@@ -11,6 +11,7 @@
     {
         private readonly AuthController _authController = new AuthController();
         private int idUsuarioTemporal = 0; // Guarda el ID entre el paso 1 y el paso 2
+        private string nombreUsuarioTemporal = "";
 
         public frm_login()
         {
@@ -34,6 +35,7 @@
             if (resultado.exito)
             {
                 this.idUsuarioTemporal = resultado.idUsuario;
+                this.nombreUsuarioTemporal = resultado.nombre; // NUEVO
                 MessageBox.Show(resultado.mensaje, "Código Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Ocultar panel de Login y mostrar panel de 2FA
@@ -64,6 +66,7 @@
                 // Asignación de variables globales que usabas previamente
                 Program.logueado = true;
                 Program.usuarioActualId = this.idUsuarioTemporal;
+                Program.nombreUsuario = this.nombreUsuarioTemporal; // AHORA SÍ MOSTRARÁ EL NOMBRE
                 Program.rol = resultado.nombreRol;
                 Program.rolId = resultado.idRol;
 

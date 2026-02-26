@@ -18,12 +18,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Utilidades\" />
-    <Folder Include="Vistas\Calificaciones\" />
     <Folder Include="Vistas\MiPerfil\" />
     <Folder Include="Vistas\Reportes\" />
     <Folder Include="Vistas\SimulacionPrediccion\" />

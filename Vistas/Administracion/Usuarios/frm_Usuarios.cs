@@ -1,10 +1,11 @@
 ﻿namespace DataBase_First.Views.Users
 {
+    using global::Academico;
+    using global::Academico.Controladores;
     using System;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
-    using global::Academico.Controladores;
 
     public partial class frm_Usuarios : Form
     {
@@ -211,6 +212,14 @@
                 {
                     usuarioId_editar = usuario.IdUsuario;
                     activacajas(false); // false = esEdicion
+
+                    // VALIDACIÓN DE SEGURIDAD (NO AUTO-EDITARSE ROL/ESTADO)
+                    if (usuarioId_editar == Program.usuarioActualId)
+                    {
+                        cmb_Rol.Enabled = false;
+                        chb_Estado.Enabled = false;
+                        MessageBox.Show("Por motivos de seguridad, no puede modificar su propio nivel de acceso ni desactivar su cuenta mientras tenga la sesión iniciada.\nSolo puede actualizar sus nombres.", "Acción Protegida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
         }

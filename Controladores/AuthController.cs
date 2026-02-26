@@ -14,7 +14,7 @@ namespace Academico.Controladores
     public class AuthController
     {
         // PASO 1: Validar credenciales y enviar correo
-        public (bool exito, int idUsuario, string mensaje) LoginPaso1(string correo, string passwordPlana)
+        public (bool exito, int idUsuario, string nombre, string mensaje) LoginPaso1(string correo, string passwordPlana)
         {
             // 1. Encriptar la contraseña en SHA256 (como lo requiere tu BD)
             string passwordHash = EncriptarSHA256(passwordPlana);
@@ -46,20 +46,20 @@ namespace Academico.Controladores
                                 bool correoEnviado = EnviarCorreo2FA(correoDestino, nombre, codigo2fa);
 
                                 if (correoEnviado)
-                                    return (true, idUsuario, "Credenciales correctas. Código 2FA enviado al correo.");
+                                    return (true, idUsuario, nombre, "Credenciales correctas. Código 2FA enviado al correo.");
                                 else
-                                    return (true, idUsuario, "Credenciales correctas, pero hubo un error enviando el correo. Revise su conexión.");
+                                    return (true, idUsuario, nombre, "Credenciales correctas, pero hubo un error enviando el correo. Revise su conexión.");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         // Si la BD lanza el SIGNAL SQLSTATE '45000' (Credenciales incorrectas o inactivo)
-                        return (false, 0, ex.Message);
+                        return (false, 0, "", ex.Message);
                     }
                 }
             }
-            return (false, 0, "Error desconocido en Paso 1.");
+            return (false, 0, "", "Error desconocido en Paso 1.");
         }
 
         // PASO 2: Validar el código de 6 dígitos
