@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Utilidades\" />
-    <Folder Include="Vistas\Academico\Matriculas\" />
     <Folder Include="Vistas\Academico\AsignacionDocentes\" />
     <Folder Include="Vistas\Calificaciones\" />
     <Folder Include="Vistas\MiPerfil\" />

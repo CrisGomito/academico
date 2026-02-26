@@ -274,7 +274,7 @@
             MainMenuStrip = menuStrip1;
             Name = "frm_Principal";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Sistema Académico con Simulación - UNIANDES";
+            Text = ".                                                                                                                                             Sistema Académico";
             Load += frm_Principal_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
