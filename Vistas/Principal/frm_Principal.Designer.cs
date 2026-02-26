@@ -92,18 +92,21 @@
             docentesToolStripMenuItem.Name = "docentesToolStripMenuItem";
             docentesToolStripMenuItem.Size = new Size(221, 24);
             docentesToolStripMenuItem.Text = "Docentes";
+            docentesToolStripMenuItem.Click += docentesToolStripMenuItem_Click;
             // 
             // estudiantesToolStripMenuItem
             // 
             estudiantesToolStripMenuItem.Name = "estudiantesToolStripMenuItem";
             estudiantesToolStripMenuItem.Size = new Size(221, 24);
             estudiantesToolStripMenuItem.Text = "Estudiantes";
+            estudiantesToolStripMenuItem.Click += estudiantesToolStripMenuItem_Click;
             // 
             // auditoriaToolStripMenuItem
             // 
             auditoriaToolStripMenuItem.Name = "auditoriaToolStripMenuItem";
             auditoriaToolStripMenuItem.Size = new Size(221, 24);
             auditoriaToolStripMenuItem.Text = "Auditoría del Sistema";
+            auditoriaToolStripMenuItem.Click += auditoriaToolStripMenuItem_Click;
             // 
             // academicoToolStripMenuItem
             // 
@@ -117,24 +120,28 @@
             asignaturasToolStripMenuItem.Name = "asignaturasToolStripMenuItem";
             asignaturasToolStripMenuItem.Size = new Size(238, 24);
             asignaturasToolStripMenuItem.Text = "Asignaturas";
+            asignaturasToolStripMenuItem.Click += asignaturasToolStripMenuItem_Click;
             // 
             // periodosToolStripMenuItem
             // 
             periodosToolStripMenuItem.Name = "periodosToolStripMenuItem";
             periodosToolStripMenuItem.Size = new Size(238, 24);
             periodosToolStripMenuItem.Text = "Periodos Académicos";
+            periodosToolStripMenuItem.Click += periodosToolStripMenuItem_Click;
             // 
             // matriculasToolStripMenuItem
             // 
             matriculasToolStripMenuItem.Name = "matriculasToolStripMenuItem";
             matriculasToolStripMenuItem.Size = new Size(238, 24);
             matriculasToolStripMenuItem.Text = "Matrículas";
+            matriculasToolStripMenuItem.Click += matriculasToolStripMenuItem_Click;
             // 
             // asignacionDocentesToolStripMenuItem
             // 
             asignacionDocentesToolStripMenuItem.Name = "asignacionDocentesToolStripMenuItem";
             asignacionDocentesToolStripMenuItem.Size = new Size(238, 24);
             asignacionDocentesToolStripMenuItem.Text = "Asignación de Docentes";
+            asignacionDocentesToolStripMenuItem.Click += asignacionDocentesToolStripMenuItem_Click;
             // 
             // calificacionesToolStripMenuItem
             // 
@@ -148,6 +155,7 @@
             ingresoNotasToolStripMenuItem.Name = "ingresoNotasToolStripMenuItem";
             ingresoNotasToolStripMenuItem.Size = new Size(191, 24);
             ingresoNotasToolStripMenuItem.Text = "Ingreso de Notas";
+            ingresoNotasToolStripMenuItem.Click += ingresoNotasToolStripMenuItem_Click;
             // 
             // simulacionToolStripMenuItem
             // 
@@ -161,12 +169,14 @@
             simuladorNotasToolStripMenuItem.Name = "simuladorNotasToolStripMenuItem";
             simuladorNotasToolStripMenuItem.Size = new Size(261, 24);
             simuladorNotasToolStripMenuItem.Text = "Simulador de Promedios";
+            simuladorNotasToolStripMenuItem.Click += simuladorNotasToolStripMenuItem_Click;
             // 
             // dashboardPrediccionToolStripMenuItem
             // 
             dashboardPrediccionToolStripMenuItem.Name = "dashboardPrediccionToolStripMenuItem";
             dashboardPrediccionToolStripMenuItem.Size = new Size(261, 24);
             dashboardPrediccionToolStripMenuItem.Text = "Dashboard de Rendimiento";
+            dashboardPrediccionToolStripMenuItem.Click += dashboardPrediccionToolStripMenuItem_Click;
             // 
             // reportesToolStripMenuItem
             // 
@@ -180,6 +190,7 @@
             reporteAcademicoToolStripMenuItem.Name = "reporteAcademicoToolStripMenuItem";
             reporteAcademicoToolStripMenuItem.Size = new Size(252, 24);
             reporteAcademicoToolStripMenuItem.Text = "Reportes Académicos PDF";
+            reporteAcademicoToolStripMenuItem.Click += reporteAcademicoToolStripMenuItem_Click;
             // 
             // pnlHeader
             // 

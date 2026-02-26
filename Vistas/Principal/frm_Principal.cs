@@ -1,4 +1,5 @@
 ﻿using Academico;
+using DataBase_First.Views.Administracion.Docentes;
 using DataBase_First.Views.Users;
 using System;
 using System.Windows.Forms;
@@ -114,11 +115,60 @@ namespace DataBase_First.Views.Main
         {
             AbrirFormularioHijo(new frm_Usuarios());
         }
-        /*
-private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
-{
-   AbrirFormularioHijo(new frm_SimuladorNotas());
-}
-*/
+
+        private void docentesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new frm_Docentes());
+        }
+
+        private void estudiantesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void auditoriaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void asignaturasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void periodosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matriculasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void asignacionDocentesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ingresoNotasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dashboardPrediccionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void reporteAcademicoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

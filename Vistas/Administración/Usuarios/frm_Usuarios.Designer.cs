@@ -282,7 +282,7 @@
             Controls.Add(label1);
             Controls.Add(lst_Lista_Usuarios);
             Font = new Font("Segoe UI", 14F);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(5);
             MaximizeBox = false;
             Name = "frm_Usuarios";
