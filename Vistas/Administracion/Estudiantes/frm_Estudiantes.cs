@@ -1,9 +1,9 @@
 ﻿namespace DataBase_First.Views.Administracion.Estudiantes
 {
+    using global::Academico.Controladores;
     using System;
     using System.Linq;
     using System.Windows.Forms;
-    using Academico.Controladores;
 
     public partial class frm_Estudiantes : Form
     {

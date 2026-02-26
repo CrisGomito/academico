@@ -23,7 +23,13 @@
 
   <ItemGroup>
     <Folder Include="Utilidades\" />
-    <Folder Include="Vistas\Asignaturas\" />
+    <Folder Include="Vistas\Academico\Matriculas\" />
+    <Folder Include="Vistas\Academico\AsignacionDocentes\" />
+    <Folder Include="Vistas\Academico\PeriodosAcademicos\" />
+    <Folder Include="Vistas\Calificaciones\" />
+    <Folder Include="Vistas\MiPerfil\" />
+    <Folder Include="Vistas\Reportes\" />
+    <Folder Include="Vistas\SimulacionPrediccion\" />
   </ItemGroup>
 
 </Project>

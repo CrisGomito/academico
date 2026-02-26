@@ -4,9 +4,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
-    using Academico;
-    using Academico.Controladores;
-    using Academico.Modelos;
+    using global::Academico.Controladores;
 
     public partial class frm_Usuarios : Form
     {
