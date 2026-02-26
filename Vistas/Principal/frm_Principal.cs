@@ -1,4 +1,5 @@
 ﻿using Academico;
+using DataBase_First.Views.Academico.AsignacionDocentes;
 using DataBase_First.Views.Academico.Asignaturas;
 using DataBase_First.Views.Academico.Matriculas;
 using DataBase_First.Views.Academico.Periodos;
@@ -66,6 +67,8 @@ namespace DataBase_First.Views.Main
                     administracionToolStripMenuItem.Visible = true;
                     academicoToolStripMenuItem.Visible = true;
                     reportesToolStripMenuItem.Visible = true;
+                    calificacionesToolStripMenuItem.Visible = true;
+                    simulacionToolStripMenuItem.Visible = true;
                     break;
 
                 case 4: // COORDINADOR
@@ -153,7 +156,7 @@ namespace DataBase_First.Views.Main
 
         private void asignacionDocentesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            AbrirFormularioHijo(new frm_AsignacionDocentes());
         }
 
         private void ingresoNotasToolStripMenuItem_Click(object sender, EventArgs e)

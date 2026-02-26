@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-02-2026 a las 21:40:52
+-- Tiempo de generación: 26-02-2026 a las 22:38:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -132,6 +132,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_password` (IN `p_id_usua
     COMMIT;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_asignacion` (IN `p_id_usuario_aud` INT, IN `p_id_rol_aud` INT, IN `p_id_asignacion` INT, IN `p_ip_user` VARCHAR(45))   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
+
+    START TRANSACTION;
+        -- Validar permisos de auditoría
+        IF NOT EXISTS (SELECT 1 FROM usuario_rol WHERE id_usuario = p_id_usuario_aud AND id_rol = p_id_rol_aud) THEN 
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Acceso denegado.'; 
+        END IF;
+
+        -- Eliminar físicamente el registro puente
+        DELETE FROM asignaciondocente WHERE id_asignacion = p_id_asignacion;
+
+        -- Registrar en Auditoría
+        INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
+        VALUES(p_id_usuario_aud, p_id_rol_aud, 'DELETE', 'asignaciondocente', p_id_asignacion, JSON_OBJECT('status', 'eliminada'), p_ip_user);
+    COMMIT;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_calificacion` (IN `p_id_usuario_aud` INT, IN `p_id_rol_aud` INT, IN `p_id_calificacion` INT, IN `p_ip_user` VARCHAR(45))   BEGIN
     DECLARE v_old_activo TINYINT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
@@ -172,6 +190,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_usuario` (IN `p_id_usua
 
         INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_anterior, valor_nuevo, ip_user)
         VALUES(p_id_usuario_aud, p_id_rol_aud, 'DELETE', 'usuario', p_id_usuario_del, JSON_OBJECT('estado', v_old_estado), JSON_OBJECT('estado', 0), p_ip_user);
+    COMMIT;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insertar_asignacion` (IN `p_id_usuario_aud` INT, IN `p_id_rol_aud` INT, IN `p_id_docente` INT, IN `p_id_asignatura` INT, IN `p_id_periodo` INT, IN `p_ip_user` VARCHAR(45))   BEGIN
+    DECLARE v_id INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
+
+    START TRANSACTION;
+        -- Validar permisos de auditoría
+        IF NOT EXISTS (SELECT 1 FROM usuario_rol WHERE id_usuario = p_id_usuario_aud AND id_rol = p_id_rol_aud) THEN 
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Acceso denegado.'; 
+        END IF;
+
+        -- Insertar la asignación
+        INSERT INTO asignaciondocente(id_docente, id_asignatura, id_periodo) 
+        VALUES(p_id_docente, p_id_asignatura, p_id_periodo);
+        
+        SET v_id = LAST_INSERT_ID();
+        
+        -- Registrar en Auditoría
+        INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
+        VALUES(p_id_usuario_aud, p_id_rol_aud, 'INSERT', 'asignaciondocente', v_id, 
+               JSON_OBJECT('id_docente', p_id_docente, 'id_asignatura', p_id_asignatura, 'id_periodo', p_id_periodo), 
+               p_ip_user);
     COMMIT;
 END$$
 
@@ -463,7 +505,10 @@ INSERT INTO `auditoria_sistema` (`id_auditoria`, `ip_user`, `id_usuario`, `id_ro
 (45, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 02:07:10'),
 (46, '169.254.243.153', 11, NULL, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 02:10:45'),
 (47, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 03:07:12'),
-(48, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 15:09:42');
+(48, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 15:09:42'),
+(49, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 16:03:35'),
+(50, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 16:14:06'),
+(51, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 16:24:13');
 
 -- --------------------------------------------------------
 
@@ -1187,7 +1232,7 @@ ALTER TABLE `asignatura`
 -- AUTO_INCREMENT de la tabla `auditoria_sistema`
 --
 ALTER TABLE `auditoria_sistema`
-  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de la tabla `calificacion`

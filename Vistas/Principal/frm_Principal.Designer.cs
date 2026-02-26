@@ -63,13 +63,13 @@
             // 
             archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { salirToolStripMenuItem });
             archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
-            archivoToolStripMenuItem.Size = new Size(71, 24);
-            archivoToolStripMenuItem.Text = "&Archivo";
+            archivoToolStripMenuItem.Size = new Size(75, 24);
+            archivoToolStripMenuItem.Text = "&Mi Perfil";
             // 
             // salirToolStripMenuItem
             // 
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(107, 24);
+            salirToolStripMenuItem.Size = new Size(180, 24);
             salirToolStripMenuItem.Text = "&Salir";
             salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
