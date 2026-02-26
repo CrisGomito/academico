@@ -92,7 +92,7 @@ namespace Academico.Controladores
         }
 
         // 4. ACTUALIZAR USUARIO (Llamando al Stored Procedure)
-        public bool ActualizarUsuario(int idUsuarioMod, string nombre, string apellido, bool estado)
+        public bool ActualizarUsuario(int idUsuarioMod, string nombre, string apellido, bool estado, int idRolNuevo)
         {
             try
             {
@@ -101,13 +101,14 @@ namespace Academico.Controladores
                     byte estadoTiny = (byte)(estado ? 1 : 0);
 
                     _context.Database.ExecuteSqlRaw(
-                        "CALL sp_actualizar_usuario({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                        "CALL sp_actualizar_usuario({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
                         Program.usuarioActualId,
                         Program.rolId,
                         idUsuarioMod,
                         nombre,
                         apellido,
                         estadoTiny,
+                        idRolNuevo,          // ¡NUEVO PARÁMETRO!
                         GetLocalIPAddress()
                     );
                     return true;

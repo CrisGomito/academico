@@ -97,11 +97,14 @@
 
             if (usuarioId_editar != 0) // EDICIÓN
             {
+                int idRolSeleccionado = (int)cmb_Rol.SelectedValue; // Capturamos el rol
+
                 resultado = _usuariosController.ActualizarUsuario(
                     usuarioId_editar,
                     txt_Nombre.Text.Trim(),
                     txt_Apellido.Text.Trim(),
-                    chb_Estado.Checked
+                    chb_Estado.Checked,
+                    idRolSeleccionado // Enviamos el rol
                 );
             }
             else // NUEVO
@@ -228,11 +231,11 @@
             txt_Nombre.Enabled = true;
             txt_Apellido.Enabled = true;
             chb_Estado.Enabled = true;
+            cmb_Rol.Enabled = true;
 
-            // Por seguridad, el SP de actualización de tu BD NO permite cambiar Rol, Correo ni Clave desde este formulario
+            // Por seguridad, el SP de actualización de tu BD NO permite cambiar Correo ni Clave desde este formulario
             txt_Correo.Enabled = esNuevo;
             txt_Contrasenia.Enabled = esNuevo;
-            cmb_Rol.Enabled = esNuevo;
         }
 
         private void btn_Salir_Click(object sender, EventArgs e)

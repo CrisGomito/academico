@@ -28,6 +28,7 @@ namespace Academico.Controladores
 
                     command.Parameters.Add(new MySqlParameter("@p_correo", correo));
                     command.Parameters.Add(new MySqlParameter("@p_password_hash", passwordHash));
+                    command.Parameters.Add(new MySqlParameter("@p_ip_user", GetLocalIPAddress()));
 
                     try
                     {

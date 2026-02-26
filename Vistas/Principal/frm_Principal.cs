@@ -1,4 +1,5 @@
 ﻿using Academico;
+using DataBase_First.Views.Administracion.Auditoria;
 using DataBase_First.Views.Administracion.Docentes;
 using DataBase_First.Views.Administracion.Estudiantes;
 using DataBase_First.Views.Users;
@@ -129,7 +130,7 @@ namespace DataBase_First.Views.Main
 
         private void auditoriaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            AbrirFormularioHijo(new frm_Auditoria());
         }
 
         private void asignaturasToolStripMenuItem_Click(object sender, EventArgs e)
