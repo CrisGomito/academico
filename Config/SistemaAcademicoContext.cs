@@ -62,8 +62,15 @@ public partial class SistemaAcademicoContext : DbContext
     public virtual DbSet<VistaUsuariosAdmin> VistaUsuariosAdmins { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;port=3306;database=sistema_academico;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            string cadenaConexion = "server=192.168.101.11;port=3306;database=sistema_academico;uid=root;pwd=;Connection Timeout=5;";
+
+            optionsBuilder.UseMySql(cadenaConexion, Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
