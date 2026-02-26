@@ -1,4 +1,5 @@
 ﻿using Academico;
+using DataBase_First.Views.Users;
 using System;
 using System.Windows.Forms;
 // using _02_CRUD.Vistas; // Descomenta esto cuando quieras instanciar tus otros formularios
@@ -108,17 +109,16 @@ namespace DataBase_First.Views.Main
             formularioHijo.Show();
         }
 
-        /* EJEMPLOS DE USO CUANDO VAYAS CREANDO TUS FORMULARIOS:
-        
-        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        // EJEMPLOS DE USO CUANDO VAYAS CREANDO TUS FORMULARIOS:
+        private void usuariosToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             AbrirFormularioHijo(new frm_Usuarios());
         }
-
-        private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frm_SimuladorNotas());
-        }
-        */
+        /*
+private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
+{
+   AbrirFormularioHijo(new frm_SimuladorNotas());
+}
+*/
     }
 }

@@ -2,15 +2,8 @@
 {
     partial class frm_Usuarios
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,13 +15,8 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            /*
             lst_Lista_Usuarios = new ListBox();
             label1 = new Label();
             txt_Nombre = new TextBox();
@@ -71,7 +59,7 @@
             label1.Name = "label1";
             label1.Size = new Size(222, 25);
             label1.TabIndex = 1;
-            label1.Text = "GESTION DE USUARIOS";
+            label1.Text = "GESTIÓN DE USUARIOS";
             // 
             // txt_Nombre
             // 
@@ -144,6 +132,7 @@
             txt_Contrasenia.Name = "txt_Contrasenia";
             txt_Contrasenia.Size = new Size(222, 32);
             txt_Contrasenia.TabIndex = 9;
+            txt_Contrasenia.UseSystemPasswordChar = true;
             // 
             // label6
             // 
@@ -162,8 +151,9 @@
             chb_Estado.Enabled = false;
             chb_Estado.Location = new Point(36, 428);
             chb_Estado.Name = "chb_Estado";
-            chb_Estado.Size = new Size(15, 14);
+            chb_Estado.Size = new Size(97, 29);
             chb_Estado.TabIndex = 13;
+            chb_Estado.Text = "Inactivo";
             chb_Estado.UseVisualStyleBackColor = true;
             chb_Estado.CheckedChanged += chb_Estado_CheckedChanged;
             // 
@@ -226,11 +216,12 @@
             // 
             // cmb_Rol
             // 
+            cmb_Rol.DropDownStyle = ComboBoxStyle.DropDownList;
             cmb_Rol.Enabled = false;
             cmb_Rol.FormattingEnabled = true;
             cmb_Rol.Location = new Point(36, 364);
             cmb_Rol.Name = "cmb_Rol";
-            cmb_Rol.Size = new Size(121, 33);
+            cmb_Rol.Size = new Size(222, 33);
             cmb_Rol.TabIndex = 19;
             // 
             // btn_Eliminar
@@ -295,34 +286,33 @@
             Margin = new Padding(5);
             MaximizeBox = false;
             Name = "frm_Usuarios";
-            Text = "frm_Usuarios";
+            Text = "Gestión de Usuarios";
             Load += frm_Usuarios_Load;
             ResumeLayout(false);
             PerformLayout();
-            */
         }
 
         #endregion
 
-        private ListBox lst_Lista_Usuarios;
-        private Label label1;
-        private TextBox txt_Nombre;
-        private Button btn_Nuevo;
-        private Label label2;
-        private Label label4;
-        private TextBox txt_Correo;
-        private Label label5;
-        private TextBox txt_Contrasenia;
-        private Label label6;
-        private CheckBox chb_Estado;
-        private Button btn_Guardar;
-        private Button btn_Editar;
-        private Button btn_Cancelar;
-        private Button btn_Salir;
-        private Label label7;
-        private ComboBox cmb_Rol;
-        private Button btn_Eliminar;
-        private Label label3;
-        private TextBox txt_Apellido;
+        private System.Windows.Forms.ListBox lst_Lista_Usuarios;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txt_Nombre;
+        private System.Windows.Forms.Button btn_Nuevo;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txt_Correo;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txt_Contrasenia;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox chb_Estado;
+        private System.Windows.Forms.Button btn_Guardar;
+        private System.Windows.Forms.Button btn_Editar;
+        private System.Windows.Forms.Button btn_Cancelar;
+        private System.Windows.Forms.Button btn_Salir;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox cmb_Rol;
+        private System.Windows.Forms.Button btn_Eliminar;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txt_Apellido;
     }
 }
