@@ -119,8 +119,8 @@ namespace Academico.Controladores
             try
             {
                 // NOTA: Configura tu correo de Gmail y crea una "Contraseña de Aplicación"
-                string miCorreo = "deadp3897@gmail.com";
-                string miClaveApp = "duvd zykl mqfn tldf";
+                string miCorreo = "cristianpilco05@gmail.com";
+                string miClaveApp = "tbtc qbfn kbvd jmqq";
 
                 MailMessage mail = new MailMessage();
                 mail.From = new MailAddress(miCorreo, "Sistema Académico UNIANDES");
