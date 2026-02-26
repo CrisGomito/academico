@@ -1,5 +1,6 @@
 ﻿using Academico;
 using DataBase_First.Views.Administracion.Docentes;
+using DataBase_First.Views.Administracion.Estudiantes;
 using DataBase_First.Views.Users;
 using System;
 using System.Windows.Forms;
@@ -123,7 +124,7 @@ namespace DataBase_First.Views.Main
 
         private void estudiantesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            AbrirFormularioHijo(new frm_Estudiantes());
         }
 
         private void auditoriaToolStripMenuItem_Click(object sender, EventArgs e)
