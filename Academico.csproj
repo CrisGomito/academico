@@ -26,7 +26,6 @@
     <Folder Include="Vistas\Administración\Docentes\" />
     <Folder Include="Vistas\Administración\Estudiantes\" />
     <Folder Include="Vistas\Asignaturas\" />
-    <Folder Include="Vistas\Usuarios\" />
   </ItemGroup>
 
 </Project>
