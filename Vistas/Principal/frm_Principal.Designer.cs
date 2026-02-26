@@ -379,6 +379,7 @@
             // 
             // lbl_Reloj
             // 
+            lbl_Reloj.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lbl_Reloj.AutoSize = true;
             lbl_Reloj.Font = new Font("Segoe UI", 12F);
             lbl_Reloj.Location = new Point(512, 630);
