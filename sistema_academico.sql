@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-02-2026 a las 03:12:46
+-- Tiempo de generación: 26-02-2026 a las 21:40:52
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -93,21 +93,29 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_estudiante` (IN `p_id
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_usuario` (IN `p_id_usuario_aud` INT, IN `p_id_rol_aud` INT, IN `p_id_usuario_mod` INT, IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_estado` TINYINT, IN `p_ip_user` VARCHAR(45))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_usuario` (IN `p_id_usuario_aud` INT, IN `p_id_rol_aud` INT, IN `p_id_usuario_mod` INT, IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_estado` TINYINT, IN `p_id_rol_nuevo` INT, IN `p_ip_user` VARCHAR(45))   BEGIN
     DECLARE v_old_nombre VARCHAR(50); DECLARE v_old_apellido VARCHAR(50); DECLARE v_old_estado TINYINT;
+    DECLARE v_old_rol INT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
 
     START TRANSACTION;
         IF NOT EXISTS (SELECT 1 FROM usuario_rol WHERE id_usuario = p_id_usuario_aud AND id_rol = p_id_rol_aud) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Acceso denegado.'; END IF;
 
         SELECT nombre, apellido, estado INTO v_old_nombre, v_old_apellido, v_old_estado FROM usuario WHERE id_usuario = p_id_usuario_mod;
+        SELECT id_rol INTO v_old_rol FROM usuario_rol WHERE id_usuario = p_id_usuario_mod LIMIT 1;
         
         UPDATE usuario SET nombre = p_nombre, apellido = p_apellido, estado = p_estado WHERE id_usuario = p_id_usuario_mod;
+        
+        -- Si el rol cambió, lo actualizamos
+        IF v_old_rol <> p_id_rol_nuevo THEN
+            DELETE FROM usuario_rol WHERE id_usuario = p_id_usuario_mod;
+            INSERT INTO usuario_rol(id_usuario, id_rol) VALUES (p_id_usuario_mod, p_id_rol_nuevo);
+        END IF;
 
         INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_anterior, valor_nuevo, ip_user)
         VALUES(p_id_usuario_aud, p_id_rol_aud, 'UPDATE', 'usuario', p_id_usuario_mod, 
-               JSON_OBJECT('nombre', v_old_nombre, 'apellido', v_old_apellido, 'estado', v_old_estado), 
-               JSON_OBJECT('nombre', p_nombre, 'apellido', p_apellido, 'estado', p_estado), p_ip_user);
+               JSON_OBJECT('nombre', v_old_nombre, 'apellido', v_old_apellido, 'estado', v_old_estado, 'id_rol', v_old_rol), 
+               JSON_OBJECT('nombre', p_nombre, 'apellido', p_apellido, 'estado', p_estado, 'id_rol', p_id_rol_nuevo), p_ip_user);
     COMMIT;
 END$$
 
@@ -259,51 +267,68 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insertar_usuario` (IN `p_id_usua
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login_paso1_credenciales` (IN `p_correo` VARCHAR(100), IN `p_password_hash` VARCHAR(255))   BEGIN
-    DECLARE v_id_usuario INT; DECLARE v_password VARCHAR(255); DECLARE v_estado TINYINT; DECLARE v_codigo_generado VARCHAR(6);
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login_paso1_credenciales` (IN `p_correo` VARCHAR(100), IN `p_password_hash` VARCHAR(255), IN `p_ip_user` VARCHAR(45))   BEGIN
+    DECLARE v_id_usuario INT; DECLARE v_password VARCHAR(255); DECLARE v_estado TINYINT; DECLARE v_codigo_generado VARCHAR(6); DECLARE v_rol INT;
+    
+    -- Buscamos al usuario y su rol principal
+    SELECT u.id_usuario, u.password_hash, u.estado, ur.id_rol 
+    INTO v_id_usuario, v_password, v_estado, v_rol
+    FROM usuario u LEFT JOIN usuario_rol ur ON u.id_usuario = ur.id_usuario
+    WHERE u.correo_hash = UNHEX(SHA2(CONCAT(p_correo, 'SALT_ACADEMICO_2026'), 256)) LIMIT 1;
+
+    IF v_id_usuario IS NULL THEN 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Credenciales incorrectas'; 
+    END IF;
+
+    IF v_estado = 0 THEN
+        -- Insertamos el fallo de usuario inactivo
+        INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
+        VALUES(v_id_usuario, v_rol, 'LOGIN', 'usuario', v_id_usuario, JSON_OBJECT('resultado', 'FAILED_INACTIVE'), p_ip_user);
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario inactivo'; 
+    END IF;
+
+    IF v_password <> p_password_hash THEN 
+        -- Iniciamos transacción solo para guardar la auditoría y luego enviar el error a C#
+        START TRANSACTION;
+            UPDATE usuario SET intentos_fallidos = intentos_fallidos + 1 WHERE id_usuario = v_id_usuario;
+            INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
+            VALUES(v_id_usuario, v_rol, 'LOGIN', 'usuario', v_id_usuario, JSON_OBJECT('resultado', 'FAILED_PASSWORD'), p_ip_user);
+        COMMIT;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Credenciales incorrectas'; 
+    END IF;
 
     START TRANSACTION;
-        SELECT id_usuario, password_hash, estado INTO v_id_usuario, v_password, v_estado 
-        FROM usuario WHERE correo_hash = UNHEX(SHA2(CONCAT(p_correo, 'SALT_ACADEMICO_2026'), 256));
-
-        IF v_id_usuario IS NULL OR v_estado = 0 OR v_password <> p_password_hash THEN 
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Credenciales incorrectas o usuario inactivo'; 
-        END IF;
-
         SET v_codigo_generado = LPAD(FLOOR(RAND() * 999999), 6, '0');
-        
-        -- Guardar código 2FA Hashed en la DB para máxima seguridad
         UPDATE usuario SET codigo_2fa = UNHEX(SHA2(v_codigo_generado, 256)), expiracion_2fa = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE id_usuario = v_id_usuario;
-
-        -- Retorna en plano solo a C# para enviarlo por correo
+        
         SELECT v_id_usuario AS id_usuario, u.nombre, p_correo AS correo, v_codigo_generado AS codigo_2fa FROM usuario u WHERE id_usuario = v_id_usuario;
     COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login_paso2_verificar2fa` (IN `p_id_usuario` INT, IN `p_codigo_ingresado` VARCHAR(6), IN `p_ip_user` VARCHAR(45))   BEGIN
-    DECLARE v_codigo_real BINARY(32); DECLARE v_expiracion DATETIME; DECLARE v_intentos INT;
+    DECLARE v_codigo_real BINARY(32); DECLARE v_expiracion DATETIME; DECLARE v_intentos INT; DECLARE v_rol INT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
 
     START TRANSACTION;
         SELECT codigo_2fa, expiracion_2fa, intentos_fallidos INTO v_codigo_real, v_expiracion, v_intentos FROM usuario WHERE id_usuario = p_id_usuario;
+        SELECT id_rol INTO v_rol FROM usuario_rol WHERE id_usuario = p_id_usuario LIMIT 1;
 
-        -- Verificar Hash
         IF v_codigo_real IS NULL OR v_codigo_real <> UNHEX(SHA2(p_codigo_ingresado, 256)) OR NOW() > v_expiracion THEN
             UPDATE usuario SET intentos_fallidos = intentos_fallidos + 1 WHERE id_usuario = p_id_usuario;
             IF v_intentos + 1 >= 3 THEN
                 UPDATE usuario SET bloqueado_hasta = NOW() + INTERVAL 15 MINUTE WHERE id_usuario = p_id_usuario;
             END IF;
-            INSERT INTO auditoria_sistema(id_usuario, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
-            VALUES(p_id_usuario, 'LOGIN', 'usuario', p_id_usuario, JSON_OBJECT('resultado', 'FAILED_2FA'), p_ip_user);
+            
+            INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
+            VALUES(p_id_usuario, v_rol, 'LOGIN', 'usuario', p_id_usuario, JSON_OBJECT('resultado', 'FAILED_2FA'), p_ip_user);
             
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Código inválido o expirado';
         END IF;
 
         UPDATE usuario SET codigo_2fa = NULL, expiracion_2fa = NULL, intentos_fallidos = 0 WHERE id_usuario = p_id_usuario;
 
-        INSERT INTO auditoria_sistema(id_usuario, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
-        VALUES(p_id_usuario, 'LOGIN', 'usuario', p_id_usuario, JSON_OBJECT('resultado', 'SUCCESS_2FA'), p_ip_user);
+        INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
+        VALUES(p_id_usuario, v_rol, 'LOGIN', 'usuario', p_id_usuario, JSON_OBJECT('resultado', 'SUCCESS_2FA'), p_ip_user);
 
         SELECT r.id_rol, r.nombre AS rol_nombre FROM usuario_rol ur JOIN rol r ON ur.id_rol = r.id_rol WHERE ur.id_usuario = p_id_usuario;
     COMMIT;
@@ -419,7 +444,26 @@ INSERT INTO `auditoria_sistema` (`id_auditoria`, `ip_user`, `id_usuario`, `id_ro
 (25, '127.0.0.1', 1, 1, 'INSERT', 'matricula', 2, NULL, '{\"id_estudiante\": \"2\", \"id_asignatura\": \"4\"}', '2026-02-25 16:41:16'),
 (26, '127.0.0.1', 1, 1, 'INSERT', 'calificacion', 1, NULL, '{\"nota\": \"9.50\"}', '2026-02-25 16:41:16'),
 (27, '127.0.0.1', 1, 1, 'INSERT', 'calificacion', 2, NULL, '{\"nota\": \"8.75\"}', '2026-02-25 16:41:16'),
-(28, '127.0.0.1', 1, 1, 'INSERT', 'calificacion', 3, NULL, '{\"nota\": \"6.50\"}', '2026-02-25 16:41:16');
+(28, '127.0.0.1', 1, 1, 'INSERT', 'calificacion', 3, NULL, '{\"nota\": \"6.50\"}', '2026-02-25 16:41:16'),
+(29, '192.108.1.1', 1, 1, 'INSERT', 'usuario', 11, NULL, '{\"nombre\": \"Cristian\", \"apellido\": \"Pilco\", \"id_rol\": \"4\"}', '2026-02-25 23:46:50'),
+(30, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-25 23:48:11'),
+(32, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-25 23:57:55'),
+(33, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 00:04:37'),
+(34, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 00:08:27'),
+(35, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 00:22:43'),
+(36, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 00:31:58'),
+(37, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:03:52'),
+(38, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:17:01'),
+(39, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:19:50'),
+(40, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:21:18'),
+(41, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:42:13'),
+(42, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:46:43'),
+(43, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 01:58:24'),
+(44, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 02:05:06'),
+(45, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 02:07:10'),
+(46, '169.254.243.153', 11, NULL, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 02:10:45'),
+(47, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 03:07:12'),
+(48, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-26 15:09:42');
 
 -- --------------------------------------------------------
 
@@ -734,7 +778,8 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `correo`, `correo_has
 (7, 'Cristian Javier', 'Saltos Ponce', 0x1582a1ba5e07f17c44bed6ccf72fb027a1943c51efcda2a13392787717ac3b31, 0x60037ec31229597be8be8f2056c556f19e2362b6ea36e40bb03327f8304009e8, NULL, NULL, '41cfb30a0c16b0ea26d7892a8a1ff486876228557448614e2825716655de5774', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
 (8, 'Andres Roberto', 'Leon Yacelga', 0xf96b65607c8432979876d433a76ce977879efaa446e49ff13fbdcd350f92af5b, 0x27d1c86e08541f62b436fef636412d808f47389f66f8550598be369caee13f03, NULL, NULL, '41cfb30a0c16b0ea26d7892a8a1ff486876228557448614e2825716655de5774', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
 (9, 'María Josefina', 'Gómez López', 0xb954ddf445ac49b6ec8c9e165ae38cc8d2edf97505c540ff157fdfb2eab0d8c2, 0x04fbfd94d5c54407ee9a8ec0241a4c117b675eac4875f05c241c7a00b19a0635, NULL, NULL, '7016fa198a233f51a7f0d47cabbd65244822adcecc7c4c491367e245ab302236', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
-(10, 'Pedro', 'Maldonado', 0xae6ae395d74e8ba99b9cee6609e4a1d4f8337c401cc2b79969930867e2218a3f, 0x5272ee1c015036a57c2b13d4a084c70e0d4b37eead62606e814469fbb1028169, NULL, NULL, '7016fa198a233f51a7f0d47cabbd65244822adcecc7c4c491367e245ab302236', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16');
+(10, 'Pedro', 'Maldonado', 0xae6ae395d74e8ba99b9cee6609e4a1d4f8337c401cc2b79969930867e2218a3f, 0x5272ee1c015036a57c2b13d4a084c70e0d4b37eead62606e814469fbb1028169, NULL, NULL, '7016fa198a233f51a7f0d47cabbd65244822adcecc7c4c491367e245ab302236', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
+(11, 'Cristian', 'Pilco', 0xed6b44d649d54187dde2f61079152638fe831782c95fde276aa9f697a071445b, 0xb3a9de62dafd476b6ca28cf89066b3d5423f02813b93348fac249ce88a945f7f, NULL, NULL, '82c2cb4784186792c6646a2b53ad4ca895c3e61e74796306190453c003804169', 1, '2026-02-25 23:46:50', 0, NULL, '2026-02-25 23:46:50');
 
 --
 -- Disparadores `usuario`
@@ -794,7 +839,8 @@ INSERT INTO `usuario_rol` (`id_usuario`, `id_rol`, `fecha_asignacion`) VALUES
 (7, 2, '2026-02-25 16:41:16'),
 (8, 2, '2026-02-25 16:41:16'),
 (9, 3, '2026-02-25 16:41:16'),
-(10, 3, '2026-02-25 16:41:16');
+(10, 3, '2026-02-25 16:41:16'),
+(11, 1, '2026-02-25 23:46:50');
 
 -- --------------------------------------------------------
 
@@ -1141,7 +1187,7 @@ ALTER TABLE `asignatura`
 -- AUTO_INCREMENT de la tabla `auditoria_sistema`
 --
 ALTER TABLE `auditoria_sistema`
-  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `calificacion`
@@ -1195,7 +1241,7 @@ ALTER TABLE `tipoevaluacion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Restricciones para tablas volcadas
