@@ -1,5 +1,7 @@
-﻿
-using Academico;
+﻿using Academico;
+using System;
+using System.Windows.Forms;
+// using _02_CRUD.Vistas; // Descomenta esto cuando quieras instanciar tus otros formularios
 
 namespace DataBase_First.Views.Main
 {
@@ -10,78 +12,113 @@ namespace DataBase_First.Views.Main
             InitializeComponent();
         }
 
-        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            /*
-            frm_Usuarios frm_usuarios = new frm_Usuarios();
-            frm_usuarios.Show();
-            */
-        }
-
         private void frm_Principal_Load(object sender, EventArgs e)
         {
-            if (Program.logueado != true) this.Close();
+            // Validación de seguridad
+            if (!Program.logueado)
+            {
+                this.Close();
+                return;
+            }
 
+            // Datos visuales del Header
             lbl_Nombre.Text = Program.nombreUsuario;
             lbl_Rol.Text = Program.rol;
-            lbl_DescripcionRol.Text = Program.descripcionRol;
 
             timer1.Start();
 
+            // Ocultar dinámicamente según el Rol de BD
             AplicarPermisosPorRol();
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             lbl_Reloj.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
         }
 
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
         private void AplicarPermisosPorRol()
         {
-            // ADMINISTRADOR (acceso total)
-            if (Program.rolId == 1)
-            {
-                // No hacemos nada, todo queda habilitado
-                return;
-            }
+            // 1. Ocultamos los menús principales por defecto por seguridad
+            administracionToolStripMenuItem.Visible = false;
+            academicoToolStripMenuItem.Visible = false;
+            calificacionesToolStripMenuItem.Visible = false;
+            simulacionToolStripMenuItem.Visible = false;
+            reportesToolStripMenuItem.Visible = false;
 
-            // Primero deshabilitamos todo
-            usuariosToolStripMenuItem.Enabled = false;
-            estudiantesToolStripMenuItem.Enabled = false;
-            materiasToolStripMenuItem.Enabled = false;
-            periodosAcadémicosToolStripMenuItem.Enabled = false;
-            cursosToolStripMenuItem.Enabled = false;
-            inscripcionesToolStripMenuItem.Enabled = false;
-            calificacionesToolStripMenuItem.Enabled = false;
-            automatizaciónToolStripMenuItem.Enabled = false;
-
-            // ROLES ESPECÍFICOS
+            // 2. Evaluamos según los roles definidos en la base de datos (Tabla `rol`)
+            // 1: Administrador | 2: Docente | 3: Estudiante | 4: Coordinador
             switch (Program.rolId)
             {
+                case 1: // ADMINISTRADOR
+                    // Tiene acceso a casi todo, especialmente creación y auditorías
+                    administracionToolStripMenuItem.Visible = true;
+                    academicoToolStripMenuItem.Visible = true;
+                    reportesToolStripMenuItem.Visible = true;
+                    break;
+
+                case 4: // COORDINADOR
+                    // Gestiona la parte académica y monitorea el rendimiento (Predicción)
+                    academicoToolStripMenuItem.Visible = true;
+                    simulacionToolStripMenuItem.Visible = true;
+                    simuladorNotasToolStripMenuItem.Visible = false; // El simulador es del estudiante
+                    dashboardPrediccionToolStripMenuItem.Visible = true;
+                    reportesToolStripMenuItem.Visible = true;
+                    break;
+
                 case 2: // DOCENTE
-                    calificacionesToolStripMenuItem.Enabled = true;
-                    materiasToolStripMenuItem.Enabled = true;
-                    cursosToolStripMenuItem.Enabled = true;
+                    // Sube notas y revisa a sus estudiantes
+                    calificacionesToolStripMenuItem.Visible = true;
+                    simulacionToolStripMenuItem.Visible = true;
+                    simuladorNotasToolStripMenuItem.Visible = false; // El simulador es del estudiante
+                    dashboardPrediccionToolStripMenuItem.Visible = true;
+                    reportesToolStripMenuItem.Visible = true;
                     break;
 
-                case 3: // COORDINADOR
-                    estudiantesToolStripMenuItem.Enabled = true;
-                    materiasToolStripMenuItem.Enabled = true;
-                    periodosAcadémicosToolStripMenuItem.Enabled = true;
-                    cursosToolStripMenuItem.Enabled = true;
-                    automatizaciónToolStripMenuItem.Enabled = true;
-                    break;
-
-                case 4: // SECRETARÍA / ASISTENTE
-                    estudiantesToolStripMenuItem.Enabled = true;
-                    inscripcionesToolStripMenuItem.Enabled = true;
-                    periodosAcadémicosToolStripMenuItem.Enabled = true;
-                    cursosToolStripMenuItem.Enabled = true;
+                case 3: // ESTUDIANTE
+                    // Interactúa con su nota actual y simula su estado académico
+                    simulacionToolStripMenuItem.Visible = true;
+                    simuladorNotasToolStripMenuItem.Visible = true;
+                    dashboardPrediccionToolStripMenuItem.Visible = false; // Predicción grupal no
+                    reportesToolStripMenuItem.Visible = true;
                     break;
 
                 default:
-                    MessageBox.Show("Rol no reconocido. Contacte al administrador.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("El rol asignado no cuenta con permisos estructurados en el sistema.", "Acceso Restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
             }
         }
+
+        // --- MÉTODO PARA ABRIR FORMULARIOS HIJOS (MDI) ---
+        // Úsalo en los eventos Click de tus menús para que no se abran ventanas sueltas.
+        private void AbrirFormularioHijo(Form formularioHijo)
+        {
+            // Cerramos cualquier otro formulario hijo abierto para no amontonar
+            foreach (Form form in this.MdiChildren)
+            {
+                form.Close();
+            }
+
+            formularioHijo.MdiParent = this;
+            formularioHijo.Dock = DockStyle.Fill; // Para que ocupe todo el espacio disponible
+            formularioHijo.Show();
+        }
+
+        /* EJEMPLOS DE USO CUANDO VAYAS CREANDO TUS FORMULARIOS:
+        
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new frm_Usuarios());
+        }
+
+        private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new frm_SimuladorNotas());
+        }
+        */
     }
 }
