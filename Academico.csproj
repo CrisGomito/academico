@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiveCharts.WinForms" Version="0.9.7.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.24" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.24">
       <PrivateAssets>all</PrivateAssets>
@@ -26,7 +27,6 @@
     <Folder Include="Utilidades\" />
     <Folder Include="Vistas\MiPerfil\" />
     <Folder Include="Vistas\Reportes\" />
-    <Folder Include="Vistas\SimulacionPrediccion\DashboardRendimiento\" />
   </ItemGroup>
 
 </Project>
