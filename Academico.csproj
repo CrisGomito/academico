@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Content Include="Vistas\Reportes\RptAcademico.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -37,6 +37,21 @@
 
   <ItemGroup>
     <Folder Include="Utilidades\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Vistas\Reportes\DsReportes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DsReportes.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Vistas\Reportes\DsReportes.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DsReportes.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

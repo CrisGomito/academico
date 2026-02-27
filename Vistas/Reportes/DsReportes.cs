@@ -1,0 +1,3 @@
+﻿namespace Academico.Vistas.Reportes
+{
+}
