@@ -18,6 +18,30 @@
             InitializeComponent();
         }
 
+        // --- MANEJO VISUAL DE PANELES ---
+        private void MostrarPanel(Panel panelAMostrar)
+        {
+            pnlLogin.Visible = false;
+            pnl2FA.Visible = false;
+            pnlRecuperar.Visible = false;
+
+            panelAMostrar.Visible = true;
+        }
+
+        // --- BOTÓN CIRCULAR CERRAR ---
+        private void btnCerrarForm_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrarForm.Width, btnCerrarForm.Height);
+            btnCerrarForm.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrarForm_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        // --- PASO 1: LOGIN ---
         private void btn_Ingresar2_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Correo.Text) || string.IsNullOrWhiteSpace(txt_Contrasenia.Text))
@@ -37,8 +61,7 @@
                 this.nombreUsuarioTemporal = resultado.nombre;
                 MessageBox.Show(resultado.mensaje, "Código Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                pnlLogin.Visible = false;
-                pnl2FA.Visible = true;
+                MostrarPanel(pnl2FA);
                 txt_Codigo2FA.Focus();
             }
             else
@@ -49,6 +72,7 @@
             }
         }
 
+        // --- PASO 2: 2FA ---
         private void btn_Verificar2FA_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Codigo2FA.Text))
@@ -80,45 +104,86 @@
             }
         }
 
-        // EVENTO DEL LINK LABEL (Olvidé mi contraseña)
+        // --- RECUPERACIÓN DE CONTRASEÑA ---
         private void lblOlvidoPass_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string correoInput = txt_Correo.Text.Trim();
+            MostrarPanel(pnlRecuperar);
+            txtCorreoRecuperacion.Text = txt_Correo.Text; // Si ya había escrito su correo, se lo pasamos al otro panel
+            txtCorreoRecuperacion.Focus();
+        }
 
+        private void btnEnviarRecuperacion_Click(object sender, EventArgs e)
+        {
+            string correoInput = txtCorreoRecuperacion.Text.Trim();
+
+            // 1. Validaciones
             if (string.IsNullOrWhiteSpace(correoInput))
             {
-                MessageBox.Show("Para restablecer su contraseña, primero ingrese su Correo Electrónico en la caja de texto y luego haga clic aquí.", "Información Requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txt_Correo.Focus();
+                MessageBox.Show("Por favor, ingrese su correo electrónico.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var confirm = MessageBox.Show($"¿Desea enviar una nueva contraseña temporal al correo: {correoInput}?", "Confirmar Recuperación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (!Regex.IsMatch(correoInput, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+            {
+                MessageBox.Show("El correo no tiene un formato válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string dominio = correoInput.Split('@')[1].ToLower();
+            if ((dominio.StartsWith("gmail.") && dominio != "gmail.com") ||
+                (dominio.StartsWith("hotmail.") && dominio != "hotmail.com" && dominio != "hotmail.es") ||
+                (dominio.StartsWith("outlook.") && dominio != "outlook.com" && dominio != "outlook.es") ||
+                (dominio.StartsWith("yahoo.") && dominio != "yahoo.com" && dominio != "yahoo.es"))
+            {
+                MessageBox.Show("El dominio del correo ingresado parece ser incorrecto (Ej: omitió el '.com').\nPor favor, revise y corrija.", "Posible error tipográfico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Confirmación y Envío
+            var confirm = MessageBox.Show($"¿Desea enviar una nueva contraseña temporal al correo:\n{correoInput}?", "Confirmar Recuperación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.Yes)
             {
-                lblOlvidoPass.Text = "Procesando...";
-                lblOlvidoPass.Enabled = false;
+                btnEnviarRecuperacion.Text = "Procesando...";
+                btnEnviarRecuperacion.Enabled = false;
 
                 var resultado = _authController.RecuperarContrasenia(correoInput);
 
                 if (resultado.exito)
                 {
                     MessageBox.Show(resultado.mensaje, "Correo Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MostrarPanel(pnlLogin);
+                    txt_Contrasenia.Clear();
+                    txt_Contrasenia.Focus();
                 }
                 else
                 {
                     MessageBox.Show(resultado.mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                lblOlvidoPass.Text = "¿Olvidó su contraseña?";
-                lblOlvidoPass.Enabled = true;
+                btnEnviarRecuperacion.Text = "Recuperar Contraseña";
+                btnEnviarRecuperacion.Enabled = true;
             }
+        }
+
+        // --- ENLACES PARA VOLVER AL LOGIN NORMAL ---
+        private void lblVolverLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MostrarPanel(pnlLogin);
+        }
+
+        private void lblVolverLoginDe2FA_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MostrarPanel(pnlLogin);
+            btn_Ingresar2.Enabled = true;
+            btn_Ingresar2.Text = "Ingresar al Sistema";
+            txt_Contrasenia.Clear();
         }
 
         private void txt_Correo_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Correo.Text)) return;
 
-            bool ok = Regex.IsMatch(txt_Correo.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
+            bool ok = Regex.IsMatch(txt_Correo.Text, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
 
             if (!ok)
             {
