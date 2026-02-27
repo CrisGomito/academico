@@ -34,14 +34,21 @@
                 return;
             }
 
-            // 2. Validar formato
-            if (!Regex.IsMatch(correo, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            // 2. Validar formato estricto
+            if (!Regex.IsMatch(correo, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             {
                 MessageBox.Show("Ingrese un correo electrónico con formato válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 3. Validar que no sea el mismo correo que ya tiene
+            // 3. Validar error de tipeo común (.co en lugar de .com)
+            if (correo.EndsWith("@gmail.co") || correo.EndsWith("@hotmail.co") || correo.EndsWith("@outlook.co") || correo.EndsWith("@yahoo.co"))
+            {
+                MessageBox.Show("Parece que olvidó la letra 'm' al final del dominio (.com).\nPor favor, revise su correo e intente nuevamente.", "Posible error tipográfico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 4. Validar que no sea el mismo correo que ya tiene
             if (correo.Equals(_correoActualUsuario, StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show("El correo ingresado es idéntico a su correo actual. Por favor, ingrese uno nuevo.", "Sin Cambios", MessageBoxButtons.OK, MessageBoxIcon.Information);

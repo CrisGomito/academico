@@ -88,9 +88,15 @@
                 return;
             }
 
-            if (!Regex.IsMatch(correoNuevo, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            if (!Regex.IsMatch(correoNuevo, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             {
                 MessageBox.Show("El correo no tiene un formato válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (correoNuevo.EndsWith("@gmail.co") || correoNuevo.EndsWith("@hotmail.co") || correoNuevo.EndsWith("@outlook.co") || correoNuevo.EndsWith("@yahoo.co"))
+            {
+                MessageBox.Show("Parece que olvidó la letra 'm' al final del dominio (.com).\nPor favor, revise su correo e intente nuevamente.", "Posible error tipográfico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -104,16 +110,16 @@
                 MessageBox.Show(resultado.mensaje, "Código Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 _enProcesoDeVerificacion = true;
-                txtCorreo.Enabled = false; // Se bloquea el campo como pediste
+                txtCorreo.Enabled = false;
                 btnValidarCorreo.Visible = false;
 
                 txtCodigo.Visible = true;
                 txtCodigo.Clear();
                 btnConfirmarCodigo.Visible = true;
-                btnCancelarValidacion.Visible = true; // La 'X' Roja
+                btnCancelarValidacion.Visible = true;
 
                 txtCodigo.Focus();
-                EvaluarEstadoGuardar(); // Asegura bloquear el botón guardar
+                EvaluarEstadoGuardar();
             }
             else
             {
@@ -182,9 +188,12 @@
                 return;
             }
 
+            // NUEVA CONFIRMACIÓN DE GUARDADO
+            var confirm = MessageBox.Show("¿Está seguro de que desea guardar y aplicar estos cambios en su perfil?", "Confirmar Cambios", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
             bool guardarCorreo = (txtCorreo.Text.Trim() != _correoOriginal) && _correoVerificado;
 
-            // Llama a GuardarPerfilCompleto que ejecuta SP y Updates finales
             bool exito = _perfil.GuardarPerfilCompleto(
                 txtNombre.Text.Trim(),
                 txtApellido.Text.Trim(),
@@ -199,9 +208,11 @@
                 _correoOriginal = txtCorreo.Text;
 
                 btnGuardar.Enabled = false;
-                _huboCambios = false;
 
                 MessageBox.Show("Información actualizada con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Desligamos el evento de cierre para que no nos pregunte si queremos salir
+                this.FormClosing -= frm_EditarInfoPerfil_FormClosing;
                 VolverAlPerfil();
             }
             else
@@ -220,7 +231,20 @@
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            this.Close();
+            bool hayCambios = (txtNombre.Text.Trim() != _nombreOriginal) || (txtApellido.Text.Trim() != _apellidoOriginal) || (txtCorreo.Text.Trim() != _correoOriginal);
+
+            if (hayCambios || _enProcesoDeVerificacion)
+            {
+                var diag = MessageBox.Show("Tiene cambios sin guardar o verificaciones pendientes.\n¿Está seguro que desea cancelar? Sus cambios se perderán.", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (diag == DialogResult.No)
+                {
+                    return; // Se queda en el formulario
+                }
+            }
+
+            // Si dijo que sí quiere salir, quitamos el evento y volvemos
+            this.FormClosing -= frm_EditarInfoPerfil_FormClosing;
+            VolverAlPerfil();
         }
 
         private void frm_EditarInfoPerfil_FormClosing(object sender, FormClosingEventArgs e)
