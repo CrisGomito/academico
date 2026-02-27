@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Vistas\Reportes\RptAcademico.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Vistas\Reportes\RptAcademico.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LiveCharts.WinForms" Version="0.9.7.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.24" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.24">
@@ -21,11 +31,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+	  <PackageReference Include="ReportViewerCore.WinForms" Version="15.1.33" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Utilidades\" />
-    <Folder Include="Vistas\Reportes\" />
   </ItemGroup>
 
 </Project>

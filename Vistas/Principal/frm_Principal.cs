@@ -180,17 +180,7 @@ namespace DataBase_First.Views.Main
 
         private void reporteAcademicoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void actualizarCorreoElectrónicoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frm_CambiarCorreo());
-        }
-
-        private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frm_CambiarClave());
+            AbrirFormularioHijo(new Reportes.frm_Reportes());
         }
 
         private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
