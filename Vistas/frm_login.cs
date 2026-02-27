@@ -4,13 +4,13 @@
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
     using Academico;
-    using Academico.Controladores; // Asegúrate de tener creado AuthController aquí
-    using DataBase_First.Views.Main; // Mantengo tu using original para frm_Principal
+    using Academico.Controladores;
+    using DataBase_First.Views.Main;
 
     public partial class frm_login : Form
     {
         private readonly AuthController _authController = new AuthController();
-        private int idUsuarioTemporal = 0; // Guarda el ID entre el paso 1 y el paso 2
+        private int idUsuarioTemporal = 0;
         private string nombreUsuarioTemporal = "";
 
         public frm_login()
@@ -18,7 +18,6 @@
             InitializeComponent();
         }
 
-        // --- PASO 1: Validar Credenciales ---
         private void btn_Ingresar2_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Correo.Text) || string.IsNullOrWhiteSpace(txt_Contrasenia.Text))
@@ -27,18 +26,17 @@
                 return;
             }
 
-            // Deshabilitar botón para evitar múltiples envíos
             btn_Ingresar2.Enabled = false;
+            btn_Ingresar2.Text = "Validando...";
 
             var resultado = _authController.LoginPaso1(txt_Correo.Text.Trim(), txt_Contrasenia.Text);
 
             if (resultado.exito)
             {
                 this.idUsuarioTemporal = resultado.idUsuario;
-                this.nombreUsuarioTemporal = resultado.nombre; // NUEVO
+                this.nombreUsuarioTemporal = resultado.nombre;
                 MessageBox.Show(resultado.mensaje, "Código Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Ocultar panel de Login y mostrar panel de 2FA
                 pnlLogin.Visible = false;
                 pnl2FA.Visible = true;
                 txt_Codigo2FA.Focus();
@@ -47,10 +45,10 @@
             {
                 MessageBox.Show(resultado.mensaje, "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btn_Ingresar2.Enabled = true;
+                btn_Ingresar2.Text = "Ingresar al Sistema";
             }
         }
 
-        // --- PASO 2: Verificar Código 2FA ---
         private void btn_Verificar2FA_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Codigo2FA.Text))
@@ -63,14 +61,11 @@
 
             if (resultado.exito)
             {
-                // Asignación de variables globales que usabas previamente
                 Program.logueado = true;
                 Program.usuarioActualId = this.idUsuarioTemporal;
-                Program.nombreUsuario = this.nombreUsuarioTemporal; // AHORA SÍ MOSTRARÁ EL NOMBRE
+                Program.nombreUsuario = this.nombreUsuarioTemporal;
                 Program.rol = resultado.nombreRol;
                 Program.rolId = resultado.idRol;
-
-                MessageBox.Show($"Inicio de sesión exitoso. Bienvenido ({resultado.nombreRol})", "Acceso Autorizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.Hide();
                 frm_Principal mainForm = new frm_Principal();
@@ -85,13 +80,45 @@
             }
         }
 
+        // EVENTO DEL LINK LABEL (Olvidé mi contraseña)
+        private void lblOlvidoPass_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string correoInput = txt_Correo.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(correoInput))
+            {
+                MessageBox.Show("Para restablecer su contraseña, primero ingrese su Correo Electrónico en la caja de texto y luego haga clic aquí.", "Información Requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txt_Correo.Focus();
+                return;
+            }
+
+            var confirm = MessageBox.Show($"¿Desea enviar una nueva contraseña temporal al correo: {correoInput}?", "Confirmar Recuperación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.Yes)
+            {
+                lblOlvidoPass.Text = "Procesando...";
+                lblOlvidoPass.Enabled = false;
+
+                var resultado = _authController.RecuperarContrasenia(correoInput);
+
+                if (resultado.exito)
+                {
+                    MessageBox.Show(resultado.mensaje, "Correo Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(resultado.mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                lblOlvidoPass.Text = "¿Olvidó su contraseña?";
+                lblOlvidoPass.Enabled = true;
+            }
+        }
+
         private void txt_Correo_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Correo.Text)) return;
 
-            bool ok = Regex.IsMatch(txt_Correo.Text,
-                 @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                 RegexOptions.IgnoreCase);
+            bool ok = Regex.IsMatch(txt_Correo.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
 
             if (!ok)
             {

@@ -143,6 +143,79 @@ namespace Academico.Controladores
             }
         }
 
+        // NUEVA FUNCIÓN: RECUPERAR CONTRASEÑA
+        public (bool exito, string mensaje) RecuperarContrasenia(string correoPlano)
+        {
+            using (var context = new SistemaAcademicoContext())
+            {
+                // Encriptamos el correo ingresado para buscarlo en la DB (igual que en LoginPaso1)
+                string hashInput = correoPlano + "SALT_ACADEMICO_2026";
+                byte[] hashBytes;
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(hashInput));
+                }
+
+                var usuario = context.Usuarios.FirstOrDefault(u => u.CorreoHash == hashBytes && u.Estado == true);
+
+                if (usuario == null)
+                    return (false, "El correo no está registrado en el sistema o el usuario está inactivo.");
+
+                // Generar nueva clave aleatoria segura (Ej: Uniandes1492*)
+                string nuevaClave = "Uniandes" + new Random().Next(1000, 9999).ToString() + "*";
+                string claveHash = EncriptarSHA256(nuevaClave);
+
+                try
+                {
+                    // Buscamos un rol del usuario para la auditoría
+                    int idRol = context.UsuarioRols.FirstOrDefault(ur => ur.IdUsuario == usuario.IdUsuario)?.IdRol ?? 3;
+
+                    // El propio usuario se audita a sí mismo en esta operación
+                    context.Database.ExecuteSqlRaw(
+                        "CALL sp_cambiar_password({0}, {1}, {2}, {3}, {4})",
+                        usuario.IdUsuario, idRol, usuario.IdUsuario, claveHash, GetLocalIPAddress()
+                    );
+
+                    bool enviado = EnviarCorreoRecuperacion(correoPlano, usuario.Nombre, nuevaClave);
+                    if (enviado)
+                        return (true, "Se ha enviado una contraseña temporal a su correo electrónico.");
+                    else
+                        return (false, "Se cambió la clave, pero hubo un problema al enviar el correo.");
+                }
+                catch (Exception ex)
+                {
+                    return (false, "Error al actualizar la contraseña: " + ex.Message);
+                }
+            }
+        }
+
+        private bool EnviarCorreoRecuperacion(string destinatario, string nombre, string claveTemp)
+        {
+            try
+            {
+                string miCorreo = "cristianpilco05@gmail.com";
+                string miClaveApp = "tbtc qbfn kbvd jmqq";
+
+                System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
+                mail.From = new System.Net.Mail.MailAddress(miCorreo, "Sistema Académico UNIANDES");
+                mail.To.Add(destinatario);
+                mail.Subject = "Recuperación de Contraseña - Sistema Académico";
+                mail.Body = $"Hola {nombre},<br><br>Ha solicitado restablecer su contraseña.<br><br>Su nueva contraseña temporal es: <b>{claveTemp}</b><br><br>Por motivos de seguridad, inicie sesión inmediatamente y diríjase a 'Mi Perfil' para crear una nueva contraseña propia.";
+                mail.IsBodyHtml = true;
+
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
+                smtp.Credentials = new NetworkCredential(miCorreo, miClaveApp);
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         private string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
