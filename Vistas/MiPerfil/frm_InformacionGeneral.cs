@@ -47,5 +47,18 @@
                 principal.AbrirFormularioHijo(new frm_CambiarClave());
             }
         }
+
+        private void btnEditarInfo_Click(object sender, EventArgs e)
+        {
+            if (this.MdiParent is frm_Principal principal)
+            {
+                principal.AbrirFormularioHijo(new frm_EditarInfoPerfil());
+            }
+        }
+
+        private void btnCerrarPerfil_Click(object sender, EventArgs e)
+        {
+            this.Close(); // Esto solo cerrará el formulario hijo y dejará el panel limpio
+        }
     }
 }

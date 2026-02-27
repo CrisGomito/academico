@@ -21,9 +21,6 @@
             menuStrip1 = new MenuStrip();
             archivoToolStripMenuItem = new ToolStripMenuItem();
             miInformaciónToolStripMenuItem = new ToolStripMenuItem();
-            actualizarCorreoElectrónicoToolStripMenuItem = new ToolStripMenuItem();
-            cambiarContraseñaToolStripMenuItem = new ToolStripMenuItem();
-            miPerfilToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesiónToolStripMenuItem = new ToolStripMenuItem();
             administracionToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem = new ToolStripMenuItem();
@@ -65,7 +62,7 @@
             // 
             // archivoToolStripMenuItem
             // 
-            archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { miInformaciónToolStripMenuItem, actualizarCorreoElectrónicoToolStripMenuItem, cambiarContraseñaToolStripMenuItem, miPerfilToolStripMenuItem, cerrarSesiónToolStripMenuItem });
+            archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { miInformaciónToolStripMenuItem, cerrarSesiónToolStripMenuItem });
             archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
             archivoToolStripMenuItem.Size = new Size(75, 24);
             archivoToolStripMenuItem.Text = "&Mi Perfil";
@@ -73,34 +70,14 @@
             // miInformaciónToolStripMenuItem
             // 
             miInformaciónToolStripMenuItem.Name = "miInformaciónToolStripMenuItem";
-            miInformaciónToolStripMenuItem.Size = new Size(261, 24);
+            miInformaciónToolStripMenuItem.Size = new Size(213, 24);
             miInformaciónToolStripMenuItem.Text = "Información General";
             miInformaciónToolStripMenuItem.Click += miInformaciónToolStripMenuItem_Click;
-            // 
-            // actualizarCorreoElectrónicoToolStripMenuItem
-            // 
-            actualizarCorreoElectrónicoToolStripMenuItem.Name = "actualizarCorreoElectrónicoToolStripMenuItem";
-            actualizarCorreoElectrónicoToolStripMenuItem.Size = new Size(261, 24);
-            actualizarCorreoElectrónicoToolStripMenuItem.Text = "Cambiar Correo Electrónico";
-            actualizarCorreoElectrónicoToolStripMenuItem.Click += actualizarCorreoElectrónicoToolStripMenuItem_Click;
-            // 
-            // cambiarContraseñaToolStripMenuItem
-            // 
-            cambiarContraseñaToolStripMenuItem.Name = "cambiarContraseñaToolStripMenuItem";
-            cambiarContraseñaToolStripMenuItem.Size = new Size(261, 24);
-            cambiarContraseñaToolStripMenuItem.Text = "Cambiar Contraseña";
-            cambiarContraseñaToolStripMenuItem.Click += cambiarContraseñaToolStripMenuItem_Click;
-            // 
-            // miPerfilToolStripMenuItem
-            // 
-            miPerfilToolStripMenuItem.Name = "miPerfilToolStripMenuItem";
-            miPerfilToolStripMenuItem.Size = new Size(261, 24);
-            miPerfilToolStripMenuItem.Text = "&Mi Perfil";
             // 
             // cerrarSesiónToolStripMenuItem
             // 
             cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(261, 24);
+            cerrarSesiónToolStripMenuItem.Size = new Size(213, 24);
             cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
@@ -351,10 +328,7 @@
         private System.Windows.Forms.Label lbl_Rol;
         private System.Windows.Forms.Label lbl_Reloj;
         private System.Windows.Forms.Timer timer1;
-        private ToolStripMenuItem actualizarCorreoElectrónicoToolStripMenuItem;
-        private ToolStripMenuItem cambiarContraseñaToolStripMenuItem;
         private ToolStripMenuItem cerrarSesiónToolStripMenuItem;
         private ToolStripMenuItem miInformaciónToolStripMenuItem;
-        private ToolStripMenuItem miPerfilToolStripMenuItem;
     }
 }

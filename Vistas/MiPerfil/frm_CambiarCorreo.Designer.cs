@@ -15,99 +15,131 @@ namespace DataBase_First.Views.Perfil
 
         private void InitializeComponent()
         {
-            label1 = new System.Windows.Forms.Label();
-            lblCorreoActual = new System.Windows.Forms.Label(); // NUEVO
-            label2 = new System.Windows.Forms.Label();
-            txtNuevoCorreo = new System.Windows.Forms.TextBox();
-            btnEnviarCodigo = new System.Windows.Forms.Button();
-            pnlValidacion = new System.Windows.Forms.Panel();
-            label3 = new System.Windows.Forms.Label();
-            txtCodigo = new System.Windows.Forms.TextBox();
-            btnConfirmar = new System.Windows.Forms.Button();
-            btnCerrar = new System.Windows.Forms.Button();
+            label1 = new Label();
+            lblCorreoActual = new Label();
+            label2 = new Label();
+            txtNuevoCorreo = new TextBox();
+            btnEnviarCodigo = new Button();
+            pnlValidacion = new Panel();
+            label3 = new Label();
+            txtCodigo = new TextBox();
+            btnConfirmar = new Button();
+            btnCerrar = new Button();
             pnlValidacion.SuspendLayout();
             SuspendLayout();
-
+            // 
+            // label1
+            // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            label1.ForeColor = System.Drawing.Color.FromArgb(41, 128, 185);
-            label1.Location = new System.Drawing.Point(50, 30);
+            label1.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(41, 128, 185);
+            label1.Location = new Point(50, 30);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(359, 30);
+            label1.Size = new Size(361, 30);
+            label1.TabIndex = 6;
             label1.Text = "CAMBIAR CORREO ELECTRÓNICO";
-
-            // NUEVO LABEL PARA CORREO ACTUAL
+            // 
+            // lblCorreoActual
+            // 
             lblCorreoActual.AutoSize = true;
-            lblCorreoActual.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Italic);
-            lblCorreoActual.ForeColor = System.Drawing.Color.DimGray;
-            lblCorreoActual.Location = new System.Drawing.Point(50, 70);
+            lblCorreoActual.Font = new System.Drawing.Font("Segoe UI", 11F, FontStyle.Italic);
+            lblCorreoActual.ForeColor = Color.DimGray;
+            lblCorreoActual.Location = new Point(50, 70);
             lblCorreoActual.Name = "lblCorreoActual";
-            lblCorreoActual.Size = new System.Drawing.Size(200, 20);
+            lblCorreoActual.Size = new Size(175, 20);
+            lblCorreoActual.TabIndex = 5;
             lblCorreoActual.Text = "Correo actual: Cargando...";
-
+            // 
+            // label2
+            // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(50, 110);
+            label2.Location = new Point(50, 110);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(232, 25);
+            label2.Size = new Size(229, 25);
+            label2.TabIndex = 4;
             label2.Text = "Nuevo Correo Electrónico";
-
-            txtNuevoCorreo.Location = new System.Drawing.Point(50, 140);
+            // 
+            // txtNuevoCorreo
+            // 
+            txtNuevoCorreo.Location = new Point(50, 140);
             txtNuevoCorreo.Name = "txtNuevoCorreo";
-            txtNuevoCorreo.Size = new System.Drawing.Size(350, 32);
-
-            btnEnviarCodigo.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
-            btnEnviarCodigo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnEnviarCodigo.ForeColor = System.Drawing.Color.White;
-            btnEnviarCodigo.Location = new System.Drawing.Point(50, 185);
+            txtNuevoCorreo.Size = new Size(350, 32);
+            txtNuevoCorreo.TabIndex = 3;
+            txtNuevoCorreo.Leave += txtNuevoCorreo_Leave_1;
+            // 
+            // btnEnviarCodigo
+            // 
+            btnEnviarCodigo.BackColor = Color.FromArgb(52, 152, 219);
+            btnEnviarCodigo.FlatStyle = FlatStyle.Flat;
+            btnEnviarCodigo.ForeColor = Color.White;
+            btnEnviarCodigo.Location = new Point(50, 185);
             btnEnviarCodigo.Name = "btnEnviarCodigo";
-            btnEnviarCodigo.Size = new System.Drawing.Size(200, 40);
+            btnEnviarCodigo.Size = new Size(200, 40);
+            btnEnviarCodigo.TabIndex = 2;
             btnEnviarCodigo.Text = "Enviar Código";
             btnEnviarCodigo.UseVisualStyleBackColor = false;
             btnEnviarCodigo.Click += btnEnviarCodigo_Click;
-
+            // 
+            // pnlValidacion
+            // 
             pnlValidacion.Controls.Add(label3);
             pnlValidacion.Controls.Add(txtCodigo);
             pnlValidacion.Controls.Add(btnConfirmar);
-            pnlValidacion.Location = new System.Drawing.Point(50, 240);
+            pnlValidacion.Location = new Point(50, 240);
             pnlValidacion.Name = "pnlValidacion";
-            pnlValidacion.Size = new System.Drawing.Size(400, 150);
+            pnlValidacion.Size = new Size(400, 150);
+            pnlValidacion.TabIndex = 1;
             pnlValidacion.Visible = false;
-
+            // 
+            // label3
+            // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(0, 10);
+            label3.Location = new Point(0, 10);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(342, 25);
+            label3.Size = new Size(332, 25);
+            label3.TabIndex = 0;
             label3.Text = "Ingrese el código enviado a su correo:";
-
-            txtCodigo.Location = new System.Drawing.Point(0, 45);
+            // 
+            // txtCodigo
+            // 
+            txtCodigo.Location = new Point(0, 45);
             txtCodigo.MaxLength = 6;
             txtCodigo.Name = "txtCodigo";
-            txtCodigo.Size = new System.Drawing.Size(200, 32);
-            txtCodigo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-
-            btnConfirmar.BackColor = System.Drawing.Color.FromArgb(39, 174, 96);
-            btnConfirmar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnConfirmar.ForeColor = System.Drawing.Color.White;
-            btnConfirmar.Location = new System.Drawing.Point(0, 95);
+            txtCodigo.Size = new Size(200, 32);
+            txtCodigo.TabIndex = 1;
+            txtCodigo.TextAlign = HorizontalAlignment.Center;
+            // 
+            // btnConfirmar
+            // 
+            btnConfirmar.BackColor = Color.FromArgb(39, 174, 96);
+            btnConfirmar.FlatStyle = FlatStyle.Flat;
+            btnConfirmar.ForeColor = Color.White;
+            btnConfirmar.Location = new Point(0, 95);
             btnConfirmar.Name = "btnConfirmar";
-            btnConfirmar.Size = new System.Drawing.Size(200, 40);
+            btnConfirmar.Size = new Size(200, 40);
+            btnConfirmar.TabIndex = 2;
             btnConfirmar.Text = "Confirmar Cambio";
             btnConfirmar.UseVisualStyleBackColor = false;
             btnConfirmar.Click += btnConfirmar_Click;
-
-            btnCerrar.BackColor = System.Drawing.Color.Silver;
-            btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCerrar.Location = new System.Drawing.Point(260, 185);
+            // 
+            // btnCerrar
+            // 
+            btnCerrar.BackColor = Color.Silver;
+            btnCerrar.FlatStyle = FlatStyle.Flat;
+            btnCerrar.Location = new Point(260, 185);
             btnCerrar.Name = "btnCerrar";
-            btnCerrar.Size = new System.Drawing.Size(140, 40);
+            btnCerrar.Size = new Size(140, 40);
+            btnCerrar.TabIndex = 0;
             btnCerrar.Text = "Cancelar";
             btnCerrar.UseVisualStyleBackColor = false;
             btnCerrar.Click += btnCerrar_Click;
-
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.Color.White;
-            ClientSize = new System.Drawing.Size(800, 500);
+            // 
+            // frm_CambiarCorreo
+            // 
+            AutoScaleDimensions = new SizeF(11F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(800, 500);
             Controls.Add(btnCerrar);
             Controls.Add(pnlValidacion);
             Controls.Add(btnEnviarCodigo);
@@ -116,10 +148,10 @@ namespace DataBase_First.Views.Perfil
             Controls.Add(lblCorreoActual);
             Controls.Add(label1);
             Font = new System.Drawing.Font("Segoe UI", 14F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "frm_CambiarCorreo";
             Text = "Cambiar Correo";
-            Load += frm_CambiarCorreo_Load; // NUEVO EVENTO
+            Load += frm_CambiarCorreo_Load;
             pnlValidacion.ResumeLayout(false);
             pnlValidacion.PerformLayout();
             ResumeLayout(false);

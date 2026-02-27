@@ -13,6 +13,25 @@ namespace Academico.Controladores
 {
     public class PerfilController
     {
+        public bool ActualizarNombres(string nombre, string apellido)
+        {
+            try
+            {
+                using (var _context = new SistemaAcademicoContext())
+                {
+                    // Usa el SP que ya tienes, enviando el mismo estado y el mismo rol actual para no alterarlos
+                    _context.Database.ExecuteSqlRaw(
+                        "CALL sp_actualizar_usuario({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+                        Program.usuarioActualId, Program.rolId, Program.usuarioActualId, nombre, apellido, 1, Program.rolId, GetLocalIPAddress()
+                    );
+
+                    // Actualizamos la variable global para que se refleje arriba
+                    Program.nombreUsuario = $"{nombre}";
+                    return true;
+                }
+            }
+            catch { return false; }
+        }
         // --- OBTENER INFORMACIÓN DEL USUARIO ACTUAL ---
         public VistaUsuariosAdmin ObtenerInformacionUsuarioActual()
         {
@@ -31,9 +50,8 @@ namespace Academico.Controladores
             string nombre = partes[0];
             string dominio = partes[1];
 
-            if (nombre.Length <= 2) return correo; // Muy corto para censurar
+            if (nombre.Length <= 2) return correo;
 
-            // Deja la primera y última letra del nombre, y llena de asteriscos el medio
             string censurado = nombre.Substring(0, 1) + new string('*', nombre.Length - 2) + nombre.Substring(nombre.Length - 1);
             return $"{censurado}@{dominio}";
         }
@@ -113,16 +131,15 @@ namespace Academico.Controladores
                     return (false, "El código es inválido o ha expirado.");
                 }
 
-                // Actualizamos el correo a través de SQL Raw para que el Trigger lo encripte automáticamente
                 _context.Database.ExecuteSqlRaw(
                     "UPDATE usuario SET correo = {0}, codigo_2fa = NULL, expiracion_2fa = NULL WHERE id_usuario = {1}",
                     nuevoCorreo, Program.usuarioActualId
                 );
 
-                // Auditoría manual
+                // CORRECCIÓN: ESCAPAR LAS LLAVES DEL JSON CON {{ }}
                 _context.Database.ExecuteSqlRaw(
                     "INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user) " +
-                    "VALUES({0}, {1}, 'UPDATE', 'usuario', {2}, '{\"correo_modificado\":\"TRUE\"}', {3})",
+                    "VALUES({0}, {1}, 'UPDATE', 'usuario', {2}, '{{ \"correo_modificado\":\"TRUE\" }}', {3})",
                     Program.usuarioActualId, Program.rolId, Program.usuarioActualId, GetLocalIPAddress()
                 );
 

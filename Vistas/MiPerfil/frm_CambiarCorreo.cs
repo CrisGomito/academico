@@ -47,7 +47,13 @@
                 btnEnviarCodigo.Enabled = true;
             }
         }
-
+        private void VolverAlPerfil()
+        {
+            if (this.MdiParent is DataBase_First.Views.Main.frm_Principal principal)
+            {
+                principal.AbrirFormularioHijo(new frm_InformacionGeneral());
+            }
+        }
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCodigo.Text)) return;
@@ -57,7 +63,7 @@
             if (resultado.exito)
             {
                 MessageBox.Show(resultado.mensaje + "\nDeberá usar este nuevo correo la próxima vez que inicie sesión.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                VolverAlPerfil(); // <-- CAMBIO AQUÍ
             }
             else
             {
@@ -65,6 +71,18 @@
             }
         }
 
-        private void btnCerrar_Click(object sender, EventArgs e) { this.Close(); }
+        private void btnCerrar_Click(object sender, EventArgs e) { VolverAlPerfil(); }
+
+        // Evento Leave para validar formato en tiempo real
+        private void txtNuevoCorreo_Leave_1(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNuevoCorreo.Text)) return;
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(txtNuevoCorreo.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                MessageBox.Show("El correo no tiene el formato correcto.", "Formato Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNuevoCorreo.Focus();
+            }
+        }
     }
 }

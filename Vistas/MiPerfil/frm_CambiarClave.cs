@@ -10,6 +10,13 @@
 
         public frm_CambiarClave() { InitializeComponent(); }
 
+        private void VolverAlPerfil()
+        {
+            if (this.MdiParent is DataBase_First.Views.Main.frm_Principal principal)
+            {
+                principal.AbrirFormularioHijo(new frm_InformacionGeneral());
+            }
+        }
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtClaveActual.Text) || string.IsNullOrWhiteSpace(txtNuevaClave.Text))
@@ -39,7 +46,7 @@
             if (_perfil.CambiarContrasenia(txtNuevaClave.Text))
             {
                 MessageBox.Show("Contraseña actualizada con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                VolverAlPerfil(); // <-- CAMBIO AQUÍ
             }
             else
             {
@@ -47,6 +54,6 @@
             }
         }
 
-        private void btnCerrar_Click(object sender, EventArgs e) { this.Close(); }
+        private void btnCerrar_Click(object sender, EventArgs e) { VolverAlPerfil(); }
     }
 }
