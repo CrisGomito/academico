@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-02-2026 a las 21:57:31
+-- Tiempo de generación: 27-02-2026 a las 23:35:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -461,8 +461,16 @@ CREATE TABLE `auditoria_sistema` (
   `registro_id` int(11) DEFAULT NULL,
   `valor_anterior` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`valor_anterior`)),
   `valor_nuevo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`valor_nuevo`)),
-  `fecha` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `fecha` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+PARTITION BY RANGE COLUMNS(`fecha`)
+(
+PARTITION p_historico VALUES LESS THAN ('2025-01-01') ENGINE=InnoDB,
+PARTITION p_2025 VALUES LESS THAN ('2026-01-01') ENGINE=InnoDB,
+PARTITION p_2026 VALUES LESS THAN ('2027-01-01') ENGINE=InnoDB,
+PARTITION p_2027 VALUES LESS THAN ('2028-01-01') ENGINE=InnoDB,
+PARTITION p_futuro VALUES LESS THAN (MAXVALUE) ENGINE=InnoDB
+);
 
 --
 -- Volcado de datos para la tabla `auditoria_sistema`
@@ -956,6 +964,24 @@ INSERT INTO `usuario_rol` (`id_usuario`, `id_rol`, `fecha_asignacion`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `vista_auditoria_actual`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vista_auditoria_actual` (
+`id_auditoria` int(11)
+,`usuario_nombre` varchar(101)
+,`rol` varchar(30)
+,`accion` enum('INSERT','UPDATE','DELETE','LOGIN')
+,`tabla_afectada` varchar(50)
+,`registro_id` int(11)
+,`valor_anterior` longtext
+,`valor_nuevo` longtext
+,`fecha` datetime
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura Stand-in para la vista `vista_docentes_admin`
 -- (Véase abajo para la vista actual)
 --
@@ -1048,6 +1074,20 @@ CREATE TABLE `vista_login_docentes` (
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `vista_login_seguridad_actual`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vista_login_seguridad_actual` (
+`nombres` varchar(50)
+,`apellidos` varchar(50)
+,`fecha_ingreso` datetime
+,`ip_user` varchar(45)
+,`resultado_login` longtext
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura Stand-in para la vista `vista_promedios_estudiantes`
 -- (Véase abajo para la vista actual)
 --
@@ -1092,6 +1132,15 @@ CREATE TABLE `vista_usuarios_admin` (
 ,`fecha_cambio_password` datetime
 ,`fecha_creacion` datetime
 );
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vista_auditoria_actual`
+--
+DROP TABLE IF EXISTS `vista_auditoria_actual`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_auditoria_actual`  AS SELECT `a`.`id_auditoria` AS `id_auditoria`, concat(`u`.`nombre`,' ',`u`.`apellido`) AS `usuario_nombre`, `r`.`nombre` AS `rol`, `a`.`accion` AS `accion`, `a`.`tabla_afectada` AS `tabla_afectada`, `a`.`registro_id` AS `registro_id`, `a`.`valor_anterior` AS `valor_anterior`, `a`.`valor_nuevo` AS `valor_nuevo`, `a`.`fecha` AS `fecha` FROM ((`auditoria_sistema` `a` left join `usuario` `u` on(`a`.`id_usuario` = `u`.`id_usuario`)) left join `rol` `r` on(`a`.`id_rol` = `r`.`id_rol`)) WHERE `a`.`fecha` >= date_format(curdate(),'%Y-01-01') AND `a`.`fecha` < date_format(curdate() + interval 1 year,'%Y-01-01') ;
 
 -- --------------------------------------------------------
 
@@ -1150,6 +1199,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Estructura para la vista `vista_login_seguridad_actual`
+--
+DROP TABLE IF EXISTS `vista_login_seguridad_actual`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_login_seguridad_actual`  AS SELECT `u`.`nombre` AS `nombres`, `u`.`apellido` AS `apellidos`, `a`.`fecha` AS `fecha_ingreso`, `a`.`ip_user` AS `ip_user`, json_unquote(json_extract(`a`.`valor_nuevo`,'$.resultado')) AS `resultado_login` FROM (`auditoria_sistema` `a` join `usuario` `u` on(`a`.`id_usuario` = `u`.`id_usuario`)) WHERE `a`.`accion` = 'LOGIN' AND `a`.`fecha` >= date_format(curdate(),'%Y-01-01') AND `a`.`fecha` < date_format(curdate() + interval 1 year,'%Y-01-01') ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `vista_promedios_estudiantes`
 --
 DROP TABLE IF EXISTS `vista_promedios_estudiantes`;
@@ -1197,7 +1255,7 @@ ALTER TABLE `asignatura`
 -- Indices de la tabla `auditoria_sistema`
 --
 ALTER TABLE `auditoria_sistema`
-  ADD PRIMARY KEY (`id_auditoria`),
+  ADD PRIMARY KEY (`id_auditoria`,`fecha`),
   ADD KEY `idx_audit_completo` (`tabla_afectada`,`accion`,`fecha`),
   ADD KEY `idx_audit_usuario` (`id_usuario`,`fecha`),
   ADD KEY `idx_audit_fecha` (`fecha`);
