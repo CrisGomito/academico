@@ -82,21 +82,41 @@
         {
             string correoNuevo = txtCorreo.Text.Trim();
 
+            // 1. Validar que no esté vacío
             if (string.IsNullOrWhiteSpace(correoNuevo))
             {
                 MessageBox.Show("El correo no puede estar vacío.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            // 2. Validar formato general
             if (!Regex.IsMatch(correoNuevo, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             {
                 MessageBox.Show("El correo no tiene un formato válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (correoNuevo.EndsWith("@gmail.co") || correoNuevo.EndsWith("@hotmail.co") || correoNuevo.EndsWith("@outlook.co") || correoNuevo.EndsWith("@yahoo.co"))
+            // 3. VALIDACIÓN ESTRICTA DE DOMINIOS CONOCIDOS
+            string dominio = correoNuevo.Split('@')[1].ToLower();
+
+            if (dominio.StartsWith("gmail.") && dominio != "gmail.com")
             {
-                MessageBox.Show("Parece que olvidó la letra 'm' al final del dominio (.com).\nPor favor, revise su correo e intente nuevamente.", "Posible error tipográfico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("El dominio de Gmail debe ser exactamente '@gmail.com'.\nRevise que no haya letras extra o faltantes.", "Dominio Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (dominio.StartsWith("hotmail.") && dominio != "hotmail.com" && dominio != "hotmail.es")
+            {
+                MessageBox.Show("El dominio de Hotmail debe ser '@hotmail.com' o '@hotmail.es'.\nRevise su escritura.", "Dominio Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (dominio.StartsWith("outlook.") && dominio != "outlook.com" && dominio != "outlook.es")
+            {
+                MessageBox.Show("El dominio de Outlook debe ser '@outlook.com' o '@outlook.es'.\nRevise su escritura.", "Dominio Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (dominio.StartsWith("yahoo.") && dominio != "yahoo.com" && dominio != "yahoo.es")
+            {
+                MessageBox.Show("El dominio de Yahoo debe ser '@yahoo.com' o '@yahoo.es'.\nRevise su escritura.", "Dominio Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
