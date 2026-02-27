@@ -100,7 +100,8 @@ namespace Academico.Controladores
                     listaSimulacion.Add(new DetalleSimulacionDTO
                     {
                         IdEvaluacion = eval.IdEvaluacion,
-                        EvaluacionInfo = $"{eval.IdTipoEvaluacionNavigation.Nombre} - {eval.Descripcion}",
+
+                        EvaluacionInfo = eval.Descripcion,
                         PesoPorcentaje = eval.IdTipoEvaluacionNavigation.Peso,
                         NotaReal = notaReal,
                         // Si hay nota real, la simulada inicia con ese valor, si no, inicia en 0

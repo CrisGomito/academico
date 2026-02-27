@@ -116,7 +116,8 @@ if (_idDocenteActual == 0)
                 var source = evaluaciones.Select(ev => new
                 {
                     ev.IdEvaluacion,
-                    Display = $"{ev.IdTipoEvaluacionNavigation.Nombre} - {ev.Descripcion}"
+
+                    Display = ev.Descripcion
                 }).ToList();
 
                 cmbEvaluacion.DataSource = source;
