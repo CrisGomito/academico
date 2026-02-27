@@ -2,21 +2,21 @@
 {
     using global::Academico;
     using global::Academico.Controladores;
-    // IMPORTANTE: Asegúrate de instalar el paquete NuGet "LiveCharts.WinForms"
     using LiveCharts;
-    using LiveCharts.WinForms;
-    using LiveCharts.Wpf;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
+    // Quitamos los using genéricos de WinForms y Wpf para evitar la ambigüedad
 
     public partial class frm_DashboardPrediccion : Form
     {
         private readonly DashboardController _dashboardController = new DashboardController();
         private int _idDocenteActual = 0;
-        private PieChart _graficoPastel;
+
+        // DECLARAMOS EXPLÍCITAMENTE EL GRÁFICO DE WINFORMS
+        private LiveCharts.WinForms.PieChart _graficoPastel;
 
         public frm_DashboardPrediccion()
         {
@@ -26,8 +26,8 @@
 
         private void InicializarGrafico()
         {
-            // Creamos el gráfico de LiveCharts en código para que el diseñador no colapse
-            _graficoPastel = new PieChart
+            // Instanciamos explícitamente el PieChart de WinForms
+            _graficoPastel = new LiveCharts.WinForms.PieChart
             {
                 Dock = DockStyle.Fill,
                 LegendLocation = LegendLocation.Bottom,
@@ -72,6 +72,7 @@
 
         private void cmbPeriodo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Validación de casteo (igual que hicimos en calificaciones)
             if (cmbPeriodo.SelectedIndex != -1 && cmbPeriodo.SelectedValue is int idPeriodo)
             {
                 var asignaturas = _dashboardController.ObtenerAsignaturas(_idDocenteActual, idPeriodo);
@@ -133,7 +134,6 @@
             }
         }
 
-        // PINTAR LAS FILAS EN RIESGO DE COLOR ROJO O NARANJA
         private void dgvPrediccion_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dgvPrediccion.Columns[e.ColumnIndex].Name == "Prediccion" && e.Value != null)
@@ -141,12 +141,12 @@
                 string valor = e.Value.ToString();
                 if (valor.Contains("REPROBADO"))
                 {
-                    dgvPrediccion.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(250, 219, 216); // Rojo suave
+                    dgvPrediccion.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(250, 219, 216);
                     dgvPrediccion.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.DarkRed;
                 }
                 else if (valor.Contains("RIESGO"))
                 {
-                    dgvPrediccion.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(253, 235, 208); // Naranja suave
+                    dgvPrediccion.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(253, 235, 208);
                     dgvPrediccion.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.DarkOrange;
                 }
             }
@@ -154,16 +154,17 @@
 
         private void DibujarGrafico(int aprobados, int riesgo)
         {
+            // Usamos explícitamente PieSeries de Wpf para las porciones del gráfico
             _graficoPastel.Series = new SeriesCollection
             {
-                new PieSeries
+                new LiveCharts.Wpf.PieSeries
                 {
                     Title = "Buen Rendimiento",
                     Values = new ChartValues<int> { aprobados },
                     DataLabels = true,
                     Fill = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(39, 174, 96))
                 },
-                new PieSeries
+                new LiveCharts.Wpf.PieSeries
                 {
                     Title = "En Riesgo / Reprobados",
                     Values = new ChartValues<int> { riesgo },
@@ -179,7 +180,11 @@
             lblTotalAlumnos.Text = "0";
             lblAprobados.Text = "0";
             lblRiesgo.Text = "0";
-            _graficoPastel.Series.Clear();
+
+            if (_graficoPastel.Series != null)
+            {
+                _graficoPastel.Series.Clear();
+            }
         }
 
         private void btnCerrar_Click(object sender, EventArgs e)
