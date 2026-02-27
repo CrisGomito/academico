@@ -146,8 +146,8 @@ namespace Academico.Controladores
         {
             try
             {
-                string miCorreo = "tu_correo_proyecto@gmail.com";
-                string miClaveApp = "aqui_va_tu_clave_de_aplicacion_gmail";
+                string miCorreo = "cristianpilco05@gmail.com";
+                string miClaveApp = "tbtc qbfn kbvd jmqq";
 
                 MailMessage mail = new MailMessage();
                 mail.From = new MailAddress(miCorreo, "Sistema Académico UNIANDES");
