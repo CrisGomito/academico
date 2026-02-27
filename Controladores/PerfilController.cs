@@ -94,7 +94,7 @@ namespace Academico.Controladores
                 using (SHA256 sha256 = SHA256.Create()) { hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(hashInput)); }
 
                 if (_context.Usuarios.Any(u => u.CorreoHash == hashBytes))
-                    return (false, "El correo ingresado ya está asociado a otra cuenta en el sistema.");
+                    return (false, "El correo ingresado ya está asociado a la cuenta en el sistema.");
 
                 // Generamos código y lo guardamos
                 string codigo = new Random().Next(100000, 999999).ToString();
