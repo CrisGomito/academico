@@ -16,6 +16,7 @@ namespace DataBase_First.Views.Perfil
         private void InitializeComponent()
         {
             label1 = new System.Windows.Forms.Label();
+            lblCorreoActual = new System.Windows.Forms.Label(); // NUEVO
             label2 = new System.Windows.Forms.Label();
             txtNuevoCorreo = new System.Windows.Forms.TextBox();
             btnEnviarCodigo = new System.Windows.Forms.Button();
@@ -35,20 +36,29 @@ namespace DataBase_First.Views.Perfil
             label1.Size = new System.Drawing.Size(359, 30);
             label1.Text = "CAMBIAR CORREO ELECTRÓNICO";
 
+            // NUEVO LABEL PARA CORREO ACTUAL
+            lblCorreoActual.AutoSize = true;
+            lblCorreoActual.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Italic);
+            lblCorreoActual.ForeColor = System.Drawing.Color.DimGray;
+            lblCorreoActual.Location = new System.Drawing.Point(50, 70);
+            lblCorreoActual.Name = "lblCorreoActual";
+            lblCorreoActual.Size = new System.Drawing.Size(200, 20);
+            lblCorreoActual.Text = "Correo actual: Cargando...";
+
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(50, 90);
+            label2.Location = new System.Drawing.Point(50, 110);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(232, 25);
             label2.Text = "Nuevo Correo Electrónico";
 
-            txtNuevoCorreo.Location = new System.Drawing.Point(50, 120);
+            txtNuevoCorreo.Location = new System.Drawing.Point(50, 140);
             txtNuevoCorreo.Name = "txtNuevoCorreo";
             txtNuevoCorreo.Size = new System.Drawing.Size(350, 32);
 
             btnEnviarCodigo.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
             btnEnviarCodigo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             btnEnviarCodigo.ForeColor = System.Drawing.Color.White;
-            btnEnviarCodigo.Location = new System.Drawing.Point(50, 165);
+            btnEnviarCodigo.Location = new System.Drawing.Point(50, 185);
             btnEnviarCodigo.Name = "btnEnviarCodigo";
             btnEnviarCodigo.Size = new System.Drawing.Size(200, 40);
             btnEnviarCodigo.Text = "Enviar Código";
@@ -58,7 +68,7 @@ namespace DataBase_First.Views.Perfil
             pnlValidacion.Controls.Add(label3);
             pnlValidacion.Controls.Add(txtCodigo);
             pnlValidacion.Controls.Add(btnConfirmar);
-            pnlValidacion.Location = new System.Drawing.Point(50, 230);
+            pnlValidacion.Location = new System.Drawing.Point(50, 240);
             pnlValidacion.Name = "pnlValidacion";
             pnlValidacion.Size = new System.Drawing.Size(400, 150);
             pnlValidacion.Visible = false;
@@ -87,7 +97,7 @@ namespace DataBase_First.Views.Perfil
 
             btnCerrar.BackColor = System.Drawing.Color.Silver;
             btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCerrar.Location = new System.Drawing.Point(260, 165);
+            btnCerrar.Location = new System.Drawing.Point(260, 185);
             btnCerrar.Name = "btnCerrar";
             btnCerrar.Size = new System.Drawing.Size(140, 40);
             btnCerrar.Text = "Cancelar";
@@ -103,17 +113,20 @@ namespace DataBase_First.Views.Perfil
             Controls.Add(btnEnviarCodigo);
             Controls.Add(txtNuevoCorreo);
             Controls.Add(label2);
+            Controls.Add(lblCorreoActual);
             Controls.Add(label1);
             Font = new System.Drawing.Font("Segoe UI", 14F);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Name = "frm_CambiarCorreo";
             Text = "Cambiar Correo";
+            Load += frm_CambiarCorreo_Load; // NUEVO EVENTO
             pnlValidacion.ResumeLayout(false);
             pnlValidacion.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
+        private System.Windows.Forms.Label lblCorreoActual;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtNuevoCorreo;

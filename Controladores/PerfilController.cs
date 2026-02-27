@@ -13,6 +13,30 @@ namespace Academico.Controladores
 {
     public class PerfilController
     {
+        // --- OBTENER INFORMACIÓN DEL USUARIO ACTUAL ---
+        public VistaUsuariosAdmin ObtenerInformacionUsuarioActual()
+        {
+            using (var _context = new SistemaAcademicoContext())
+            {
+                return _context.VistaUsuariosAdmins.FirstOrDefault(u => u.IdUsuario == Program.usuarioActualId);
+            }
+        }
+
+        // --- CENSURAR CORREO POR SEGURIDAD ---
+        public string ObtenerCorreoCensurado(string correo)
+        {
+            if (string.IsNullOrEmpty(correo) || !correo.Contains("@")) return "";
+
+            var partes = correo.Split('@');
+            string nombre = partes[0];
+            string dominio = partes[1];
+
+            if (nombre.Length <= 2) return correo; // Muy corto para censurar
+
+            // Deja la primera y última letra del nombre, y llena de asteriscos el medio
+            string censurado = nombre.Substring(0, 1) + new string('*', nombre.Length - 2) + nombre.Substring(nombre.Length - 1);
+            return $"{censurado}@{dominio}";
+        }
         // --- 1. CAMBIO DE CONTRASEÑA ---
         public bool VerificarClaveActual(string clavePlana)
         {

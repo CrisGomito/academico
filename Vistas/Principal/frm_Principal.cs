@@ -109,7 +109,7 @@ namespace DataBase_First.Views.Main
 
         // --- MÉTODO PARA ABRIR FORMULARIOS HIJOS (MDI) ---
         // Úsalo en los eventos Click de tus menús para que no se abran ventanas sueltas.
-        private void AbrirFormularioHijo(Form formularioHijo)
+        public void AbrirFormularioHijo(Form formularioHijo)
         {
             // Cerramos cualquier otro formulario hijo abierto para no amontonar
             foreach (Form form in this.MdiChildren)
@@ -208,6 +208,11 @@ namespace DataBase_First.Views.Main
                 // Reiniciamos la aplicación completa. Esto destruye el MDI y levanta el Login limpio.
                 Application.Restart();
             }
+        }
+
+        private void miInformaciónToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new frm_InformacionGeneral());
         }
     }
 }

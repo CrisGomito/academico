@@ -20,8 +20,10 @@
             components = new System.ComponentModel.Container();
             menuStrip1 = new MenuStrip();
             archivoToolStripMenuItem = new ToolStripMenuItem();
+            miInformaciónToolStripMenuItem = new ToolStripMenuItem();
             actualizarCorreoElectrónicoToolStripMenuItem = new ToolStripMenuItem();
             cambiarContraseñaToolStripMenuItem = new ToolStripMenuItem();
+            miPerfilToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesiónToolStripMenuItem = new ToolStripMenuItem();
             administracionToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem = new ToolStripMenuItem();
@@ -47,8 +49,6 @@
             lbl_Nombre = new Label();
             label1 = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
-            miInformaciónToolStripMenuItem = new ToolStripMenuItem();
-            miPerfilToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             pnlHeader.SuspendLayout();
             SuspendLayout();
@@ -70,6 +70,13 @@
             archivoToolStripMenuItem.Size = new Size(75, 24);
             archivoToolStripMenuItem.Text = "&Mi Perfil";
             // 
+            // miInformaciónToolStripMenuItem
+            // 
+            miInformaciónToolStripMenuItem.Name = "miInformaciónToolStripMenuItem";
+            miInformaciónToolStripMenuItem.Size = new Size(261, 24);
+            miInformaciónToolStripMenuItem.Text = "Información General";
+            miInformaciónToolStripMenuItem.Click += miInformaciónToolStripMenuItem_Click;
+            // 
             // actualizarCorreoElectrónicoToolStripMenuItem
             // 
             actualizarCorreoElectrónicoToolStripMenuItem.Name = "actualizarCorreoElectrónicoToolStripMenuItem";
@@ -83,6 +90,12 @@
             cambiarContraseñaToolStripMenuItem.Size = new Size(261, 24);
             cambiarContraseñaToolStripMenuItem.Text = "Cambiar Contraseña";
             cambiarContraseñaToolStripMenuItem.Click += cambiarContraseñaToolStripMenuItem_Click;
+            // 
+            // miPerfilToolStripMenuItem
+            // 
+            miPerfilToolStripMenuItem.Name = "miPerfilToolStripMenuItem";
+            miPerfilToolStripMenuItem.Size = new Size(261, 24);
+            miPerfilToolStripMenuItem.Text = "&Mi Perfil";
             // 
             // cerrarSesiónToolStripMenuItem
             // 
@@ -279,18 +292,6 @@
             // 
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
-            // 
-            // miInformaciónToolStripMenuItem
-            // 
-            miInformaciónToolStripMenuItem.Name = "miInformaciónToolStripMenuItem";
-            miInformaciónToolStripMenuItem.Size = new Size(261, 24);
-            miInformaciónToolStripMenuItem.Text = "Información General";
-            // 
-            // miPerfilToolStripMenuItem
-            // 
-            miPerfilToolStripMenuItem.Name = "miPerfilToolStripMenuItem";
-            miPerfilToolStripMenuItem.Size = new Size(261, 24);
-            miPerfilToolStripMenuItem.Text = "&Mi Perfil";
             // 
             // frm_Principal
             // 

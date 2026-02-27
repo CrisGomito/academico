@@ -11,6 +11,14 @@
 
         public frm_CambiarCorreo() { InitializeComponent(); }
 
+        private void frm_CambiarCorreo_Load(object sender, EventArgs e)
+        {
+            var infoUsuario = _perfil.ObtenerInformacionUsuarioActual();
+            if (infoUsuario != null)
+            {
+                lblCorreoActual.Text = $"Correo vinculado actual: {_perfil.ObtenerCorreoCensurado(infoUsuario.CorreoPlano)}";
+            }
+        }
         private void btnEnviarCodigo_Click(object sender, EventArgs e)
         {
             string correo = txtNuevoCorreo.Text.Trim();
