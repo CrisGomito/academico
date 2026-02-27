@@ -26,7 +26,7 @@
     <Folder Include="Utilidades\" />
     <Folder Include="Vistas\MiPerfil\" />
     <Folder Include="Vistas\Reportes\" />
-    <Folder Include="Vistas\SimulacionPrediccion\" />
+    <Folder Include="Vistas\SimulacionPrediccion\DashboardRendimiento\" />
   </ItemGroup>
 
 </Project>

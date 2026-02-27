@@ -7,6 +7,7 @@ using DataBase_First.Views.Administracion.Auditoria;
 using DataBase_First.Views.Administracion.Docentes;
 using DataBase_First.Views.Administracion.Estudiantes;
 using DataBase_First.Views.Calificaciones;
+using DataBase_First.Views.Simulacion;
 using DataBase_First.Views.Users;
 using System;
 using System.Windows.Forms;
@@ -167,7 +168,7 @@ namespace DataBase_First.Views.Main
 
         private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            AbrirFormularioHijo(new frm_SimuladorNotas());
         }
 
         private void dashboardPrediccionToolStripMenuItem_Click(object sender, EventArgs e)
