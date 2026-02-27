@@ -20,6 +20,9 @@
             components = new System.ComponentModel.Container();
             menuStrip1 = new MenuStrip();
             archivoToolStripMenuItem = new ToolStripMenuItem();
+            actualizarCorreoElectrónicoToolStripMenuItem = new ToolStripMenuItem();
+            cambiarContraseñaToolStripMenuItem = new ToolStripMenuItem();
+            cerrarSesiónToolStripMenuItem = new ToolStripMenuItem();
             administracionToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem = new ToolStripMenuItem();
             docentesToolStripMenuItem = new ToolStripMenuItem();
@@ -44,9 +47,6 @@
             lbl_Nombre = new Label();
             label1 = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
-            cambiarContraseñaToolStripMenuItem = new ToolStripMenuItem();
-            actualizarCorreoElectrónicoToolStripMenuItem = new ToolStripMenuItem();
-            cerrarSesiónToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             pnlHeader.SuspendLayout();
             SuspendLayout();
@@ -67,6 +67,27 @@
             archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
             archivoToolStripMenuItem.Size = new Size(75, 24);
             archivoToolStripMenuItem.Text = "&Mi Perfil";
+            // 
+            // actualizarCorreoElectrónicoToolStripMenuItem
+            // 
+            actualizarCorreoElectrónicoToolStripMenuItem.Name = "actualizarCorreoElectrónicoToolStripMenuItem";
+            actualizarCorreoElectrónicoToolStripMenuItem.Size = new Size(271, 24);
+            actualizarCorreoElectrónicoToolStripMenuItem.Text = "Actualizar Correo Electrónico";
+            actualizarCorreoElectrónicoToolStripMenuItem.Click += actualizarCorreoElectrónicoToolStripMenuItem_Click;
+            // 
+            // cambiarContraseñaToolStripMenuItem
+            // 
+            cambiarContraseñaToolStripMenuItem.Name = "cambiarContraseñaToolStripMenuItem";
+            cambiarContraseñaToolStripMenuItem.Size = new Size(271, 24);
+            cambiarContraseñaToolStripMenuItem.Text = "Cambiar Contraseña";
+            cambiarContraseñaToolStripMenuItem.Click += cambiarContraseñaToolStripMenuItem_Click;
+            // 
+            // cerrarSesiónToolStripMenuItem
+            // 
+            cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
+            cerrarSesiónToolStripMenuItem.Size = new Size(271, 24);
+            cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
+            cerrarSesiónToolStripMenuItem.Click += cerrarSesiónToolStripMenuItem_Click;
             // 
             // administracionToolStripMenuItem
             // 
@@ -256,24 +277,6 @@
             // 
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
-            // 
-            // cambiarContraseñaToolStripMenuItem
-            // 
-            cambiarContraseñaToolStripMenuItem.Name = "cambiarContraseñaToolStripMenuItem";
-            cambiarContraseñaToolStripMenuItem.Size = new Size(271, 24);
-            cambiarContraseñaToolStripMenuItem.Text = "Cambiar Contraseña";
-            // 
-            // actualizarCorreoElectrónicoToolStripMenuItem
-            // 
-            actualizarCorreoElectrónicoToolStripMenuItem.Name = "actualizarCorreoElectrónicoToolStripMenuItem";
-            actualizarCorreoElectrónicoToolStripMenuItem.Size = new Size(271, 24);
-            actualizarCorreoElectrónicoToolStripMenuItem.Text = "Actualizar Correo Electrónico";
-            // 
-            // cerrarSesiónToolStripMenuItem
-            // 
-            cerrarSesiónToolStripMenuItem.Name = "cerrarSesiónToolStripMenuItem";
-            cerrarSesiónToolStripMenuItem.Size = new Size(271, 24);
-            cerrarSesiónToolStripMenuItem.Text = "Cerrar Sesión";
             // 
             // frm_Principal
             // 

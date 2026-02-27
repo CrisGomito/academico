@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Utilidades\" />
-    <Folder Include="Vistas\MiPerfil\" />
     <Folder Include="Vistas\Reportes\" />
   </ItemGroup>
 
