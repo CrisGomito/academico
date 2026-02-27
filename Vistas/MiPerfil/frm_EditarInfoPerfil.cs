@@ -11,8 +11,10 @@
         private string _correoOriginal;
         private string _nombreOriginal;
         private string _apellidoOriginal;
-        private bool _correoValidadoEnEsteFormulario = false;
-        private bool _huboCambios = false;
+
+        // ESTADOS LÓGICOS
+        private bool _correoVerificado = false; // ¿Metió el código bien?
+        private bool _enProcesoDeVerificacion = false; // ¿Está esperando el código?
 
         public frm_EditarInfoPerfil()
         {
@@ -36,66 +38,82 @@
 
         private void campos_TextChanged(object sender, EventArgs e)
         {
-            EvaluarCambios();
+            EvaluarEstadoGuardar();
         }
 
         private void txtCorreo_TextChanged(object sender, EventArgs e)
         {
-            EvaluarCambios();
+            if (_enProcesoDeVerificacion) return;
 
-            // Si el correo cambió respecto al original, mostrar botón validar y esconder check
-            if (txtCorreo.Text.Trim() != _correoOriginal)
+            string correoActual = txtCorreo.Text.Trim();
+
+            if (correoActual == _correoOriginal)
             {
-                _correoValidadoEnEsteFormulario = false;
-                lblVerificado.Visible = false;
-                btnValidarCorreo.Visible = true;
-                txtCodigo.Visible = false;
-                btnConfirmarCodigo.Visible = false;
+                RestablecerUI_Correo();
             }
             else
             {
-                btnValidarCorreo.Visible = false;
-                txtCodigo.Visible = false;
-                btnConfirmarCodigo.Visible = false;
+                btnValidarCorreo.Visible = true;
                 lblVerificado.Visible = false;
-                _correoValidadoEnEsteFormulario = true; // El original es válido por defecto
+                _correoVerificado = false;
             }
+
+            EvaluarEstadoGuardar();
         }
 
-        private void txtCorreo_Leave(object sender, EventArgs e)
+        private void EvaluarEstadoGuardar()
         {
-            if (string.IsNullOrWhiteSpace(txtCorreo.Text)) return;
+            bool hayCambiosNombres = (txtNombre.Text.Trim() != _nombreOriginal) || (txtApellido.Text.Trim() != _apellidoOriginal);
+            bool correoCambioYVerificado = (txtCorreo.Text.Trim() != _correoOriginal) && _correoVerificado;
 
-            if (!Regex.IsMatch(txtCorreo.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            // Si el correo está a medio cambiar (no verificado) o en proceso, SE BLOQUEA TODO GUARDADO
+            if ((txtCorreo.Text.Trim() != _correoOriginal && !_correoVerificado) || _enProcesoDeVerificacion)
             {
-                MessageBox.Show("El correo no tiene el formato correcto.", "Formato Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtCorreo.Focus();
+                btnGuardar.Enabled = false;
             }
-        }
-
-        private void EvaluarCambios()
-        {
-            _huboCambios = (txtNombre.Text.Trim() != _nombreOriginal) ||
-                           (txtApellido.Text.Trim() != _apellidoOriginal) ||
-                           (txtCorreo.Text.Trim() != _correoOriginal);
-
-            // Solo permitimos guardar si hubo cambios Y (si cambió el correo, ya lo verificó)
-            btnGuardar.Enabled = _huboCambios && (txtCorreo.Text.Trim() == _correoOriginal || _correoValidadoEnEsteFormulario);
+            else
+            {
+                // Si cambió nombres, o cambió y verificó correo, puede guardar
+                btnGuardar.Enabled = hayCambiosNombres || correoCambioYVerificado;
+            }
         }
 
         private void btnValidarCorreo_Click(object sender, EventArgs e)
         {
+            string correoNuevo = txtCorreo.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(correoNuevo))
+            {
+                MessageBox.Show("El correo no puede estar vacío.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!Regex.IsMatch(correoNuevo, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                MessageBox.Show("El correo no tiene un formato válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             btnValidarCorreo.Text = "Enviando...";
             btnValidarCorreo.Enabled = false;
 
-            var resultado = _perfil.SolicitarCambioCorreo(txtCorreo.Text.Trim());
+            var resultado = _perfil.SolicitarCambioCorreo(correoNuevo);
 
             if (resultado.exito)
             {
-                MessageBox.Show(resultado.mensaje, "Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(resultado.mensaje, "Código Enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                _enProcesoDeVerificacion = true;
+                txtCorreo.Enabled = false; // Se bloquea el campo como pediste
+                btnValidarCorreo.Visible = false;
+
                 txtCodigo.Visible = true;
+                txtCodigo.Clear();
                 btnConfirmarCodigo.Visible = true;
+                btnCancelarValidacion.Visible = true; // La 'X' Roja
+
                 txtCodigo.Focus();
+                EvaluarEstadoGuardar(); // Asegura bloquear el botón guardar
             }
             else
             {
@@ -109,27 +127,51 @@
         {
             if (string.IsNullOrWhiteSpace(txtCodigo.Text)) return;
 
-            // Este método actualiza el correo físicamente en la BD
-            var resultado = _perfil.ConfirmarCambioCorreo(txtCorreo.Text.Trim(), txtCodigo.Text.Trim());
+            // SOLO VERIFICA. EL CORREO NO SE GUARDA HASTA QUE DE CLICK EN "GUARDAR"
+            var resultado = _perfil.ConfirmarCodigoCorreo(txtCodigo.Text.Trim());
 
             if (resultado.exito)
             {
-                _correoValidadoEnEsteFormulario = true;
-                _correoOriginal = txtCorreo.Text.Trim(); // Actualizamos el estado "original"
-
-                btnValidarCorreo.Visible = false;
                 txtCodigo.Visible = false;
                 btnConfirmarCodigo.Visible = false;
+                btnCancelarValidacion.Visible = false;
 
-                lblVerificado.Visible = true;
-                txtCorreo.Enabled = false; // Bloqueamos como pediste
+                lblVerificado.Visible = true; // Check verde
+                _correoVerificado = true;
+                _enProcesoDeVerificacion = false;
+                txtCorreo.Enabled = false; // Sigue bloqueado para que no lo edite y arruine la verificación
 
-                EvaluarCambios(); // Rehabilitar botón Guardar
+                EvaluarEstadoGuardar(); // Habilita el Guardar
             }
             else
             {
                 MessageBox.Show(resultado.mensaje, "Código Incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        // LA 'X' ROJA PARA CANCELAR VERIFICACIÓN
+        private void btnCancelarValidacion_Click(object sender, EventArgs e)
+        {
+            RestablecerUI_Correo();
+            EvaluarEstadoGuardar();
+        }
+
+        private void RestablecerUI_Correo()
+        {
+            _enProcesoDeVerificacion = false;
+            _correoVerificado = false;
+
+            txtCorreo.Text = _correoOriginal;
+            txtCorreo.Enabled = true;
+
+            txtCodigo.Visible = false;
+            btnConfirmarCodigo.Visible = false;
+            btnCancelarValidacion.Visible = false;
+            lblVerificado.Visible = false;
+
+            btnValidarCorreo.Visible = false;
+            btnValidarCorreo.Text = "Validar";
+            btnValidarCorreo.Enabled = true;
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -140,16 +182,31 @@
                 return;
             }
 
-            // El correo ya se guardó en el ConfirmarCodigo_Click. Aquí solo guardamos nombres.
-            if (_perfil.ActualizarNombres(txtNombre.Text.Trim(), txtApellido.Text.Trim()))
+            bool guardarCorreo = (txtCorreo.Text.Trim() != _correoOriginal) && _correoVerificado;
+
+            // Llama a GuardarPerfilCompleto que ejecuta SP y Updates finales
+            bool exito = _perfil.GuardarPerfilCompleto(
+                txtNombre.Text.Trim(),
+                txtApellido.Text.Trim(),
+                txtCorreo.Text.Trim(),
+                guardarCorreo
+            );
+
+            if (exito)
             {
-                _huboCambios = false; // Limpiamos bandera
+                _nombreOriginal = txtNombre.Text;
+                _apellidoOriginal = txtApellido.Text;
+                _correoOriginal = txtCorreo.Text;
+
+                btnGuardar.Enabled = false;
+                _huboCambios = false;
+
                 MessageBox.Show("Información actualizada con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 VolverAlPerfil();
             }
             else
             {
-                MessageBox.Show("Error al actualizar la información.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error de base de datos al guardar la información.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -163,14 +220,17 @@
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            VolverAlPerfil();
+            this.Close();
         }
 
         private void frm_EditarInfoPerfil_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_huboCambios && btnGuardar.Enabled)
+            // Solo pregunta si hay cambios reales que se perderían
+            bool hayCambios = (txtNombre.Text.Trim() != _nombreOriginal) || (txtApellido.Text.Trim() != _apellidoOriginal) || (txtCorreo.Text.Trim() != _correoOriginal);
+
+            if (hayCambios)
             {
-                var diag = MessageBox.Show("Tiene cambios sin guardar. ¿Está seguro que desea salir?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var diag = MessageBox.Show("Tiene cambios sin guardar o verificaciones pendientes.\n¿Está seguro que desea cancelar? Sus cambios se perderán.", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (diag == DialogResult.No)
                 {
                     e.Cancel = true;

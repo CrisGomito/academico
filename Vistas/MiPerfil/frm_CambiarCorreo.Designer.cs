@@ -65,7 +65,6 @@ namespace DataBase_First.Views.Perfil
             txtNuevoCorreo.Name = "txtNuevoCorreo";
             txtNuevoCorreo.Size = new Size(350, 32);
             txtNuevoCorreo.TabIndex = 3;
-            txtNuevoCorreo.Leave += txtNuevoCorreo_Leave_1;
             // 
             // btnEnviarCodigo
             // 

@@ -50,13 +50,17 @@ namespace DataBase_First.Views.Perfil
             // 
             // btnCerrarPerfil
             // 
-            btnCerrarPerfil.Location = new Point(620, 3);
+            btnCerrarPerfil.BackColor = System.Drawing.Color.FromArgb(231, 76, 60); // Rojo puro
+            btnCerrarPerfil.FlatAppearance.BorderSize = 0;
+            btnCerrarPerfil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btnCerrarPerfil.Location = new System.Drawing.Point(670, 10); // Arriba a la derecha del Card
             btnCerrarPerfil.Name = "btnCerrarPerfil";
-            btnCerrarPerfil.Size = new Size(75, 23);
+            btnCerrarPerfil.Size = new System.Drawing.Size(20, 20); // Pequeño y cuadrado
             btnCerrarPerfil.TabIndex = 8;
-            btnCerrarPerfil.Text = "button1";
-            btnCerrarPerfil.UseVisualStyleBackColor = true;
+            btnCerrarPerfil.Text = ""; // Sin texto
+            btnCerrarPerfil.UseVisualStyleBackColor = false;
             btnCerrarPerfil.Click += btnCerrarPerfil_Click;
+            btnCerrarPerfil.Paint += BtnCerrarPerfil_Paint; // NUEVO EVENTO PARA HACERLO CIRCULAR
             // 
             // btnEditarInfo
             // 

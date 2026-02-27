@@ -116,7 +116,8 @@ namespace Academico.Controladores
             }
         }
 
-        public (bool exito, string mensaje) ConfirmarCambioCorreo(string nuevoCorreo, string codigoIngresado)
+        // --- 1. SOLO VALIDA EL CÓDIGO (NO ACTUALIZA CORREO AÚN) ---
+        public (bool exito, string mensaje) ConfirmarCodigoCorreo(string codigoIngresado)
         {
             using (var _context = new SistemaAcademicoContext())
             {
@@ -131,20 +132,43 @@ namespace Academico.Controladores
                     return (false, "El código es inválido o ha expirado.");
                 }
 
-                _context.Database.ExecuteSqlRaw(
-                    "UPDATE usuario SET correo = {0}, codigo_2fa = NULL, expiracion_2fa = NULL WHERE id_usuario = {1}",
-                    nuevoCorreo, Program.usuarioActualId
-                );
-
-                // CORRECCIÓN: ESCAPAR LAS LLAVES DEL JSON CON {{ }}
-                _context.Database.ExecuteSqlRaw(
-                    "INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user) " +
-                    "VALUES({0}, {1}, 'UPDATE', 'usuario', {2}, '{{ \"correo_modificado\":\"TRUE\" }}', {3})",
-                    Program.usuarioActualId, Program.rolId, Program.usuarioActualId, GetLocalIPAddress()
-                );
-
-                return (true, "Correo electrónico actualizado con éxito.");
+                return (true, "Código verificado correctamente.");
             }
+        }
+
+        // --- 2. GUARDA TODOS LOS DATOS JUNTOS (Nombres, Apellidos y Opcionalmente Correo) ---
+        public bool GuardarPerfilCompleto(string nombre, string apellido, string nuevoCorreo, bool actualizarCorreo)
+        {
+            try
+            {
+                using (var _context = new SistemaAcademicoContext())
+                {
+                    // 1. Actualizar Nombre y Apellido usando el SP de auditoría
+                    _context.Database.ExecuteSqlRaw(
+                        "CALL sp_actualizar_usuario({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+                        Program.usuarioActualId, Program.rolId, Program.usuarioActualId, nombre, apellido, 1, Program.rolId, GetLocalIPAddress()
+                    );
+                    Program.nombreUsuario = $"{nombre}"; // Actualiza sesión
+
+                    // 2. Si se validó un nuevo correo, actualizarlo y borrar el código 2FA
+                    if (actualizarCorreo)
+                    {
+                        _context.Database.ExecuteSqlRaw(
+                            "UPDATE usuario SET correo = {0}, codigo_2fa = NULL, expiracion_2fa = NULL WHERE id_usuario = {1}",
+                            nuevoCorreo, Program.usuarioActualId
+                        );
+
+                        // Auditoría manual del correo
+                        _context.Database.ExecuteSqlRaw(
+                            "INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user) " +
+                            "VALUES({0}, {1}, 'UPDATE', 'usuario', {2}, '{{ \"correo_modificado\":\"TRUE\" }}', {3})",
+                            Program.usuarioActualId, Program.rolId, Program.usuarioActualId, GetLocalIPAddress()
+                        );
+                    }
+                    return true;
+                }
+            }
+            catch { return false; }
         }
 
         // --- MÉTODOS AUXILIARES ---

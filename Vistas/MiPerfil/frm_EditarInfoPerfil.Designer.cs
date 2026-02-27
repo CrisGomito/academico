@@ -70,7 +70,6 @@ namespace DataBase_First.Views.Perfil
             txtCorreo.Name = "txtCorreo";
             txtCorreo.Size = new System.Drawing.Size(300, 32);
             txtCorreo.TextChanged += txtCorreo_TextChanged;
-            txtCorreo.Leave += txtCorreo_Leave;
 
             btnValidarCorreo.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
             btnValidarCorreo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -154,6 +153,25 @@ namespace DataBase_First.Views.Perfil
             FormClosing += frm_EditarInfoPerfil_FormClosing;
             ResumeLayout(false);
             PerformLayout();
+            // (Todo lo de arriba se queda igual...)
+
+            btnCancelarValidacion = new System.Windows.Forms.Button(); // NUEVO
+
+            // btnCancelarValidacion (La 'X' roja al lado del OK)
+            btnCancelarValidacion.BackColor = System.Drawing.Color.FromArgb(231, 76, 60);
+            btnCancelarValidacion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btnCancelarValidacion.ForeColor = System.Drawing.Color.White;
+            btnCancelarValidacion.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnCancelarValidacion.Location = new System.Drawing.Point(685, 208); // Al lado de btnConfirmarCodigo
+            btnCancelarValidacion.Name = "btnCancelarValidacion";
+            btnCancelarValidacion.Size = new System.Drawing.Size(35, 35);
+            btnCancelarValidacion.Text = "X";
+            btnCancelarValidacion.UseVisualStyleBackColor = false;
+            btnCancelarValidacion.Visible = false;
+            btnCancelarValidacion.Click += btnCancelarValidacion_Click;
+
+            // ... (agrega btnCancelarValidacion al panel)
+            Controls.Add(btnCancelarValidacion);
         }
 
         private System.Windows.Forms.Label label1;
@@ -169,5 +187,7 @@ namespace DataBase_First.Views.Perfil
         private System.Windows.Forms.Label lblVerificado;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.Button btnCancelarValidacion; // NUEVO
+        private bool _huboCambios = false;
     }
 }

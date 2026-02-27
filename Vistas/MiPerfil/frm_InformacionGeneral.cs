@@ -60,5 +60,11 @@
         {
             this.Close(); // Esto solo cerrará el formulario hijo y dejará el panel limpio
         }
+        private void BtnCerrarPerfil_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrarPerfil.Width, btnCerrarPerfil.Height);
+            btnCerrarPerfil.Region = new System.Drawing.Region(botonCircular);
+        }
     }
 }

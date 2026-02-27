@@ -8,6 +8,7 @@
     public partial class frm_CambiarCorreo : Form
     {
         private readonly PerfilController _perfil = new PerfilController();
+        private string _correoActualUsuario = "";
 
         public frm_CambiarCorreo() { InitializeComponent(); }
 
@@ -16,15 +17,34 @@
             var infoUsuario = _perfil.ObtenerInformacionUsuarioActual();
             if (infoUsuario != null)
             {
-                lblCorreoActual.Text = $"Correo vinculado actual: {_perfil.ObtenerCorreoCensurado(infoUsuario.CorreoPlano)}";
+                _correoActualUsuario = infoUsuario.CorreoPlano;
+                // CAMBIO: Mostramos el correo en plano, sin censurar.
+                lblCorreoActual.Text = $"Correo vinculado actual: {_correoActualUsuario}";
             }
         }
+
         private void btnEnviarCodigo_Click(object sender, EventArgs e)
         {
             string correo = txtNuevoCorreo.Text.Trim();
+
+            // 1. Validar que no esté vacío
+            if (string.IsNullOrWhiteSpace(correo))
+            {
+                MessageBox.Show("El campo de correo no puede estar vacío.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Validar formato
             if (!Regex.IsMatch(correo, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
-                MessageBox.Show("Ingrese un correo válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese un correo electrónico con formato válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 3. Validar que no sea el mismo correo que ya tiene
+            if (correo.Equals(_correoActualUsuario, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("El correo ingresado es idéntico a su correo actual. Por favor, ingrese uno nuevo.", "Sin Cambios", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -47,6 +67,7 @@
                 btnEnviarCodigo.Enabled = true;
             }
         }
+
         private void VolverAlPerfil()
         {
             if (this.MdiParent is DataBase_First.Views.Main.frm_Principal principal)
@@ -54,35 +75,42 @@
                 principal.AbrirFormularioHijo(new frm_InformacionGeneral());
             }
         }
+
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCodigo.Text)) return;
 
-            var resultado = _perfil.ConfirmarCambioCorreo(txtNuevoCorreo.Text.Trim(), txtCodigo.Text.Trim());
+            // Fíjate que aquí usamos el método de GuardarPerfilCompleto para que se audite y guarde todo
+            // Enviamos nombres vacíos (el método no los usa si no los cambias desde la pantalla principal, 
+            // pero para esta pantalla en específico, el GuardarPerfilCompleto asume que siempre guardas nombres.
+            // Para no dañar el otro formulario, usaremos un truco: leer los nombres actuales y enviarlos intactos).
+            var infoUsuario = _perfil.ObtenerInformacionUsuarioActual();
+            if (infoUsuario == null) return;
+
+            // OJO: Usamos GuardarPerfilCompleto en lugar del viejo ConfirmarCambioCorreo
+            var resultado = _perfil.ConfirmarCodigoCorreo(txtCodigo.Text.Trim());
 
             if (resultado.exito)
             {
-                MessageBox.Show(resultado.mensaje + "\nDeberá usar este nuevo correo la próxima vez que inicie sesión.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                VolverAlPerfil(); // <-- CAMBIO AQUÍ
+                // Si el código es correcto, procedemos a guardar (no cambian los nombres, solo el correo)
+                bool guardado = _perfil.GuardarPerfilCompleto(infoUsuario.Nombre, infoUsuario.Apellido, txtNuevoCorreo.Text.Trim(), true);
+
+                if (guardado)
+                {
+                    MessageBox.Show("Correo electrónico actualizado con éxito.\nDeberá usar este nuevo correo la próxima vez que inicie sesión.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    VolverAlPerfil();
+                }
+                else
+                {
+                    MessageBox.Show("Ocurrió un error al guardar en la Base de Datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
-                MessageBox.Show(resultado.mensaje, "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(resultado.mensaje, "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void btnCerrar_Click(object sender, EventArgs e) { VolverAlPerfil(); }
-
-        // Evento Leave para validar formato en tiempo real
-        private void txtNuevoCorreo_Leave_1(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtNuevoCorreo.Text)) return;
-
-            if (!System.Text.RegularExpressions.Regex.IsMatch(txtNuevoCorreo.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
-                MessageBox.Show("El correo no tiene el formato correcto.", "Formato Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNuevoCorreo.Focus();
-            }
-        }
     }
 }
