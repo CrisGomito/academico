@@ -18,58 +18,46 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            pnlControlWindow = new System.Windows.Forms.Panel();
-            label2 = new System.Windows.Forms.Label();
-            btnMinimizar = new System.Windows.Forms.Button();
-            btnMaximizar = new System.Windows.Forms.Button();
-            btnCerrar = new System.Windows.Forms.Button();
-
-            pnlMenuTop = new System.Windows.Forms.Panel();
+            pnlControlWindow = new Panel();
+            label2 = new Label();
+            btnMinimizar = new Button();
+            btnMaximizar = new Button();
+            btnCerrar = new Button();
+            pnlMenuTop = new Panel();
             btnMenuReportes = new FontAwesome.Sharp.IconButton();
             btnMenuSimulacion = new FontAwesome.Sharp.IconButton();
             btnMenuCalificaciones = new FontAwesome.Sharp.IconButton();
             btnMenuAcademico = new FontAwesome.Sharp.IconButton();
             btnMenuAdmin = new FontAwesome.Sharp.IconButton();
             btnMenuPerfil = new FontAwesome.Sharp.IconButton();
-
-            pnlHeaderInfo = new System.Windows.Forms.Panel();
-            lbl_Reloj = new System.Windows.Forms.Label();
-            lbl_Rol = new System.Windows.Forms.Label();
-            label4 = new System.Windows.Forms.Label();
-            lbl_Nombre = new System.Windows.Forms.Label();
-            label1 = new System.Windows.Forms.Label();
-
-            pnlContenedorHijo = new System.Windows.Forms.Panel();
-
-            // Submenús (Flotantes)
-            pnlSubMenuPerfil = new System.Windows.Forms.Panel();
+            pnlHeaderInfo = new Panel();
+            lbl_Reloj = new Label();
+            lbl_Rol = new Label();
+            label4 = new Label();
+            lbl_Nombre = new Label();
+            label1 = new Label();
+            pnlContenedorHijo = new Panel();
+            pnlSubMenuPerfil = new Panel();
             btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             btnInfoGeneral = new FontAwesome.Sharp.IconButton();
-
-            pnlSubMenuAdmin = new System.Windows.Forms.Panel();
+            pnlSubMenuAdmin = new Panel();
             btnAuditoria = new FontAwesome.Sharp.IconButton();
             btnEstudiantes = new FontAwesome.Sharp.IconButton();
             btnDocentes = new FontAwesome.Sharp.IconButton();
             btnUsuarios = new FontAwesome.Sharp.IconButton();
-
-            pnlSubMenuAcademico = new System.Windows.Forms.Panel();
+            pnlSubMenuAcademico = new Panel();
             btnAsigDocentes = new FontAwesome.Sharp.IconButton();
             btnMatriculas = new FontAwesome.Sharp.IconButton();
             btnPeriodos = new FontAwesome.Sharp.IconButton();
             btnAsignaturas = new FontAwesome.Sharp.IconButton();
-
-            pnlSubMenuCalificaciones = new System.Windows.Forms.Panel();
+            pnlSubMenuCalificaciones = new Panel();
             btnIngresoNotas = new FontAwesome.Sharp.IconButton();
-
-            pnlSubMenuSimulacion = new System.Windows.Forms.Panel();
+            pnlSubMenuSimulacion = new Panel();
             btnDashRendimiento = new FontAwesome.Sharp.IconButton();
             btnSimPromedios = new FontAwesome.Sharp.IconButton();
-
-            pnlSubMenuReportes = new System.Windows.Forms.Panel();
+            pnlSubMenuReportes = new Panel();
             btnRptAcademico = new FontAwesome.Sharp.IconButton();
-
             timer1 = new System.Windows.Forms.Timer(components);
-
             pnlControlWindow.SuspendLayout();
             pnlMenuTop.SuspendLayout();
             pnlHeaderInfo.SuspendLayout();
@@ -80,410 +68,619 @@
             pnlSubMenuSimulacion.SuspendLayout();
             pnlSubMenuReportes.SuspendLayout();
             SuspendLayout();
-
-            // --- PANEL CONTROL SUPERIOR (Título y Botones Ventana) ---
-            pnlControlWindow.BackColor = System.Drawing.Color.FromArgb(40, 50, 65);
+            // 
+            // pnlControlWindow
+            // 
+            pnlControlWindow.BackColor = Color.FromArgb(40, 50, 65);
             pnlControlWindow.Controls.Add(label2);
             pnlControlWindow.Controls.Add(btnMinimizar);
             pnlControlWindow.Controls.Add(btnMaximizar);
             pnlControlWindow.Controls.Add(btnCerrar);
-            pnlControlWindow.Dock = System.Windows.Forms.DockStyle.Top;
-            pnlControlWindow.Location = new System.Drawing.Point(0, 0);
+            pnlControlWindow.Dock = DockStyle.Top;
+            pnlControlWindow.Location = new Point(0, 0);
             pnlControlWindow.Name = "pnlControlWindow";
-            pnlControlWindow.Size = new System.Drawing.Size(1280, 40);
+            pnlControlWindow.Size = new Size(1280, 40);
+            pnlControlWindow.TabIndex = 9;
             pnlControlWindow.MouseDown += pnlControlWindow_MouseDown;
-
+            // 
+            // label2
+            // 
             label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label2.ForeColor = System.Drawing.Color.White;
-            label2.Location = new System.Drawing.Point(15, 7); // Corrección del error del Point
+            label2.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(15, 7);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(206, 25);
+            label2.Size = new Size(209, 25);
+            label2.TabIndex = 0;
             label2.Text = "SISTEMA ACADÉMICO";
             label2.MouseDown += pnlControlWindow_MouseDown;
-
-            btnMinimizar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            // 
+            // btnMinimizar
+            // 
+            btnMinimizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnMinimizar.FlatAppearance.BorderSize = 0;
-            btnMinimizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMinimizar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            btnMinimizar.ForeColor = System.Drawing.Color.White;
-            btnMinimizar.Location = new System.Drawing.Point(1190, 5);
+            btnMinimizar.FlatStyle = FlatStyle.Flat;
+            btnMinimizar.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnMinimizar.ForeColor = Color.White;
+            btnMinimizar.Location = new Point(1190, 5);
             btnMinimizar.Name = "btnMinimizar";
-            btnMinimizar.Size = new System.Drawing.Size(30, 30);
+            btnMinimizar.Size = new Size(30, 30);
+            btnMinimizar.TabIndex = 1;
             btnMinimizar.Text = "—";
             btnMinimizar.UseVisualStyleBackColor = true;
             btnMinimizar.Click += btnMinimizar_Click;
-
-            btnMaximizar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            // 
+            // btnMaximizar
+            // 
+            btnMaximizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnMaximizar.FlatAppearance.BorderSize = 0;
-            btnMaximizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMaximizar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            btnMaximizar.ForeColor = System.Drawing.Color.White;
-            btnMaximizar.Location = new System.Drawing.Point(1220, 5);
+            btnMaximizar.FlatStyle = FlatStyle.Flat;
+            btnMaximizar.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnMaximizar.ForeColor = Color.White;
+            btnMaximizar.Location = new Point(1220, 5);
             btnMaximizar.Name = "btnMaximizar";
-            btnMaximizar.Size = new System.Drawing.Size(30, 30);
+            btnMaximizar.Size = new Size(30, 30);
+            btnMaximizar.TabIndex = 2;
             btnMaximizar.Text = "⬜";
             btnMaximizar.UseVisualStyleBackColor = true;
             btnMaximizar.Click += btnMaximizar_Click;
-
-            btnCerrar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            btnCerrar.BackColor = System.Drawing.Color.FromArgb(231, 76, 60);
+            // 
+            // btnCerrar
+            // 
+            btnCerrar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnCerrar.BackColor = Color.FromArgb(231, 76, 60);
             btnCerrar.FlatAppearance.BorderSize = 0;
-            btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCerrar.Location = new System.Drawing.Point(1255, 12);
+            btnCerrar.FlatStyle = FlatStyle.Flat;
+            btnCerrar.Location = new Point(1255, 12);
             btnCerrar.Name = "btnCerrar";
-            btnCerrar.Size = new System.Drawing.Size(16, 16);
+            btnCerrar.Size = new Size(16, 16);
+            btnCerrar.TabIndex = 3;
             btnCerrar.UseVisualStyleBackColor = false;
             btnCerrar.Click += btnCerrar_Click;
             btnCerrar.Paint += btnCerrar_Paint;
-
-            // --- PANEL MENÚ HORIZONTAL ---
-            pnlMenuTop.BackColor = System.Drawing.Color.FromArgb(52, 73, 94);
+            // 
+            // pnlMenuTop
+            // 
+            pnlMenuTop.BackColor = Color.FromArgb(52, 73, 94);
             pnlMenuTop.Controls.Add(btnMenuReportes);
             pnlMenuTop.Controls.Add(btnMenuSimulacion);
             pnlMenuTop.Controls.Add(btnMenuCalificaciones);
             pnlMenuTop.Controls.Add(btnMenuAcademico);
             pnlMenuTop.Controls.Add(btnMenuAdmin);
             pnlMenuTop.Controls.Add(btnMenuPerfil);
-            pnlMenuTop.Dock = System.Windows.Forms.DockStyle.Top;
-            pnlMenuTop.Location = new System.Drawing.Point(0, 40);
+            pnlMenuTop.Dock = DockStyle.Top;
+            pnlMenuTop.Location = new Point(0, 40);
             pnlMenuTop.Name = "pnlMenuTop";
-            pnlMenuTop.Size = new System.Drawing.Size(1280, 50);
-
-            // Configuración general de botones horizontales
-            btnMenuPerfil.Dock = System.Windows.Forms.DockStyle.Left;
-            btnMenuPerfil.FlatAppearance.BorderSize = 0;
-            btnMenuPerfil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMenuPerfil.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnMenuPerfil.ForeColor = System.Drawing.Color.Gainsboro;
-            btnMenuPerfil.IconChar = FontAwesome.Sharp.IconChar.User;
-            btnMenuPerfil.IconColor = System.Drawing.Color.Gainsboro;
-            btnMenuPerfil.IconSize = 28;
-            btnMenuPerfil.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            btnMenuPerfil.Size = new System.Drawing.Size(150, 50);
-            btnMenuPerfil.Text = " Mi Perfil";
-            btnMenuPerfil.Click += btnMenuPerfil_Click;
-
-            btnMenuAdmin.Dock = System.Windows.Forms.DockStyle.Left;
-            btnMenuAdmin.FlatAppearance.BorderSize = 0;
-            btnMenuAdmin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMenuAdmin.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnMenuAdmin.ForeColor = System.Drawing.Color.Gainsboro;
-            btnMenuAdmin.IconChar = FontAwesome.Sharp.IconChar.Tools;
-            btnMenuAdmin.IconColor = System.Drawing.Color.Gainsboro;
-            btnMenuAdmin.IconSize = 28;
-            btnMenuAdmin.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            btnMenuAdmin.Size = new System.Drawing.Size(180, 50);
-            btnMenuAdmin.Text = " Administración";
-            btnMenuAdmin.Click += btnMenuAdmin_Click;
-
-            btnMenuAcademico.Dock = System.Windows.Forms.DockStyle.Left;
-            btnMenuAcademico.FlatAppearance.BorderSize = 0;
-            btnMenuAcademico.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMenuAcademico.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnMenuAcademico.ForeColor = System.Drawing.Color.Gainsboro;
-            btnMenuAcademico.IconChar = FontAwesome.Sharp.IconChar.University;
-            btnMenuAcademico.IconColor = System.Drawing.Color.Gainsboro;
-            btnMenuAcademico.IconSize = 28;
-            btnMenuAcademico.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            btnMenuAcademico.Size = new System.Drawing.Size(150, 50);
-            btnMenuAcademico.Text = " Académico";
-            btnMenuAcademico.Click += btnMenuAcademico_Click;
-
-            btnMenuCalificaciones.Dock = System.Windows.Forms.DockStyle.Left;
-            btnMenuCalificaciones.FlatAppearance.BorderSize = 0;
-            btnMenuCalificaciones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMenuCalificaciones.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnMenuCalificaciones.ForeColor = System.Drawing.Color.Gainsboro;
-            btnMenuCalificaciones.IconChar = FontAwesome.Sharp.IconChar.GraduationCap;
-            btnMenuCalificaciones.IconColor = System.Drawing.Color.Gainsboro;
-            btnMenuCalificaciones.IconSize = 28;
-            btnMenuCalificaciones.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            btnMenuCalificaciones.Size = new System.Drawing.Size(170, 50);
-            btnMenuCalificaciones.Text = " Calificaciones";
-            btnMenuCalificaciones.Click += btnMenuCalificaciones_Click;
-
-            btnMenuSimulacion.Dock = System.Windows.Forms.DockStyle.Left;
-            btnMenuSimulacion.FlatAppearance.BorderSize = 0;
-            btnMenuSimulacion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMenuSimulacion.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnMenuSimulacion.ForeColor = System.Drawing.Color.Gainsboro;
-            btnMenuSimulacion.IconChar = FontAwesome.Sharp.IconChar.Brain;
-            btnMenuSimulacion.IconColor = System.Drawing.Color.Gainsboro;
-            btnMenuSimulacion.IconSize = 28;
-            btnMenuSimulacion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            btnMenuSimulacion.Size = new System.Drawing.Size(150, 50);
-            btnMenuSimulacion.Text = " Simulación";
-            btnMenuSimulacion.Click += btnMenuSimulacion_Click;
-
-            btnMenuReportes.Dock = System.Windows.Forms.DockStyle.Left;
+            pnlMenuTop.Size = new Size(1280, 50);
+            pnlMenuTop.TabIndex = 8;
+            // 
+            // btnMenuReportes
+            // 
+            btnMenuReportes.Dock = DockStyle.Left;
             btnMenuReportes.FlatAppearance.BorderSize = 0;
-            btnMenuReportes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMenuReportes.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnMenuReportes.ForeColor = System.Drawing.Color.Gainsboro;
-            btnMenuReportes.IconChar = FontAwesome.Sharp.IconChar.ChartBar;
-            btnMenuReportes.IconColor = System.Drawing.Color.Gainsboro;
+            btnMenuReportes.FlatStyle = FlatStyle.Flat;
+            btnMenuReportes.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnMenuReportes.ForeColor = Color.Gainsboro;
+            btnMenuReportes.IconChar = FontAwesome.Sharp.IconChar.BarChart;
+            btnMenuReportes.IconColor = Color.Gainsboro;
+            btnMenuReportes.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMenuReportes.IconSize = 28;
-            btnMenuReportes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            btnMenuReportes.Size = new System.Drawing.Size(140, 50);
+            btnMenuReportes.Location = new Point(800, 0);
+            btnMenuReportes.Name = "btnMenuReportes";
+            btnMenuReportes.Size = new Size(140, 50);
+            btnMenuReportes.TabIndex = 0;
             btnMenuReportes.Text = " Reportes";
+            btnMenuReportes.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnMenuReportes.Click += btnMenuReportes_Click;
-
-            // --- PANEL HEADER INFO (Usuario y Reloj) ---
-            pnlHeaderInfo.BackColor = System.Drawing.Color.White;
+            // 
+            // btnMenuSimulacion
+            // 
+            btnMenuSimulacion.Dock = DockStyle.Left;
+            btnMenuSimulacion.FlatAppearance.BorderSize = 0;
+            btnMenuSimulacion.FlatStyle = FlatStyle.Flat;
+            btnMenuSimulacion.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnMenuSimulacion.ForeColor = Color.Gainsboro;
+            btnMenuSimulacion.IconChar = FontAwesome.Sharp.IconChar.Brain;
+            btnMenuSimulacion.IconColor = Color.Gainsboro;
+            btnMenuSimulacion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnMenuSimulacion.IconSize = 28;
+            btnMenuSimulacion.Location = new Point(650, 0);
+            btnMenuSimulacion.Name = "btnMenuSimulacion";
+            btnMenuSimulacion.Size = new Size(150, 50);
+            btnMenuSimulacion.TabIndex = 1;
+            btnMenuSimulacion.Text = " Simulación";
+            btnMenuSimulacion.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnMenuSimulacion.Click += btnMenuSimulacion_Click;
+            // 
+            // btnMenuCalificaciones
+            // 
+            btnMenuCalificaciones.Dock = DockStyle.Left;
+            btnMenuCalificaciones.FlatAppearance.BorderSize = 0;
+            btnMenuCalificaciones.FlatStyle = FlatStyle.Flat;
+            btnMenuCalificaciones.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnMenuCalificaciones.ForeColor = Color.Gainsboro;
+            btnMenuCalificaciones.IconChar = FontAwesome.Sharp.IconChar.MortarBoard;
+            btnMenuCalificaciones.IconColor = Color.Gainsboro;
+            btnMenuCalificaciones.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnMenuCalificaciones.IconSize = 28;
+            btnMenuCalificaciones.Location = new Point(480, 0);
+            btnMenuCalificaciones.Name = "btnMenuCalificaciones";
+            btnMenuCalificaciones.Size = new Size(170, 50);
+            btnMenuCalificaciones.TabIndex = 2;
+            btnMenuCalificaciones.Text = " Calificaciones";
+            btnMenuCalificaciones.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnMenuCalificaciones.Click += btnMenuCalificaciones_Click;
+            // 
+            // btnMenuAcademico
+            // 
+            btnMenuAcademico.Dock = DockStyle.Left;
+            btnMenuAcademico.FlatAppearance.BorderSize = 0;
+            btnMenuAcademico.FlatStyle = FlatStyle.Flat;
+            btnMenuAcademico.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnMenuAcademico.ForeColor = Color.Gainsboro;
+            btnMenuAcademico.IconChar = FontAwesome.Sharp.IconChar.Institution;
+            btnMenuAcademico.IconColor = Color.Gainsboro;
+            btnMenuAcademico.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnMenuAcademico.IconSize = 28;
+            btnMenuAcademico.Location = new Point(330, 0);
+            btnMenuAcademico.Name = "btnMenuAcademico";
+            btnMenuAcademico.Size = new Size(150, 50);
+            btnMenuAcademico.TabIndex = 3;
+            btnMenuAcademico.Text = " Académico";
+            btnMenuAcademico.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnMenuAcademico.Click += btnMenuAcademico_Click;
+            // 
+            // btnMenuAdmin
+            // 
+            btnMenuAdmin.Dock = DockStyle.Left;
+            btnMenuAdmin.FlatAppearance.BorderSize = 0;
+            btnMenuAdmin.FlatStyle = FlatStyle.Flat;
+            btnMenuAdmin.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnMenuAdmin.ForeColor = Color.Gainsboro;
+            btnMenuAdmin.IconChar = FontAwesome.Sharp.IconChar.Tools;
+            btnMenuAdmin.IconColor = Color.Gainsboro;
+            btnMenuAdmin.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnMenuAdmin.IconSize = 28;
+            btnMenuAdmin.Location = new Point(150, 0);
+            btnMenuAdmin.Name = "btnMenuAdmin";
+            btnMenuAdmin.Size = new Size(180, 50);
+            btnMenuAdmin.TabIndex = 4;
+            btnMenuAdmin.Text = " Administración";
+            btnMenuAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnMenuAdmin.Click += btnMenuAdmin_Click;
+            // 
+            // btnMenuPerfil
+            // 
+            btnMenuPerfil.Dock = DockStyle.Left;
+            btnMenuPerfil.FlatAppearance.BorderSize = 0;
+            btnMenuPerfil.FlatStyle = FlatStyle.Flat;
+            btnMenuPerfil.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnMenuPerfil.ForeColor = Color.Gainsboro;
+            btnMenuPerfil.IconChar = FontAwesome.Sharp.IconChar.User;
+            btnMenuPerfil.IconColor = Color.Gainsboro;
+            btnMenuPerfil.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnMenuPerfil.IconSize = 28;
+            btnMenuPerfil.Location = new Point(0, 0);
+            btnMenuPerfil.Name = "btnMenuPerfil";
+            btnMenuPerfil.Size = new Size(150, 50);
+            btnMenuPerfil.TabIndex = 5;
+            btnMenuPerfil.Text = " Mi Perfil";
+            btnMenuPerfil.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnMenuPerfil.Click += btnMenuPerfil_Click;
+            // 
+            // pnlHeaderInfo
+            // 
+            pnlHeaderInfo.BackColor = Color.White;
             pnlHeaderInfo.Controls.Add(lbl_Reloj);
             pnlHeaderInfo.Controls.Add(lbl_Rol);
             pnlHeaderInfo.Controls.Add(label4);
             pnlHeaderInfo.Controls.Add(lbl_Nombre);
             pnlHeaderInfo.Controls.Add(label1);
-            pnlHeaderInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            pnlHeaderInfo.Location = new System.Drawing.Point(0, 90);
+            pnlHeaderInfo.Dock = DockStyle.Top;
+            pnlHeaderInfo.Location = new Point(0, 90);
             pnlHeaderInfo.Name = "pnlHeaderInfo";
-            pnlHeaderInfo.Size = new System.Drawing.Size(1280, 40);
-
-            lbl_Reloj.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            pnlHeaderInfo.Size = new Size(1280, 40);
+            pnlHeaderInfo.TabIndex = 7;
+            // 
+            // lbl_Reloj
+            // 
+            lbl_Reloj.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbl_Reloj.AutoSize = true;
-            lbl_Reloj.Font = new System.Drawing.Font("Segoe UI", 11F);
-            lbl_Reloj.ForeColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            lbl_Reloj.Location = new System.Drawing.Point(950, 10);
+            lbl_Reloj.Font = new Font("Segoe UI", 11F);
+            lbl_Reloj.ForeColor = Color.FromArgb(64, 64, 64);
+            lbl_Reloj.Location = new Point(950, 10);
             lbl_Reloj.Name = "lbl_Reloj";
-            lbl_Reloj.Size = new System.Drawing.Size(220, 20);
+            lbl_Reloj.Size = new Size(206, 20);
+            lbl_Reloj.TabIndex = 0;
             lbl_Reloj.Text = "00/00/0000 00:00:00 --- 0 min";
-
-            label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            label1.ForeColor = System.Drawing.Color.FromArgb(44, 62, 80);
-            label1.Location = new System.Drawing.Point(20, 10);
-            label1.Name = "label1";
-            label1.Text = "Bienvenido:";
-
-            lbl_Nombre.AutoSize = true;
-            lbl_Nombre.Font = new System.Drawing.Font("Segoe UI", 11F);
-            lbl_Nombre.Location = new System.Drawing.Point(120, 10);
-            lbl_Nombre.Name = "lbl_Nombre";
-            lbl_Nombre.Text = "NombreUsuario";
-
-            label4.AutoSize = true;
-            label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            label4.ForeColor = System.Drawing.Color.FromArgb(44, 62, 80);
-            label4.Location = new System.Drawing.Point(370, 10);
-            label4.Text = "Rol:";
-
+            // 
+            // lbl_Rol
+            // 
             lbl_Rol.AutoSize = true;
-            lbl_Rol.Font = new System.Drawing.Font("Segoe UI", 11F);
-            lbl_Rol.Location = new System.Drawing.Point(410, 10);
+            lbl_Rol.Font = new Font("Segoe UI", 11F);
+            lbl_Rol.Location = new Point(410, 10);
+            lbl_Rol.Name = "lbl_Rol";
+            lbl_Rol.Size = new Size(81, 20);
+            lbl_Rol.TabIndex = 1;
             lbl_Rol.Text = "RolUsuario";
-
-            // --- CONTENEDOR PRINCIPAL (Donde van los formularios hijos) ---
-            pnlContenedorHijo.BackColor = System.Drawing.Color.FromArgb(240, 243, 246);
-            pnlContenedorHijo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            pnlContenedorHijo.Dock = System.Windows.Forms.DockStyle.Fill;
-            pnlContenedorHijo.Location = new System.Drawing.Point(0, 130);
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label4.ForeColor = Color.FromArgb(44, 62, 80);
+            label4.Location = new Point(370, 10);
+            label4.Name = "label4";
+            label4.Size = new Size(36, 20);
+            label4.TabIndex = 2;
+            label4.Text = "Rol:";
+            // 
+            // lbl_Nombre
+            // 
+            lbl_Nombre.AutoSize = true;
+            lbl_Nombre.Font = new Font("Segoe UI", 11F);
+            lbl_Nombre.Location = new Point(120, 10);
+            lbl_Nombre.Name = "lbl_Nombre";
+            lbl_Nombre.Size = new Size(114, 20);
+            lbl_Nombre.TabIndex = 3;
+            lbl_Nombre.Text = "NombreUsuario";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(44, 62, 80);
+            label1.Location = new Point(20, 10);
+            label1.Name = "label1";
+            label1.Size = new Size(91, 20);
+            label1.TabIndex = 4;
+            label1.Text = "Bienvenido:";
+            // 
+            // pnlContenedorHijo
+            // 
+            pnlContenedorHijo.BackColor = Color.FromArgb(240, 243, 246);
+            pnlContenedorHijo.BackgroundImageLayout = ImageLayout.Zoom;
+            pnlContenedorHijo.Dock = DockStyle.Fill;
+            pnlContenedorHijo.Location = new Point(0, 130);
             pnlContenedorHijo.Name = "pnlContenedorHijo";
-            pnlContenedorHijo.Size = new System.Drawing.Size(1280, 590);
-
-            // =========================================================================
-            // CONFIGURACIÓN DE LOS PANELES SUBMENÚS (Desplegables)
-            // =========================================================================
-
-            // MI PERFIL
-            pnlSubMenuPerfil.BackColor = System.Drawing.Color.FromArgb(65, 85, 105);
+            pnlContenedorHijo.Size = new Size(1280, 590);
+            pnlContenedorHijo.TabIndex = 6;
+            // 
+            // pnlSubMenuPerfil
+            // 
+            pnlSubMenuPerfil.BackColor = Color.FromArgb(65, 85, 105);
             pnlSubMenuPerfil.Controls.Add(btnCerrarSesion);
             pnlSubMenuPerfil.Controls.Add(btnInfoGeneral);
-            pnlSubMenuPerfil.Size = new System.Drawing.Size(200, 80);
+            pnlSubMenuPerfil.Location = new Point(0, 0);
+            pnlSubMenuPerfil.Name = "pnlSubMenuPerfil";
+            pnlSubMenuPerfil.Size = new Size(200, 80);
+            pnlSubMenuPerfil.TabIndex = 5;
             pnlSubMenuPerfil.Visible = false;
-
-            btnInfoGeneral.Dock = System.Windows.Forms.DockStyle.Top;
-            btnInfoGeneral.FlatAppearance.BorderSize = 0;
-            btnInfoGeneral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnInfoGeneral.Font = new System.Drawing.Font("Segoe UI", 10F);
-            btnInfoGeneral.ForeColor = System.Drawing.Color.Silver;
-            btnInfoGeneral.Size = new System.Drawing.Size(200, 40);
-            btnInfoGeneral.Text = " Información General";
-            btnInfoGeneral.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnInfoGeneral.Click += btnInfoGeneral_Click;
-
-            btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // btnCerrarSesion
+            // 
+            btnCerrarSesion.Dock = DockStyle.Top;
             btnCerrarSesion.FlatAppearance.BorderSize = 0;
-            btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCerrarSesion.Font = new System.Drawing.Font("Segoe UI", 10F);
-            btnCerrarSesion.ForeColor = System.Drawing.Color.Silver;
-            btnCerrarSesion.Size = new System.Drawing.Size(200, 40);
+            btnCerrarSesion.FlatStyle = FlatStyle.Flat;
+            btnCerrarSesion.Font = new Font("Segoe UI", 10F);
+            btnCerrarSesion.ForeColor = Color.Silver;
+            btnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnCerrarSesion.IconColor = Color.Black;
+            btnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnCerrarSesion.Location = new Point(0, 40);
+            btnCerrarSesion.Name = "btnCerrarSesion";
+            btnCerrarSesion.Size = new Size(200, 40);
+            btnCerrarSesion.TabIndex = 0;
             btnCerrarSesion.Text = " Cerrar Sesión";
-            btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            btnCerrarSesion.TextAlign = ContentAlignment.MiddleLeft;
             btnCerrarSesion.Click += btnCerrarSesion_Click;
-
-            // ADMINISTRACIÓN
-            pnlSubMenuAdmin.BackColor = System.Drawing.Color.FromArgb(65, 85, 105);
+            // 
+            // btnInfoGeneral
+            // 
+            btnInfoGeneral.Dock = DockStyle.Top;
+            btnInfoGeneral.FlatAppearance.BorderSize = 0;
+            btnInfoGeneral.FlatStyle = FlatStyle.Flat;
+            btnInfoGeneral.Font = new Font("Segoe UI", 10F);
+            btnInfoGeneral.ForeColor = Color.Silver;
+            btnInfoGeneral.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnInfoGeneral.IconColor = Color.Black;
+            btnInfoGeneral.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnInfoGeneral.Location = new Point(0, 0);
+            btnInfoGeneral.Name = "btnInfoGeneral";
+            btnInfoGeneral.Size = new Size(200, 40);
+            btnInfoGeneral.TabIndex = 1;
+            btnInfoGeneral.Text = " Información General";
+            btnInfoGeneral.TextAlign = ContentAlignment.MiddleLeft;
+            btnInfoGeneral.Click += btnInfoGeneral_Click;
+            // 
+            // pnlSubMenuAdmin
+            // 
+            pnlSubMenuAdmin.BackColor = Color.FromArgb(65, 85, 105);
             pnlSubMenuAdmin.Controls.Add(btnAuditoria);
             pnlSubMenuAdmin.Controls.Add(btnEstudiantes);
             pnlSubMenuAdmin.Controls.Add(btnDocentes);
             pnlSubMenuAdmin.Controls.Add(btnUsuarios);
-            pnlSubMenuAdmin.Size = new System.Drawing.Size(200, 160);
+            pnlSubMenuAdmin.Location = new Point(0, 0);
+            pnlSubMenuAdmin.Name = "pnlSubMenuAdmin";
+            pnlSubMenuAdmin.Size = new Size(200, 160);
+            pnlSubMenuAdmin.TabIndex = 4;
             pnlSubMenuAdmin.Visible = false;
-
-            btnUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
-            btnUsuarios.FlatAppearance.BorderSize = 0;
-            btnUsuarios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnUsuarios.ForeColor = System.Drawing.Color.Silver;
-            btnUsuarios.Size = new System.Drawing.Size(200, 40);
-            btnUsuarios.Text = " Usuarios";
-            btnUsuarios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnUsuarios.Click += btnUsuarios_Click;
-
-            btnDocentes.Dock = System.Windows.Forms.DockStyle.Top;
-            btnDocentes.FlatAppearance.BorderSize = 0;
-            btnDocentes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnDocentes.ForeColor = System.Drawing.Color.Silver;
-            btnDocentes.Size = new System.Drawing.Size(200, 40);
-            btnDocentes.Text = " Docentes";
-            btnDocentes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnDocentes.Click += btnDocentes_Click;
-
-            btnEstudiantes.Dock = System.Windows.Forms.DockStyle.Top;
-            btnEstudiantes.FlatAppearance.BorderSize = 0;
-            btnEstudiantes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnEstudiantes.ForeColor = System.Drawing.Color.Silver;
-            btnEstudiantes.Size = new System.Drawing.Size(200, 40);
-            btnEstudiantes.Text = " Estudiantes";
-            btnEstudiantes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnEstudiantes.Click += btnEstudiantes_Click;
-
-            btnAuditoria.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // btnAuditoria
+            // 
+            btnAuditoria.Dock = DockStyle.Top;
             btnAuditoria.FlatAppearance.BorderSize = 0;
-            btnAuditoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnAuditoria.ForeColor = System.Drawing.Color.Silver;
-            btnAuditoria.Size = new System.Drawing.Size(200, 40);
+            btnAuditoria.FlatStyle = FlatStyle.Flat;
+            btnAuditoria.ForeColor = Color.Silver;
+            btnAuditoria.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnAuditoria.IconColor = Color.Black;
+            btnAuditoria.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnAuditoria.Location = new Point(0, 120);
+            btnAuditoria.Name = "btnAuditoria";
+            btnAuditoria.Size = new Size(200, 40);
+            btnAuditoria.TabIndex = 0;
             btnAuditoria.Text = " Auditoría";
-            btnAuditoria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            btnAuditoria.TextAlign = ContentAlignment.MiddleLeft;
             btnAuditoria.Click += btnAuditoria_Click;
-
-            // ACADÉMICO
-            pnlSubMenuAcademico.BackColor = System.Drawing.Color.FromArgb(65, 85, 105);
+            // 
+            // btnEstudiantes
+            // 
+            btnEstudiantes.Dock = DockStyle.Top;
+            btnEstudiantes.FlatAppearance.BorderSize = 0;
+            btnEstudiantes.FlatStyle = FlatStyle.Flat;
+            btnEstudiantes.ForeColor = Color.Silver;
+            btnEstudiantes.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnEstudiantes.IconColor = Color.Black;
+            btnEstudiantes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnEstudiantes.Location = new Point(0, 80);
+            btnEstudiantes.Name = "btnEstudiantes";
+            btnEstudiantes.Size = new Size(200, 40);
+            btnEstudiantes.TabIndex = 1;
+            btnEstudiantes.Text = " Estudiantes";
+            btnEstudiantes.TextAlign = ContentAlignment.MiddleLeft;
+            btnEstudiantes.Click += btnEstudiantes_Click;
+            // 
+            // btnDocentes
+            // 
+            btnDocentes.Dock = DockStyle.Top;
+            btnDocentes.FlatAppearance.BorderSize = 0;
+            btnDocentes.FlatStyle = FlatStyle.Flat;
+            btnDocentes.ForeColor = Color.Silver;
+            btnDocentes.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnDocentes.IconColor = Color.Black;
+            btnDocentes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnDocentes.Location = new Point(0, 40);
+            btnDocentes.Name = "btnDocentes";
+            btnDocentes.Size = new Size(200, 40);
+            btnDocentes.TabIndex = 2;
+            btnDocentes.Text = " Docentes";
+            btnDocentes.TextAlign = ContentAlignment.MiddleLeft;
+            btnDocentes.Click += btnDocentes_Click;
+            // 
+            // btnUsuarios
+            // 
+            btnUsuarios.Dock = DockStyle.Top;
+            btnUsuarios.FlatAppearance.BorderSize = 0;
+            btnUsuarios.FlatStyle = FlatStyle.Flat;
+            btnUsuarios.ForeColor = Color.Silver;
+            btnUsuarios.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnUsuarios.IconColor = Color.Black;
+            btnUsuarios.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnUsuarios.Location = new Point(0, 0);
+            btnUsuarios.Name = "btnUsuarios";
+            btnUsuarios.Size = new Size(200, 40);
+            btnUsuarios.TabIndex = 3;
+            btnUsuarios.Text = " Usuarios";
+            btnUsuarios.TextAlign = ContentAlignment.MiddleLeft;
+            btnUsuarios.Click += btnUsuarios_Click;
+            // 
+            // pnlSubMenuAcademico
+            // 
+            pnlSubMenuAcademico.BackColor = Color.FromArgb(65, 85, 105);
             pnlSubMenuAcademico.Controls.Add(btnAsigDocentes);
             pnlSubMenuAcademico.Controls.Add(btnMatriculas);
             pnlSubMenuAcademico.Controls.Add(btnPeriodos);
             pnlSubMenuAcademico.Controls.Add(btnAsignaturas);
-            pnlSubMenuAcademico.Size = new System.Drawing.Size(200, 160);
+            pnlSubMenuAcademico.Location = new Point(0, 0);
+            pnlSubMenuAcademico.Name = "pnlSubMenuAcademico";
+            pnlSubMenuAcademico.Size = new Size(200, 160);
+            pnlSubMenuAcademico.TabIndex = 3;
             pnlSubMenuAcademico.Visible = false;
-
-            btnAsignaturas.Dock = System.Windows.Forms.DockStyle.Top;
-            btnAsignaturas.FlatAppearance.BorderSize = 0;
-            btnAsignaturas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnAsignaturas.ForeColor = System.Drawing.Color.Silver;
-            btnAsignaturas.Size = new System.Drawing.Size(200, 40);
-            btnAsignaturas.Text = " Asignaturas";
-            btnAsignaturas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnAsignaturas.Click += btnAsignaturas_Click;
-
-            btnPeriodos.Dock = System.Windows.Forms.DockStyle.Top;
-            btnPeriodos.FlatAppearance.BorderSize = 0;
-            btnPeriodos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnPeriodos.ForeColor = System.Drawing.Color.Silver;
-            btnPeriodos.Size = new System.Drawing.Size(200, 40);
-            btnPeriodos.Text = " Periodos Académicos";
-            btnPeriodos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnPeriodos.Click += btnPeriodos_Click;
-
-            btnMatriculas.Dock = System.Windows.Forms.DockStyle.Top;
-            btnMatriculas.FlatAppearance.BorderSize = 0;
-            btnMatriculas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnMatriculas.ForeColor = System.Drawing.Color.Silver;
-            btnMatriculas.Size = new System.Drawing.Size(200, 40);
-            btnMatriculas.Text = " Matrículas";
-            btnMatriculas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnMatriculas.Click += btnMatriculas_Click;
-
-            btnAsigDocentes.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // btnAsigDocentes
+            // 
+            btnAsigDocentes.Dock = DockStyle.Top;
             btnAsigDocentes.FlatAppearance.BorderSize = 0;
-            btnAsigDocentes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnAsigDocentes.ForeColor = System.Drawing.Color.Silver;
-            btnAsigDocentes.Size = new System.Drawing.Size(200, 40);
+            btnAsigDocentes.FlatStyle = FlatStyle.Flat;
+            btnAsigDocentes.ForeColor = Color.Silver;
+            btnAsigDocentes.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnAsigDocentes.IconColor = Color.Black;
+            btnAsigDocentes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnAsigDocentes.Location = new Point(0, 120);
+            btnAsigDocentes.Name = "btnAsigDocentes";
+            btnAsigDocentes.Size = new Size(200, 40);
+            btnAsigDocentes.TabIndex = 0;
             btnAsigDocentes.Text = " Asignar Docentes";
-            btnAsigDocentes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            btnAsigDocentes.TextAlign = ContentAlignment.MiddleLeft;
             btnAsigDocentes.Click += btnAsigDocentes_Click;
-
-            // CALIFICACIONES
-            pnlSubMenuCalificaciones.BackColor = System.Drawing.Color.FromArgb(65, 85, 105);
+            // 
+            // btnMatriculas
+            // 
+            btnMatriculas.Dock = DockStyle.Top;
+            btnMatriculas.FlatAppearance.BorderSize = 0;
+            btnMatriculas.FlatStyle = FlatStyle.Flat;
+            btnMatriculas.ForeColor = Color.Silver;
+            btnMatriculas.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnMatriculas.IconColor = Color.Black;
+            btnMatriculas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnMatriculas.Location = new Point(0, 80);
+            btnMatriculas.Name = "btnMatriculas";
+            btnMatriculas.Size = new Size(200, 40);
+            btnMatriculas.TabIndex = 1;
+            btnMatriculas.Text = " Matrículas";
+            btnMatriculas.TextAlign = ContentAlignment.MiddleLeft;
+            btnMatriculas.Click += btnMatriculas_Click;
+            // 
+            // btnPeriodos
+            // 
+            btnPeriodos.Dock = DockStyle.Top;
+            btnPeriodos.FlatAppearance.BorderSize = 0;
+            btnPeriodos.FlatStyle = FlatStyle.Flat;
+            btnPeriodos.ForeColor = Color.Silver;
+            btnPeriodos.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnPeriodos.IconColor = Color.Black;
+            btnPeriodos.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnPeriodos.Location = new Point(0, 40);
+            btnPeriodos.Name = "btnPeriodos";
+            btnPeriodos.Size = new Size(200, 40);
+            btnPeriodos.TabIndex = 2;
+            btnPeriodos.Text = " Periodos Académicos";
+            btnPeriodos.TextAlign = ContentAlignment.MiddleLeft;
+            btnPeriodos.Click += btnPeriodos_Click;
+            // 
+            // btnAsignaturas
+            // 
+            btnAsignaturas.Dock = DockStyle.Top;
+            btnAsignaturas.FlatAppearance.BorderSize = 0;
+            btnAsignaturas.FlatStyle = FlatStyle.Flat;
+            btnAsignaturas.ForeColor = Color.Silver;
+            btnAsignaturas.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnAsignaturas.IconColor = Color.Black;
+            btnAsignaturas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnAsignaturas.Location = new Point(0, 0);
+            btnAsignaturas.Name = "btnAsignaturas";
+            btnAsignaturas.Size = new Size(200, 40);
+            btnAsignaturas.TabIndex = 3;
+            btnAsignaturas.Text = " Asignaturas";
+            btnAsignaturas.TextAlign = ContentAlignment.MiddleLeft;
+            btnAsignaturas.Click += btnAsignaturas_Click;
+            // 
+            // pnlSubMenuCalificaciones
+            // 
+            pnlSubMenuCalificaciones.BackColor = Color.FromArgb(65, 85, 105);
             pnlSubMenuCalificaciones.Controls.Add(btnIngresoNotas);
-            pnlSubMenuCalificaciones.Size = new System.Drawing.Size(200, 40);
+            pnlSubMenuCalificaciones.Location = new Point(0, 0);
+            pnlSubMenuCalificaciones.Name = "pnlSubMenuCalificaciones";
+            pnlSubMenuCalificaciones.Size = new Size(200, 40);
+            pnlSubMenuCalificaciones.TabIndex = 2;
             pnlSubMenuCalificaciones.Visible = false;
-
-            btnIngresoNotas.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // btnIngresoNotas
+            // 
+            btnIngresoNotas.Dock = DockStyle.Top;
             btnIngresoNotas.FlatAppearance.BorderSize = 0;
-            btnIngresoNotas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnIngresoNotas.ForeColor = System.Drawing.Color.Silver;
-            btnIngresoNotas.Size = new System.Drawing.Size(200, 40);
+            btnIngresoNotas.FlatStyle = FlatStyle.Flat;
+            btnIngresoNotas.ForeColor = Color.Silver;
+            btnIngresoNotas.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnIngresoNotas.IconColor = Color.Black;
+            btnIngresoNotas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnIngresoNotas.Location = new Point(0, 0);
+            btnIngresoNotas.Name = "btnIngresoNotas";
+            btnIngresoNotas.Size = new Size(200, 40);
+            btnIngresoNotas.TabIndex = 0;
             btnIngresoNotas.Text = " Ingreso de Notas";
-            btnIngresoNotas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            btnIngresoNotas.TextAlign = ContentAlignment.MiddleLeft;
             btnIngresoNotas.Click += btnIngresoNotas_Click;
-
-            // SIMULACIÓN
-            pnlSubMenuSimulacion.BackColor = System.Drawing.Color.FromArgb(65, 85, 105);
+            // 
+            // pnlSubMenuSimulacion
+            // 
+            pnlSubMenuSimulacion.BackColor = Color.FromArgb(65, 85, 105);
             pnlSubMenuSimulacion.Controls.Add(btnDashRendimiento);
             pnlSubMenuSimulacion.Controls.Add(btnSimPromedios);
-            pnlSubMenuSimulacion.Size = new System.Drawing.Size(220, 80);
+            pnlSubMenuSimulacion.Location = new Point(0, 0);
+            pnlSubMenuSimulacion.Name = "pnlSubMenuSimulacion";
+            pnlSubMenuSimulacion.Size = new Size(220, 80);
+            pnlSubMenuSimulacion.TabIndex = 1;
             pnlSubMenuSimulacion.Visible = false;
-
-            btnSimPromedios.Dock = System.Windows.Forms.DockStyle.Top;
-            btnSimPromedios.FlatAppearance.BorderSize = 0;
-            btnSimPromedios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnSimPromedios.ForeColor = System.Drawing.Color.Silver;
-            btnSimPromedios.Size = new System.Drawing.Size(220, 40);
-            btnSimPromedios.Text = " Simulador de Notas";
-            btnSimPromedios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnSimPromedios.Click += btnSimPromedios_Click;
-
-            btnDashRendimiento.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // btnDashRendimiento
+            // 
+            btnDashRendimiento.Dock = DockStyle.Top;
             btnDashRendimiento.FlatAppearance.BorderSize = 0;
-            btnDashRendimiento.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnDashRendimiento.ForeColor = System.Drawing.Color.Silver;
-            btnDashRendimiento.Size = new System.Drawing.Size(220, 40);
+            btnDashRendimiento.FlatStyle = FlatStyle.Flat;
+            btnDashRendimiento.ForeColor = Color.Silver;
+            btnDashRendimiento.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnDashRendimiento.IconColor = Color.Black;
+            btnDashRendimiento.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnDashRendimiento.Location = new Point(0, 40);
+            btnDashRendimiento.Name = "btnDashRendimiento";
+            btnDashRendimiento.Size = new Size(220, 40);
+            btnDashRendimiento.TabIndex = 0;
             btnDashRendimiento.Text = " Dashboard Predicción";
-            btnDashRendimiento.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            btnDashRendimiento.TextAlign = ContentAlignment.MiddleLeft;
             btnDashRendimiento.Click += btnDashRendimiento_Click;
-
-            // REPORTES
-            pnlSubMenuReportes.BackColor = System.Drawing.Color.FromArgb(65, 85, 105);
+            // 
+            // btnSimPromedios
+            // 
+            btnSimPromedios.Dock = DockStyle.Top;
+            btnSimPromedios.FlatAppearance.BorderSize = 0;
+            btnSimPromedios.FlatStyle = FlatStyle.Flat;
+            btnSimPromedios.ForeColor = Color.Silver;
+            btnSimPromedios.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnSimPromedios.IconColor = Color.Black;
+            btnSimPromedios.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnSimPromedios.Location = new Point(0, 0);
+            btnSimPromedios.Name = "btnSimPromedios";
+            btnSimPromedios.Size = new Size(220, 40);
+            btnSimPromedios.TabIndex = 1;
+            btnSimPromedios.Text = " Simulador de Notas";
+            btnSimPromedios.TextAlign = ContentAlignment.MiddleLeft;
+            btnSimPromedios.Click += btnSimPromedios_Click;
+            // 
+            // pnlSubMenuReportes
+            // 
+            pnlSubMenuReportes.BackColor = Color.FromArgb(65, 85, 105);
             pnlSubMenuReportes.Controls.Add(btnRptAcademico);
-            pnlSubMenuReportes.Size = new System.Drawing.Size(200, 40);
+            pnlSubMenuReportes.Location = new Point(0, 0);
+            pnlSubMenuReportes.Name = "pnlSubMenuReportes";
+            pnlSubMenuReportes.Size = new Size(200, 40);
+            pnlSubMenuReportes.TabIndex = 0;
             pnlSubMenuReportes.Visible = false;
-
-            btnRptAcademico.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // btnRptAcademico
+            // 
+            btnRptAcademico.Dock = DockStyle.Top;
             btnRptAcademico.FlatAppearance.BorderSize = 0;
-            btnRptAcademico.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnRptAcademico.ForeColor = System.Drawing.Color.Silver;
-            btnRptAcademico.Size = new System.Drawing.Size(200, 40);
+            btnRptAcademico.FlatStyle = FlatStyle.Flat;
+            btnRptAcademico.ForeColor = Color.Silver;
+            btnRptAcademico.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnRptAcademico.IconColor = Color.Black;
+            btnRptAcademico.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnRptAcademico.Location = new Point(0, 0);
+            btnRptAcademico.Name = "btnRptAcademico";
+            btnRptAcademico.Size = new Size(200, 40);
+            btnRptAcademico.TabIndex = 0;
             btnRptAcademico.Text = " Exportar PDFs";
-            btnRptAcademico.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            btnRptAcademico.TextAlign = ContentAlignment.MiddleLeft;
             btnRptAcademico.Click += btnRptAcademico_Click;
-
+            // 
+            // timer1
+            // 
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
-
-            // Agregar submenús a los controles principales
+            // 
+            // frm_Principal
+            // 
+            AutoScaleDimensions = new SizeF(11F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(240, 243, 246);
+            ClientSize = new Size(1280, 720);
             Controls.Add(pnlSubMenuReportes);
             Controls.Add(pnlSubMenuSimulacion);
             Controls.Add(pnlSubMenuCalificaciones);
             Controls.Add(pnlSubMenuAcademico);
             Controls.Add(pnlSubMenuAdmin);
             Controls.Add(pnlSubMenuPerfil);
-
             Controls.Add(pnlContenedorHijo);
             Controls.Add(pnlHeaderInfo);
             Controls.Add(pnlMenuTop);
             Controls.Add(pnlControlWindow);
-
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.Color.FromArgb(240, 243, 246);
-            ClientSize = new System.Drawing.Size(1280, 720);
-            Font = new System.Drawing.Font("Segoe UI", 14F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Font = new Font("Segoe UI", 14F);
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "frm_Principal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Sistema Académico";
             Load += frm_Principal_Load;
-
             pnlControlWindow.ResumeLayout(false);
             pnlControlWindow.PerformLayout();
             pnlMenuTop.ResumeLayout(false);
