@@ -36,15 +36,16 @@ namespace DataBase_First.Views.Reportes
             pnlTop.Dock = DockStyle.Top;
             pnlTop.Location = new Point(0, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.Size = new Size(1024, 100);
+            pnlTop.Size = new Size(1207, 100);
             pnlTop.TabIndex = 1;
             // 
             // btnCerrarForm
             // 
+            btnCerrarForm.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnCerrarForm.BackColor = Color.FromArgb(231, 76, 60);
             btnCerrarForm.FlatAppearance.BorderSize = 0;
             btnCerrarForm.FlatStyle = FlatStyle.Flat;
-            btnCerrarForm.Location = new Point(985, 15);
+            btnCerrarForm.Location = new Point(1175, 12);
             btnCerrarForm.Name = "btnCerrarForm";
             btnCerrarForm.Size = new Size(20, 20);
             btnCerrarForm.TabIndex = 0;
@@ -94,16 +95,16 @@ namespace DataBase_First.Views.Reportes
             lblTitulo.ForeColor = Color.FromArgb(41, 128, 185);
             lblTitulo.Location = new Point(20, 15);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(321, 30);
+            lblTitulo.Size = new Size(320, 30);
             lblTitulo.TabIndex = 4;
-            lblTitulo.Text = "MÓDULO DE REPORTES (PDF)";
+            lblTitulo.Text = "MÓDULO DE REPORTES - PDF";
             // 
             // pnlContenedorReporte
             // 
             pnlContenedorReporte.Dock = DockStyle.Fill;
             pnlContenedorReporte.Location = new Point(0, 100);
             pnlContenedorReporte.Name = "pnlContenedorReporte";
-            pnlContenedorReporte.Size = new Size(1024, 520);
+            pnlContenedorReporte.Size = new Size(1207, 520);
             pnlContenedorReporte.TabIndex = 0;
             // 
             // frm_Reportes
@@ -111,7 +112,7 @@ namespace DataBase_First.Views.Reportes
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.WhiteSmoke;
-            ClientSize = new Size(1024, 620);
+            ClientSize = new Size(1207, 620);
             Controls.Add(pnlContenedorReporte);
             Controls.Add(pnlTop);
             Font = new System.Drawing.Font("Segoe UI", 14F);

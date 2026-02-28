@@ -1,5 +1,6 @@
 ﻿namespace DataBase_First.Views.Reportes
 {
+    using global::Academico;
     using global::Academico.Controladores;
     using Microsoft.Reporting.WinForms;
     using System;
@@ -38,15 +39,28 @@
 
             try
             {
+                // 1. PREPARAMOS LOS PARÁMETROS
+                // Tomamos los datos globales de la sesión actual
+                string nombreUsuario = string.IsNullOrEmpty(Program.nombreUsuario) ? "Usuario Desconocido" : Program.nombreUsuario;
+                string rolUsuario = string.IsNullOrEmpty(Program.rol) ? "Sin Rol" : Program.rol;
+                string textoUsuario = $"Generado por: {nombreUsuario} - {rolUsuario}";
+                string textoFecha = $"Fecha de emisión: {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}";
+
+                // Creamos el arreglo de parámetros (Deben llamarse EXACTAMENTE igual que en el .rdlc)
+                ReportParameter[] parametros = new ReportParameter[]
+                {
+                    new ReportParameter("UsuarioImpresion", textoUsuario),
+                    new ReportParameter("FechaImpresion", textoFecha)
+                };
+
+                // 2. CARGAMOS EL REPORTE SEGÚN LA SELECCIÓN
                 if (cmbTipoReporte.SelectedIndex == 0) // Rendimiento Académico
                 {
                     var datos = _reportesController.ObtenerReporteAcademico();
 
-                    // RUTA AL ARCHIVO RDLC (Debes crearlo en la carpeta Reportes)
                     string rutaReporte = Path.Combine(Application.StartupPath, @"Vistas\Reportes\RptAcademico.rdlc");
                     _reportViewer.LocalReport.ReportPath = rutaReporte;
 
-                    // El nombre "dsAcademico" debe coincidir EXACTAMENTE con el nombre del Dataset que crees en el RDLC
                     ReportDataSource rds = new ReportDataSource("dsAcademico", datos);
                     _reportViewer.LocalReport.DataSources.Add(rds);
                 }
@@ -58,14 +72,19 @@
                     _reportViewer.LocalReport.ReportPath = rutaReporte;
 
                     ReportDataSource rds = new ReportDataSource("dsSeguridad", datos);
-                    _reportViewer.LocalReport.DataSources.Add(rds);   
+                    _reportViewer.LocalReport.DataSources.Add(rds);
                 }
 
+                // 3. INYECTAMOS LOS PARÁMETROS AL REPORTE
+                // Es muy importante hacer esto DESPUÉS de haber asignado el ReportPath
+                _reportViewer.LocalReport.SetParameters(parametros);
+
+                // 4. RENDERIZAMOS
                 _reportViewer.RefreshReport();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el reporte: Asegúrese de haber creado el archivo .rdlc. \n\nDetalle: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al cargar el reporte.\n\nDetalle: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
