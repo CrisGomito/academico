@@ -33,9 +33,9 @@ public partial class Calificacion
 
     [ForeignKey("IdEstudiante")]
     [InverseProperty("Calificacions")]
-    public virtual Estudiante IdEstudianteNavigation { get; set; } = null!;
+    public virtual Estudiante IdEstudianteNavigation { get; set; }
 
     [ForeignKey("IdEvaluacion")]
     [InverseProperty("Calificacions")]
-    public virtual Evaluacion IdEvaluacionNavigation { get; set; } = null!;
+    public virtual Evaluacion IdEvaluacionNavigation { get; set; }
 }

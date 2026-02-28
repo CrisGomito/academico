@@ -27,13 +27,13 @@ public partial class Asignaciondocente
 
     [ForeignKey("IdAsignatura")]
     [InverseProperty("Asignaciondocentes")]
-    public virtual Asignatura IdAsignaturaNavigation { get; set; } = null!;
+    public virtual Asignatura IdAsignaturaNavigation { get; set; }
 
     [ForeignKey("IdDocente")]
     [InverseProperty("Asignaciondocentes")]
-    public virtual Docente IdDocenteNavigation { get; set; } = null!;
+    public virtual Docente IdDocenteNavigation { get; set; }
 
     [ForeignKey("IdPeriodo")]
     [InverseProperty("Asignaciondocentes")]
-    public virtual Periodoacademico IdPeriodoNavigation { get; set; } = null!;
+    public virtual Periodoacademico IdPeriodoNavigation { get; set; }
 }

@@ -14,15 +14,16 @@ public partial class VistaReporteAcademico
 
     [Column("nombres")]
     [StringLength(50)]
-    public string? Nombres { get; set; }
+    public string Nombres { get; set; }
 
     [Column("apellidos")]
     [StringLength(50)]
-    public string? Apellidos { get; set; }
+    public string Apellidos { get; set; }
 
+    [Required]
     [Column("asignatura")]
     [StringLength(60)]
-    public string Asignatura { get; set; } = null!;
+    public string Asignatura { get; set; }
 
     [Column("promedio_final")]
     [Precision(5, 2)]
@@ -30,5 +31,5 @@ public partial class VistaReporteAcademico
 
     [Column("estado")]
     [StringLength(15)]
-    public string? Estado { get; set; }
+    public string Estado { get; set; }
 }

@@ -14,9 +14,10 @@ public partial class Rol
     [Column("id_rol", TypeName = "int(11)")]
     public int IdRol { get; set; }
 
+    [Required]
     [Column("nombre")]
     [StringLength(30)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
     [InverseProperty("IdRolNavigation")]
     public virtual ICollection<UsuarioRol> UsuarioRols { get; set; } = new List<UsuarioRol>();

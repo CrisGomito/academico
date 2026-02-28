@@ -15,13 +15,14 @@ public partial class Docente
     [Column("id_docente", TypeName = "int(11)")]
     public int IdDocente { get; set; }
 
+    [Required]
     [Column("cedula")]
     [MaxLength(255)]
-    public byte[] Cedula { get; set; } = null!;
+    public byte[] Cedula { get; set; }
 
     [Column("cedula_hash")]
     [MaxLength(32)]
-    public byte[]? CedulaHash { get; set; }
+    public byte[] CedulaHash { get; set; }
 
     [Column("id_usuario", TypeName = "int(11)")]
     public int IdUsuario { get; set; }
@@ -37,5 +38,5 @@ public partial class Docente
 
     [ForeignKey("IdUsuario")]
     [InverseProperty("Docente")]
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual Usuario IdUsuarioNavigation { get; set; }
 }

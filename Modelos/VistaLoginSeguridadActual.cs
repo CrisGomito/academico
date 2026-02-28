@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Academico.Modelos;
 
 [Keyless]
-public partial class VistaDocentesPeriodo
+public partial class VistaLoginSeguridadActual
 {
     [Column("nombres")]
     [StringLength(50)]
@@ -17,13 +17,15 @@ public partial class VistaDocentesPeriodo
     [StringLength(50)]
     public string Apellidos { get; set; }
 
-    [Required]
-    [Column("asignatura")]
-    [StringLength(60)]
-    public string Asignatura { get; set; }
+    [Column("fecha_ingreso", TypeName = "datetime")]
+    public DateTime FechaIngreso { get; set; }
 
-    [Required]
-    [Column("periodo")]
-    [StringLength(30)]
-    public string Periodo { get; set; }
+    [Column("ip_user")]
+    [StringLength(45)]
+    public string IpUser { get; set; }
+
+    [Column("resultado_login")]
+    [MySqlCharSet("utf8")]
+    [MySqlCollation("utf8_general_ci")]
+    public string ResultadoLogin { get; set; }
 }

@@ -16,30 +16,31 @@ public partial class Usuario
 
     [Column("nombre")]
     [StringLength(50)]
-    public string? Nombre { get; set; }
+    public string Nombre { get; set; }
 
     [Column("apellido")]
     [StringLength(50)]
-    public string? Apellido { get; set; }
+    public string Apellido { get; set; }
 
     [Column("correo")]
     [MaxLength(255)]
-    public byte[]? Correo { get; set; }
+    public byte[] Correo { get; set; }
 
     [Column("correo_hash")]
     [MaxLength(32)]
-    public byte[]? CorreoHash { get; set; }
+    public byte[] CorreoHash { get; set; }
 
     [Column("codigo_2fa")]
     [MaxLength(32)]
-    public byte[]? Codigo2fa { get; set; }
+    public byte[] Codigo2fa { get; set; }
 
     [Column("expiracion_2fa", TypeName = "datetime")]
     public DateTime? Expiracion2fa { get; set; }
 
+    [Required]
     [Column("password_hash")]
     [StringLength(255)]
-    public string PasswordHash { get; set; } = null!;
+    public string PasswordHash { get; set; }
 
     [Column("estado")]
     public bool? Estado { get; set; }
@@ -57,10 +58,10 @@ public partial class Usuario
     public DateTime? FechaCreacion { get; set; }
 
     [InverseProperty("IdUsuarioNavigation")]
-    public virtual Docente? Docente { get; set; }
+    public virtual Docente Docente { get; set; }
 
     [InverseProperty("IdUsuarioNavigation")]
-    public virtual Estudiante? Estudiante { get; set; }
+    public virtual Estudiante Estudiante { get; set; }
 
     [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<UsuarioRol> UsuarioRols { get; set; } = new List<UsuarioRol>();

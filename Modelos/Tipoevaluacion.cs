@@ -13,9 +13,10 @@ public partial class Tipoevaluacion
     [Column("id_tipo_evaluacion", TypeName = "int(11)")]
     public int IdTipoEvaluacion { get; set; }
 
+    [Required]
     [Column("nombre")]
     [StringLength(30)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
     [Column("peso")]
     [Precision(5, 2)]

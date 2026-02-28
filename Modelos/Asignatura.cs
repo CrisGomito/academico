@@ -13,9 +13,10 @@ public partial class Asignatura
     [Column("id_asignatura", TypeName = "int(11)")]
     public int IdAsignatura { get; set; }
 
+    [Required]
     [Column("nombre")]
     [StringLength(60)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
     [Column("creditos", TypeName = "tinyint(4)")]
     public sbyte Creditos { get; set; }

@@ -27,13 +27,13 @@ public partial class Matricula
 
     [ForeignKey("IdAsignatura")]
     [InverseProperty("Matriculas")]
-    public virtual Asignatura IdAsignaturaNavigation { get; set; } = null!;
+    public virtual Asignatura IdAsignaturaNavigation { get; set; }
 
     [ForeignKey("IdEstudiante")]
     [InverseProperty("Matriculas")]
-    public virtual Estudiante IdEstudianteNavigation { get; set; } = null!;
+    public virtual Estudiante IdEstudianteNavigation { get; set; }
 
     [ForeignKey("IdPeriodo")]
     [InverseProperty("Matriculas")]
-    public virtual Periodoacademico IdPeriodoNavigation { get; set; } = null!;
+    public virtual Periodoacademico IdPeriodoNavigation { get; set; }
 }

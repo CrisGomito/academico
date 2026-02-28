@@ -16,17 +16,19 @@ public partial class Estudiante
     [Column("id_estudiante", TypeName = "int(11)")]
     public int IdEstudiante { get; set; }
 
+    [Required]
     [Column("cedula")]
     [MaxLength(255)]
-    public byte[] Cedula { get; set; } = null!;
+    public byte[] Cedula { get; set; }
 
     [Column("cedula_hash")]
     [MaxLength(32)]
-    public byte[]? CedulaHash { get; set; }
+    public byte[] CedulaHash { get; set; }
 
+    [Required]
     [Column("codigo")]
     [StringLength(20)]
-    public string Codigo { get; set; } = null!;
+    public string Codigo { get; set; }
 
     [Column("id_usuario", TypeName = "int(11)")]
     public int IdUsuario { get; set; }
@@ -42,7 +44,7 @@ public partial class Estudiante
 
     [ForeignKey("IdUsuario")]
     [InverseProperty("Estudiante")]
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual Usuario IdUsuarioNavigation { get; set; }
 
     [InverseProperty("IdEstudianteNavigation")]
     public virtual ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();

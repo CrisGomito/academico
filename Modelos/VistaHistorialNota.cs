@@ -14,26 +14,27 @@ public partial class VistaHistorialNota
 
     [Column("usuario_nombre")]
     [StringLength(101)]
-    public string? UsuarioNombre { get; set; }
+    public string UsuarioNombre { get; set; }
 
     [Column("rol")]
     [StringLength(30)]
-    public string? Rol { get; set; }
+    public string Rol { get; set; }
 
+    [Required]
     [Column("accion", TypeName = "enum('INSERT','UPDATE','DELETE','LOGIN')")]
-    public string Accion { get; set; } = null!;
+    public string Accion { get; set; }
 
     [Column("id_calificacion", TypeName = "int(11)")]
     public int? IdCalificacion { get; set; }
 
     [Column("valor_anterior")]
     [MySqlCollation("utf8mb4_bin")]
-    public string? ValorAnterior { get; set; }
+    public string ValorAnterior { get; set; }
 
     [Column("valor_nuevo")]
     [MySqlCollation("utf8mb4_bin")]
-    public string? ValorNuevo { get; set; }
+    public string ValorNuevo { get; set; }
 
     [Column("fecha", TypeName = "datetime")]
-    public DateTime? Fecha { get; set; }
+    public DateTime Fecha { get; set; }
 }

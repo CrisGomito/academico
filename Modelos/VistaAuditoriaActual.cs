@@ -6,26 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Academico.Modelos;
 
-[PrimaryKey("IdAuditoria", "Fecha")]
-[Table("auditoria_sistema")]
-[Index("TablaAfectada", "Accion", "Fecha", Name = "idx_audit_completo")]
-[Index("Fecha", Name = "idx_audit_fecha")]
-[Index("IdUsuario", "Fecha", Name = "idx_audit_usuario")]
-public partial class AuditoriaSistema
+[Keyless]
+public partial class VistaAuditoriaActual
 {
-    [Key]
     [Column("id_auditoria", TypeName = "int(11)")]
     public int IdAuditoria { get; set; }
 
-    [Column("ip_user")]
-    [StringLength(45)]
-    public string IpUser { get; set; }
+    [Column("usuario_nombre")]
+    [StringLength(101)]
+    public string UsuarioNombre { get; set; }
 
-    [Column("id_usuario", TypeName = "int(11)")]
-    public int? IdUsuario { get; set; }
-
-    [Column("id_rol", TypeName = "int(11)")]
-    public int? IdRol { get; set; }
+    [Column("rol")]
+    [StringLength(30)]
+    public string Rol { get; set; }
 
     [Required]
     [Column("accion", TypeName = "enum('INSERT','UPDATE','DELETE','LOGIN')")]
@@ -38,13 +31,14 @@ public partial class AuditoriaSistema
     [Column("registro_id", TypeName = "int(11)")]
     public int? RegistroId { get; set; }
 
-    [Column("valor_anterior", TypeName = "json")]
+    [Column("valor_anterior")]
+    [MySqlCollation("utf8mb4_bin")]
     public string ValorAnterior { get; set; }
 
-    [Column("valor_nuevo", TypeName = "json")]
+    [Column("valor_nuevo")]
+    [MySqlCollation("utf8mb4_bin")]
     public string ValorNuevo { get; set; }
 
-    [Key]
     [Column("fecha", TypeName = "datetime")]
     public DateTime Fecha { get; set; }
 }

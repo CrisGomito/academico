@@ -14,18 +14,18 @@ public partial class VistaUsuariosAdmin
 
     [Column("nombre")]
     [StringLength(50)]
-    public string? Nombre { get; set; }
+    public string Nombre { get; set; }
 
     [Column("apellido")]
     [StringLength(50)]
-    public string? Apellido { get; set; }
+    public string Apellido { get; set; }
 
     [Column("correo_plano")]
     [StringLength(255)]
-    public string? CorreoPlano { get; set; }
+    public string CorreoPlano { get; set; }
 
     [Column("roles", TypeName = "mediumtext")]
-    public string? Roles { get; set; }
+    public string Roles { get; set; }
 
     [Column("estado")]
     public bool? Estado { get; set; }

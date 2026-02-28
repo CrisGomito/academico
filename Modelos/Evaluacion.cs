@@ -27,20 +27,20 @@ public partial class Evaluacion
 
     [Column("descripcion")]
     [StringLength(80)]
-    public string? Descripcion { get; set; }
+    public string Descripcion { get; set; }
 
     [InverseProperty("IdEvaluacionNavigation")]
     public virtual ICollection<Calificacion> Calificacions { get; set; } = new List<Calificacion>();
 
     [ForeignKey("IdAsignatura")]
     [InverseProperty("Evaluacions")]
-    public virtual Asignatura IdAsignaturaNavigation { get; set; } = null!;
+    public virtual Asignatura IdAsignaturaNavigation { get; set; }
 
     [ForeignKey("IdPeriodo")]
     [InverseProperty("Evaluacions")]
-    public virtual Periodoacademico IdPeriodoNavigation { get; set; } = null!;
+    public virtual Periodoacademico IdPeriodoNavigation { get; set; }
 
     [ForeignKey("IdTipoEvaluacion")]
     [InverseProperty("Evaluacions")]
-    public virtual Tipoevaluacion IdTipoEvaluacionNavigation { get; set; } = null!;
+    public virtual Tipoevaluacion IdTipoEvaluacionNavigation { get; set; }
 }

@@ -14,23 +14,24 @@ public partial class VistaEstudiantesAdmin
 
     [Column("nombre")]
     [StringLength(50)]
-    public string? Nombre { get; set; }
+    public string Nombre { get; set; }
 
     [Column("apellido")]
     [StringLength(50)]
-    public string? Apellido { get; set; }
+    public string Apellido { get; set; }
 
     [Column("cedula_plana")]
     [StringLength(255)]
-    public string? CedulaPlana { get; set; }
+    public string CedulaPlana { get; set; }
 
     [Column("correo_plano")]
     [StringLength(255)]
-    public string? CorreoPlano { get; set; }
+    public string CorreoPlano { get; set; }
 
+    [Required]
     [Column("codigo")]
     [StringLength(20)]
-    public string Codigo { get; set; } = null!;
+    public string Codigo { get; set; }
 
     [Column("estado")]
     public bool? Estado { get; set; }

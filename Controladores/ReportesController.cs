@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Academico.Config;
+using Academico.Modelos;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Academico.Config;
-using Academico.Modelos;
 
 namespace Academico.Controladores
 {
@@ -19,7 +20,7 @@ namespace Academico.Controladores
                     .ToList();
             }
         }
-        /*
+
         // Reporte 2: Historial de Accesos (Auditoría)
         public List<VistaLoginSeguridadActual> ObtenerReporteAccesos()
         {
@@ -30,6 +31,5 @@ namespace Academico.Controladores
                     .ToList();
             }
         }
-        */
     }
 }

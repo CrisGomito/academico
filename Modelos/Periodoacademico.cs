@@ -13,9 +13,10 @@ public partial class Periodoacademico
     [Column("id_periodo", TypeName = "int(11)")]
     public int IdPeriodo { get; set; }
 
+    [Required]
     [Column("nombre")]
     [StringLength(30)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
     [Column("fecha_inicio")]
     public DateOnly FechaInicio { get; set; }
@@ -23,9 +24,10 @@ public partial class Periodoacademico
     [Column("fecha_fin")]
     public DateOnly FechaFin { get; set; }
 
+    [Required]
     [Column("estado")]
     [StringLength(15)]
-    public string Estado { get; set; } = null!;
+    public string Estado { get; set; }
 
     [InverseProperty("IdPeriodoNavigation")]
     public virtual ICollection<Asignaciondocente> Asignaciondocentes { get; set; } = new List<Asignaciondocente>();

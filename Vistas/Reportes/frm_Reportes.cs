@@ -52,15 +52,13 @@
                 }
                 else if (cmbTipoReporte.SelectedIndex == 1) // Auditoría Seguridad
                 {
-                    /*
                     var datos = _reportesController.ObtenerReporteAccesos();
 
                     string rutaReporte = Path.Combine(Application.StartupPath, @"Vistas\Reportes\RptSeguridad.rdlc");
                     _reportViewer.LocalReport.ReportPath = rutaReporte;
 
                     ReportDataSource rds = new ReportDataSource("dsSeguridad", datos);
-                    _reportViewer.LocalReport.DataSources.Add(rds);
-                    */
+                    _reportViewer.LocalReport.DataSources.Add(rds);   
                 }
 
                 _reportViewer.RefreshReport();

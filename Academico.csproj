@@ -10,10 +10,14 @@
 
   <ItemGroup>
     <None Remove="Vistas\Reportes\RptAcademico.rdlc" />
+    <None Remove="Vistas\Reportes\RptSeguridad.rdlc" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Vistas\Reportes\RptAcademico.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Vistas\Reportes\RptSeguridad.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

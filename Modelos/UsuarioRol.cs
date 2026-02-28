@@ -24,9 +24,9 @@ public partial class UsuarioRol
 
     [ForeignKey("IdRol")]
     [InverseProperty("UsuarioRols")]
-    public virtual Rol IdRolNavigation { get; set; } = null!;
+    public virtual Rol IdRolNavigation { get; set; }
 
     [ForeignKey("IdUsuario")]
     [InverseProperty("UsuarioRols")]
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual Usuario IdUsuarioNavigation { get; set; }
 }

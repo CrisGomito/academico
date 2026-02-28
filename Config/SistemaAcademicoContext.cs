@@ -43,6 +43,8 @@ public partial class SistemaAcademicoContext : DbContext
 
     public virtual DbSet<UsuarioRol> UsuarioRols { get; set; }
 
+    public virtual DbSet<VistaAuditoriaActual> VistaAuditoriaActuals { get; set; }
+
     public virtual DbSet<VistaDocentesAdmin> VistaDocentesAdmins { get; set; }
 
     public virtual DbSet<VistaDocentesPeriodo> VistaDocentesPeriodos { get; set; }
@@ -54,6 +56,8 @@ public partial class SistemaAcademicoContext : DbContext
     public virtual DbSet<VistaHistorialNota> VistaHistorialNotas { get; set; }
 
     public virtual DbSet<VistaLoginDocente> VistaLoginDocentes { get; set; }
+
+    public virtual DbSet<VistaLoginSeguridadActual> VistaLoginSeguridadActuals { get; set; }
 
     public virtual DbSet<VistaPromediosEstudiante> VistaPromediosEstudiantes { get; set; }
 
@@ -102,8 +106,11 @@ public partial class SistemaAcademicoContext : DbContext
 
         modelBuilder.Entity<AuditoriaSistema>(entity =>
         {
-            entity.HasKey(e => e.IdAuditoria).HasName("PRIMARY");
+            entity.HasKey(e => new { e.IdAuditoria, e.Fecha })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
+            entity.Property(e => e.IdAuditoria).ValueGeneratedOnAdd();
             entity.Property(e => e.Fecha).HasDefaultValueSql("current_timestamp()");
         });
 
@@ -223,6 +230,13 @@ public partial class SistemaAcademicoContext : DbContext
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.UsuarioRols).HasConstraintName("fk_ur_usuario");
         });
 
+        modelBuilder.Entity<VistaAuditoriaActual>(entity =>
+        {
+            entity.ToView("vista_auditoria_actual");
+
+            entity.Property(e => e.Fecha).HasDefaultValueSql("current_timestamp()");
+        });
+
         modelBuilder.Entity<VistaDocentesAdmin>(entity =>
         {
             entity.ToView("vista_docentes_admin");
@@ -259,6 +273,13 @@ public partial class SistemaAcademicoContext : DbContext
         modelBuilder.Entity<VistaLoginDocente>(entity =>
         {
             entity.ToView("vista_login_docentes");
+
+            entity.Property(e => e.FechaIngreso).HasDefaultValueSql("current_timestamp()");
+        });
+
+        modelBuilder.Entity<VistaLoginSeguridadActual>(entity =>
+        {
+            entity.ToView("vista_login_seguridad_actual");
 
             entity.Property(e => e.FechaIngreso).HasDefaultValueSql("current_timestamp()");
         });
