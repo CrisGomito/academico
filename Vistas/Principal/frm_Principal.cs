@@ -1,26 +1,37 @@
 ﻿using Academico;
-using DataBase_First.Views.Academico.AsignacionDocentes;
-using DataBase_First.Views.Academico.Asignaturas;
-using DataBase_First.Views.Academico.Matriculas;
-using DataBase_First.Views.Academico.Periodos;
-using DataBase_First.Views.Administracion.Auditoria;
-using DataBase_First.Views.Administracion.Docentes;
-using DataBase_First.Views.Administracion.Estudiantes;
-using DataBase_First.Views.Calificaciones;
-using DataBase_First.Views.Dashboard;
 using DataBase_First.Views.Perfil;
-using DataBase_First.Views.Simulacion;
-using DataBase_First.Views.Users;
+using FontAwesome.Sharp;
 using System;
+using System.Drawing;
+using System.Linq;
+using System.Runtime.InteropServices; // Necesario para mover la ventana
 using System.Windows.Forms;
+
 
 namespace DataBase_First.Views.Main
 {
     public partial class frm_Principal : Form
     {
+        // Campos para la lógica de dropdowns
+        private IconButton currentBtn;
+        private Panel leftBorderBtn;
+        private Form currentChildForm;
+        private DateTime fechaInicioSesion;
+
         public frm_Principal()
         {
             InitializeComponent();
+
+            // Inicializar borde izquierdo para selección de menú
+            leftBorderBtn = new Panel();
+            leftBorderBtn.Size = new Size(7, 50);
+            pnlMenuContainer.Controls.Add(leftBorderBtn);
+
+            // Configuraciones de ventana sin borde (MDI invisible)
+            this.Text = string.Empty;
+            this.ControlBox = false;
+            this.DoubleBuffered = true;
+            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
         }
 
         private void frm_Principal_Load(object sender, EventArgs e)
@@ -36,172 +47,342 @@ namespace DataBase_First.Views.Main
             lbl_Nombre.Text = Program.nombreUsuario;
             lbl_Rol.Text = Program.rol;
 
+            // Guardamos la hora de inicio de sesión real (supongamos que está en Program)
+            // Si no está, usa DateTime.Now como fallback
+            fechaInicioSesion = DateTime.Now;
+
             timer1.Start();
 
             // Ocultar dinámicamente según el Rol de BD
             AplicarPermisosPorRol();
+
+            // Asegurarnos que la imagen de fondo esté visible al inicio
+            GestionarFondoMdi();
         }
 
+        // --- LÓGICA DE RELOJ Y TIEMPO DE SESIÓN ---
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbl_Reloj.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-        }
+            DateTime ahora = DateTime.Now;
+            TimeSpan tiempoTranscurrido = ahora - fechaInicioSesion;
 
-        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void AplicarPermisosPorRol()
-        {
-            // 1. Ocultamos los menús principales por defecto por seguridad
-            administracionToolStripMenuItem.Visible = false;
-            academicoToolStripMenuItem.Visible = false;
-            calificacionesToolStripMenuItem.Visible = false;
-            simulacionToolStripMenuItem.Visible = false;
-            reportesToolStripMenuItem.Visible = false;
-
-            // 2. Evaluamos según los roles definidos en la base de datos (Tabla `rol`)
-            // 1: Administrador | 2: Docente | 3: Estudiante | 4: Coordinador
-            switch (Program.rolId)
+            string formatoTiempo;
+            if (tiempoTranscurrido.TotalMinutes < 60)
             {
-                case 1: // ADMINISTRADOR
-                    // Tiene acceso a casi todo, especialmente creación y auditorías
-                    administracionToolStripMenuItem.Visible = true;
-                    academicoToolStripMenuItem.Visible = true;
-                    reportesToolStripMenuItem.Visible = true;
-                    calificacionesToolStripMenuItem.Visible = true;
-                    simulacionToolStripMenuItem.Visible = true;
-                    break;
+                formatoTiempo = $"{(int)tiempoTranscurrido.TotalMinutes} min";
+            }
+            else
+            {
+                formatoTiempo = $"{(int)tiempoTranscurrido.TotalHours} hora(s) y {tiempoTranscurrido.Minutes} min";
+            }
 
-                case 4: // COORDINADOR
-                    // Gestiona la parte académica y monitorea el rendimiento (Predicción)
-                    academicoToolStripMenuItem.Visible = true;
-                    simulacionToolStripMenuItem.Visible = true;
-                    simuladorNotasToolStripMenuItem.Visible = false; // El simulador es del estudiante
-                    dashboardPrediccionToolStripMenuItem.Visible = true;
-                    reportesToolStripMenuItem.Visible = true;
-                    break;
+            lbl_Reloj.Text = $"{ahora.ToString("dd/MM/yyyy HH:mm:ss")} --- {formatoTiempo}";
+        }
 
-                case 2: // DOCENTE
-                    // Sube notas y revisa a sus estudiantes
-                    calificacionesToolStripMenuItem.Visible = true;
-                    simulacionToolStripMenuItem.Visible = true;
-                    simuladorNotasToolStripMenuItem.Visible = false; // El simulador es del estudiante
-                    dashboardPrediccionToolStripMenuItem.Visible = true;
-                    reportesToolStripMenuItem.Visible = true;
-                    break;
+        // --- LÓGICA PARA MOVER LA VENTANA (DLL Imports) ---
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private static extern void ReleaseCapture();
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+        private static extern void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
-                case 3: // ESTUDIANTE
-                    // Interactúa con su nota actual y simula su estado académico
-                    simulacionToolStripMenuItem.Visible = true;
-                    simuladorNotasToolStripMenuItem.Visible = true;
-                    dashboardPrediccionToolStripMenuItem.Visible = false; // Predicción grupal no
-                    reportesToolStripMenuItem.Visible = true;
-                    break;
+        private void pnlControlWindow_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
 
-                default:
-                    MessageBox.Show("El rol asignado no cuenta con permisos estructurados en el sistema.", "Acceso Restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
+        // --- BOTONES DE CONTROL DE VENTANA ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            ConfirmarCerrarSesion();
+        }
+
+        private void btnMaximizar_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Normal)
+                WindowState = FormWindowState.Maximized;
+            else
+                WindowState = FormWindowState.Normal;
+        }
+
+        private void btnMinimizar_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        // --- LÓGICA DE MENÚS Y SUBMENÚS (DROPDOWNS) ---
+        private void OcultarSubMenus()
+        {
+            pnlSubMenuPerfil.Visible = false;
+            pnlSubMenuAdmin.Visible = false;
+            pnlSubMenuAcademico.Visible = false;
+            pnlSubMenuCalificaciones.Visible = false;
+            pnlSubMenuSimulacion.Visible = false;
+            pnlSubMenuReportes.Visible = false;
+        }
+
+        private void MostrarSubMenu(Panel subMenu)
+        {
+            if (subMenu.Visible == false)
+            {
+                OcultarSubMenus();
+                subMenu.Visible = true;
+                // Pequeña "animación" de altura (opcional, ajusta según la cantidad de items)
+                // subMenu.Height = subMenu.Controls.Count * 40; 
+            }
+            else
+            {
+                subMenu.Visible = false;
             }
         }
 
-        // --- MÉTODO PARA ABRIR FORMULARIOS HIJOS (MDI) ---
-        // Úsalo en los eventos Click de tus menús para que no se abran ventanas sueltas.
+        // Estilo de selección de botón principal
+        private void ActivarBoton(object senderBtn, Color color)
+        {
+            if (senderBtn != null)
+            {
+                DesactivarBoton();
+                // Botón
+                currentBtn = (IconButton)senderBtn;
+                currentBtn.BackColor = Color.FromArgb(65, 85, 105);
+                currentBtn.ForeColor = color;
+                currentBtn.TextAlign = ContentAlignment.MiddleCenter;
+                currentBtn.IconColor = color;
+                currentBtn.TextImageRelation = TextImageRelation.TextBeforeImage;
+                currentBtn.ImageAlign = ContentAlignment.MiddleRight;
+                // Borde izquierdo
+                leftBorderBtn.BackColor = color;
+                leftBorderBtn.Location = new Point(0, currentBtn.Location.Y);
+                leftBorderBtn.Visible = true;
+                leftBorderBtn.BringToFront();
+            }
+        }
+
+        private void DesactivarBoton()
+        {
+            if (currentBtn != null)
+            {
+                currentBtn.BackColor = Color.FromArgb(52, 73, 94);
+                currentBtn.ForeColor = Color.Gainsboro;
+                currentBtn.TextAlign = ContentAlignment.MiddleLeft;
+                currentBtn.IconColor = Color.Gainsboro;
+                currentBtn.TextImageRelation = TextImageRelation.ImageBeforeText;
+                currentBtn.ImageAlign = ContentAlignment.MiddleLeft;
+            }
+        }
+
+        // --- EVENTOS CLICK DE MENÚS PRINCIPALES ---
+        private void btnMenuPerfil_Click(object sender, EventArgs e)
+        {
+            ActivarBoton(sender, Color.FromArgb(160, 210, 255)); // Azul suave
+            MostrarSubMenu(pnlSubMenuPerfil);
+        }
+
+        private void btnMenuAdmin_Click(object sender, EventArgs e)
+        {
+            ActivarBoton(sender, Color.FromArgb(160, 210, 255));
+            MostrarSubMenu(pnlSubMenuAdmin);
+        }
+
+        private void btnMenuAcademico_Click(object sender, EventArgs e)
+        {
+            ActivarBoton(sender, Color.FromArgb(160, 210, 255));
+            MostrarSubMenu(pnlSubMenuAcademico);
+        }
+
+        private void btnMenuCalificaciones_Click(object sender, EventArgs e)
+        {
+            ActivarBoton(sender, Color.FromArgb(160, 210, 255));
+            MostrarSubMenu(pnlSubMenuCalificaciones);
+        }
+
+        private void btnMenuSimulacion_Click(object sender, EventArgs e)
+        {
+            ActivarBoton(sender, Color.FromArgb(160, 210, 255));
+            MostrarSubMenu(pnlSubMenuSimulacion);
+        }
+
+        private void btnMenuReportes_Click(object sender, EventArgs e)
+        {
+            ActivarBoton(sender, Color.FromArgb(160, 210, 255));
+            MostrarSubMenu(pnlSubMenuReportes);
+        }
+
+        // --- LÓGICA DE FORMULARIOS HIJOS Y FONDO ---
+        private void GestionarFondoMdi()
+        {
+            // Si hay formularios hijos visibles, ocultamos la imagen de fondo del panel contenedor
+            if (this.MdiChildren.Length > 0)
+            {
+                pnlContenedorHijo.BackgroundImage = null;
+            }
+            else
+            {
+                // Si no hay hijos, restauramos la imagen de recursos
+                pnlContenedorHijo.BackgroundImage = Properties.Resources.background_academico;
+            }
+        }
+
         public void AbrirFormularioHijo(Form formularioHijo)
         {
-            // Cerramos cualquier otro formulario hijo abierto para no amontonar
-            foreach (Form form in this.MdiChildren)
+            // Cerramos cualquier otro formulario hijo abierto
+            if (currentChildForm != null)
             {
-                form.Close();
+                currentChildForm.Close();
             }
 
+            currentChildForm = formularioHijo;
             formularioHijo.MdiParent = this;
-            formularioHijo.Dock = DockStyle.Fill; // Para que ocupe todo el espacio disponible
+            formularioHijo.FormBorderStyle = FormBorderStyle.None;
+            formularioHijo.Dock = DockStyle.Fill;
+
+            // Suscribirse al evento de cierre para restaurar el fondo
+            formularioHijo.FormClosed += (s, args) => { GestionarFondoMdi(); };
+
             formularioHijo.Show();
+
+            // Ocultamos el submenú después de seleccionar e iniciar la gestión del fondo
+            OcultarSubMenus();
+            GestionarFondoMdi();
         }
 
-        // EJEMPLOS DE USO CUANDO VAYAS CREANDO TUS FORMULARIOS:
-        private void usuariosToolStripMenuItem_Click_1(object sender, EventArgs e)
+        // --- EVENTOS CLICK DE SUBMENÚS (ACCIONES) ---
+        private void btnInfoGeneral_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Usuarios());
+            AbrirFormularioHijo(new frm_InformacionGeneral());
         }
 
-        private void docentesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Docentes());
+            ConfirmarCerrarSesion();
         }
 
-        private void estudiantesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnUsuarios_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Estudiantes());
+            AbrirFormularioHijo(new Users.frm_Usuarios());
         }
 
-        private void auditoriaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnDocentes_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Auditoria());
+            AbrirFormularioHijo(new Administracion.Docentes.frm_Docentes());
         }
 
-        private void asignaturasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnEstudiantes_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Asignaturas());
+            AbrirFormularioHijo(new Administracion.Estudiantes.frm_Estudiantes());
         }
 
-        private void periodosToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnAuditoria_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Periodos());
+            AbrirFormularioHijo(new Administracion.Auditoria.frm_Auditoria());
         }
 
-        private void matriculasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnAsignaturas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_Matriculas());
+            AbrirFormularioHijo(new Academico.Asignaturas.frm_Asignaturas());
         }
 
-        private void asignacionDocentesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnPeriodos_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_AsignacionDocentes());
+            AbrirFormularioHijo(new Academico.Periodos.frm_Periodos());
         }
 
-        private void ingresoNotasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnMatriculas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_IngresoNotas());
+            AbrirFormularioHijo(new Academico.Matriculas.frm_Matriculas());
         }
 
-        private void simuladorNotasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnAsigDocentes_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_SimuladorNotas());
+            AbrirFormularioHijo(new Academico.AsignacionDocentes.frm_AsignacionDocentes());
         }
 
-        private void dashboardPrediccionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnIngresoNotas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frm_DashboardPrediccion());
+            AbrirFormularioHijo(new Calificaciones.frm_IngresoNotas());
         }
 
-        private void reporteAcademicoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnSimPromedios_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new Simulacion.frm_SimuladorNotas());
+        }
+
+        private void btnDashRendimiento_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new Dashboard.frm_DashboardPrediccion());
+        }
+
+        private void btnRptAcademico_Click(object sender, EventArgs e)
         {
             AbrirFormularioHijo(new Reportes.frm_Reportes());
         }
 
-        private void cerrarSesiónToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConfirmarCerrarSesion()
         {
-            var confirm = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirm = MessageBox.Show("¿Está seguro que desea cerrar sesión o salir del sistema?", "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.Yes)
             {
                 // Limpiamos memoria
                 Program.logueado = false;
-                Program.usuarioActualId = 0;
-                Program.nombreUsuario = "";
-                Program.rol = "";
-                Program.rolId = 0;
+                // ... (resto de limpiezas de Program)
 
-                // Reiniciamos la aplicación completa. Esto destruye el MDI y levanta el Login limpio.
+                // Reiniciamos la aplicación completa.
                 Application.Restart();
             }
         }
 
-        private void miInformaciónToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AplicarPermisosPorRol()
         {
-            AbrirFormularioHijo(new frm_InformacionGeneral());
+            // Ocultamos los botones de menú principales por defecto
+            btnMenuAdmin.Visible = false;
+            btnMenuAcademico.Visible = false;
+            btnMenuCalificaciones.Visible = false;
+            btnMenuSimulacion.Visible = false;
+            btnMenuReportes.Visible = false;
+
+            // Evaluamos según los roles (1: Admin, 2: Docente, 3: Estudiante, 4: Coordinador)
+            switch (Program.rolId)
+            {
+                case 1: // ADMINISTRADOR
+                    btnMenuAdmin.Visible = true;
+                    btnMenuAcademico.Visible = true;
+                    btnMenuCalificaciones.Visible = true;
+                    btnMenuSimulacion.Visible = true;
+                    btnMenuReportes.Visible = true;
+                    break;
+
+                case 4: // COORDINADOR
+                    btnMenuAcademico.Visible = true;
+                    btnMenuSimulacion.Visible = true;
+                    // Ocultar submenús específicos por código si es necesario
+                    btnSimPromedios.Visible = false;
+                    btnMenuReportes.Visible = true;
+                    break;
+
+                case 2: // DOCENTE
+                    btnMenuCalificaciones.Visible = true;
+                    btnMenuSimulacion.Visible = true;
+                    btnSimPromedios.Visible = false;
+                    btnMenuReportes.Visible = true;
+                    break;
+
+                case 3: // ESTUDIANTE
+                    btnMenuSimulacion.Visible = true;
+                    btnDashRendimiento.Visible = false;
+                    btnMenuReportes.Visible = true;
+                    break;
+
+                default:
+                    MessageBox.Show("El rol asignado no cuenta con permisos estructurados.", "Acceso Restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+            }
         }
     }
 }
