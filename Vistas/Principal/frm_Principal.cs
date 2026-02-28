@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices; // Necesario para mover la ventana
 using System.Windows.Forms;
+using Academico.Properties;
 
 
 namespace DataBase_First.Views.Main
@@ -226,7 +227,7 @@ namespace DataBase_First.Views.Main
             else
             {
                 // Si no hay hijos, restauramos la imagen de recursos
-                pnlContenedorHijo.BackgroundImage = Properties.Resources.background_academico;
+                pnlContenedorHijo.BackgroundImage = Resources.background_academico;
             }
         }
 

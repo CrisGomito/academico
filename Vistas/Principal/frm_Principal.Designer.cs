@@ -1,4 +1,6 @@
-﻿namespace DataBase_First.Views.Main
+﻿using Academico.Properties;
+
+namespace DataBase_First.Views.Main
 {
     partial class frm_Principal
     {
@@ -678,7 +680,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
             label2.ForeColor = Color.White;
-            label2.Location = { 45, 15 }
+            label2.Location = new Point(45, 15);
             ;
             label2.Name = "label2";
             label2.Size = new Size(165, 28);
@@ -759,7 +761,7 @@
             // 
             pnlContenedorHijo.BackColor = Color.FromArgb(240, 243, 246);
             // CONFIGURACIÓN DE LA IMAGEN DE FONDO OPACA
-            pnlContenedorHijo.BackgroundImage = Properties.Resources.background_academico;
+            pnlContenedorHijo.BackgroundImage = Resources.background_academico;
             pnlContenedorHijo.BackgroundImageLayout = ImageLayout.Center; // O Zoom, según la imagen
             pnlContenedorHijo.Dock = DockStyle.Fill;
             pnlContenedorHijo.Location = new Point(260, 90);
