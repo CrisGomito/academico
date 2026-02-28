@@ -681,7 +681,6 @@ namespace DataBase_First.Views.Main
             label2.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
             label2.ForeColor = Color.White;
             label2.Location = new Point(45, 15);
-            ;
             label2.Name = "label2";
             label2.Size = new Size(165, 28);
             label2.Text = "SISTEMA ACAD";
