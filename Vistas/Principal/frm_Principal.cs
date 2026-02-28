@@ -13,7 +13,6 @@ using DataBase_First.Views.Simulacion;
 using DataBase_First.Views.Users;
 using System;
 using System.Windows.Forms;
-// using _02_CRUD.Vistas; // Descomenta esto cuando quieras instanciar tus otros formularios
 
 namespace DataBase_First.Views.Main
 {
