@@ -4,12 +4,13 @@
     using System;
     using System.Linq;
     using System.Windows.Forms;
+    using FontAwesome.Sharp;
 
     public partial class frm_Docentes : Form
     {
         private readonly DocentesController _docentesController = new DocentesController();
         private int idDocente_editar = 0;
-        private string cedula_actual = ""; // Guarda la cédula para pasarla al eliminar lógico
+        private string cedula_actual = "";
 
         public frm_Docentes()
         {
@@ -20,6 +21,20 @@
         {
             carga_lista();
         }
+
+        // --- BOTÓN CIRCULAR ROJO PARA CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // ---------------------------------------
 
         private void carga_lista()
         {
@@ -35,7 +50,6 @@
             lst_Lista_Docentes.DisplayMember = "DisplayInfo";
             lst_Lista_Docentes.ValueMember = "IdDocente";
 
-            // Cargar usuarios disponibles para asignar (Solo en modo "Nuevo")
             CargarUsuariosDisponibles();
         }
 
@@ -59,9 +73,9 @@
         {
             idDocente_editar = 0;
             cedula_actual = "";
-            CargarUsuariosDisponibles(); // Refrescamos por si alguien creó un usuario recientemente
+            CargarUsuariosDisponibles();
             LimpiarCampos(false);
-            activacajas(true); // esNuevo = true
+            activacajas(true);
         }
 
         private void btn_Cancelar_Click(object sender, EventArgs e)
@@ -76,7 +90,6 @@
             chb_Estado.Text = chb_Estado.Checked ? "Activo" : "Inactivo";
         }
 
-        // Evitar letras en la cédula
         private void txt_Cedula_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -170,13 +183,12 @@
 
             if (docente != null)
             {
-                // Como ya es docente, no podemos cambiar su usuario base. Mostraremos su nombre en el combo
                 cmb_Usuario.DataSource = new[] { new { Nombre = $"{docente.Nombre} {docente.Apellido}" } };
                 cmb_Usuario.DisplayMember = "Nombre";
                 cmb_Usuario.SelectedIndex = 0;
 
                 txt_Cedula.Text = docente.CedulaPlana;
-                cedula_actual = docente.CedulaPlana; // Guardamos para eliminar lógicamente
+                cedula_actual = docente.CedulaPlana;
                 chb_Estado.Checked = docente.Estado ?? false;
 
                 if (idAccion == 1) // Modo Editar
@@ -200,13 +212,7 @@
             txt_Cedula.Enabled = true;
             chb_Estado.Enabled = true;
 
-            // Solo se puede elegir usuario si es un Docente nuevo
             cmb_Usuario.Enabled = esNuevo;
-        }
-
-        private void btn_Salir_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void btn_Editar_Click(object sender, EventArgs e)
@@ -233,8 +239,6 @@
             }
 
             var idDocente = (int)lst_Lista_Docentes.SelectedValue;
-
-            // Requerimos cargar el docente para saber su cédula y enviarla al SP de actualización (Eliminado Lógico)
             uno(0);
 
             var confirmResult = MessageBox.Show("¿Está seguro de que desea deshabilitar a este docente?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
