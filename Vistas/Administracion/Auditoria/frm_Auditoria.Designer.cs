@@ -1,9 +1,4 @@
-﻿using System.Drawing.Printing;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace DataBase_First.Views.Administracion.Auditoria
+﻿namespace DataBase_First.Views.Administracion.Auditoria
 {
     partial class frm_Auditoria
     {
@@ -11,125 +6,192 @@ namespace DataBase_First.Views.Administracion.Auditoria
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            label1 = new System.Windows.Forms.Label();
-            dgv_Auditoria = new System.Windows.Forms.DataGridView();
-            btn_Salir = new System.Windows.Forms.Button();
-            txt_Buscar = new System.Windows.Forms.TextBox();
-            label2 = new System.Windows.Forms.Label();
-            btn_Actualizar = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)dgv_Auditoria).BeginInit();
+            components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            pnlCabecera = new Panel();
+            btnCerrar = new Button();
+            lblTitulo = new Label();
+            pnlContenedorCentral = new Panel();
+            dgvAuditoria = new DataGridView();
+            pnlBuscador = new Panel();
+            txtBuscar = new TextBox();
+            iconBuscar = new FontAwesome.Sharp.IconPictureBox();
+            tmrAutoRefresh = new System.Windows.Forms.Timer(components);
+            pnlCabecera.SuspendLayout();
+            pnlContenedorCentral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvAuditoria).BeginInit();
+            pnlBuscador.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)iconBuscar).BeginInit();
             SuspendLayout();
             // 
-            // label1
+            // pnlCabecera
             // 
-            label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label1.Location = new System.Drawing.Point(31, 18);
-            label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(242, 25);
-            label1.TabIndex = 2;
-            label1.Text = "AUDITORÍA DEL SISTEMA";
+            pnlCabecera.BackColor = Color.White;
+            pnlCabecera.Controls.Add(btnCerrar);
+            pnlCabecera.Controls.Add(lblTitulo);
+            pnlCabecera.Dock = DockStyle.Top;
+            pnlCabecera.Location = new Point(0, 0);
+            pnlCabecera.Name = "pnlCabecera";
+            pnlCabecera.Size = new Size(950, 50);
+            pnlCabecera.TabIndex = 0;
             // 
-            // dgv_Auditoria
+            // btnCerrar
             // 
-            dgv_Auditoria.AllowUserToAddRows = false;
-            dgv_Auditoria.AllowUserToDeleteRows = false;
-            dgv_Auditoria.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            dgv_Auditoria.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dgv_Auditoria.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dgv_Auditoria.DefaultCellStyle = dataGridViewCellStyle1;
-            dgv_Auditoria.Location = new System.Drawing.Point(36, 120);
-            dgv_Auditoria.Name = "dgv_Auditoria";
-            dgv_Auditoria.ReadOnly = true;
-            dgv_Auditoria.RowHeadersVisible = false;
-            dgv_Auditoria.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgv_Auditoria.Size = new System.Drawing.Size(950, 420);
-            dgv_Auditoria.TabIndex = 3;
+            btnCerrar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnCerrar.BackColor = Color.FromArgb(231, 76, 60);
+            btnCerrar.FlatAppearance.BorderSize = 0;
+            btnCerrar.FlatStyle = FlatStyle.Flat;
+            btnCerrar.Location = new Point(915, 15);
+            btnCerrar.Name = "btnCerrar";
+            btnCerrar.Size = new Size(20, 20);
+            btnCerrar.TabIndex = 0;
+            btnCerrar.UseVisualStyleBackColor = false;
+            btnCerrar.Click += btnCerrar_Click;
+            btnCerrar.Paint += btnCerrar_Paint;
             // 
-            // btn_Salir
+            // lblTitulo
             // 
-            btn_Salir.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            btn_Salir.Location = new System.Drawing.Point(868, 560);
-            btn_Salir.Margin = new System.Windows.Forms.Padding(5);
-            btn_Salir.Name = "btn_Salir";
-            btn_Salir.Size = new System.Drawing.Size(118, 38);
-            btn_Salir.TabIndex = 18;
-            btn_Salir.Text = "Cerrar";
-            btn_Salir.UseVisualStyleBackColor = true;
-            btn_Salir.Click += btn_Salir_Click;
+            lblTitulo.Dock = DockStyle.Fill;
+            lblTitulo.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitulo.ForeColor = Color.FromArgb(44, 62, 80);
+            lblTitulo.Location = new Point(0, 0);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(950, 50);
+            lblTitulo.TabIndex = 1;
+            lblTitulo.Text = "AUDITORÍA DEL SISTEMA";
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // txt_Buscar
+            // pnlContenedorCentral
             // 
-            txt_Buscar.Location = new System.Drawing.Point(109, 68);
-            txt_Buscar.Name = "txt_Buscar";
-            txt_Buscar.Size = new System.Drawing.Size(300, 32);
-            txt_Buscar.TabIndex = 19;
-            txt_Buscar.TextChanged += txt_Buscar_TextChanged;
+            pnlContenedorCentral.BackColor = Color.FromArgb(240, 243, 246);
+            pnlContenedorCentral.Controls.Add(dgvAuditoria);
+            pnlContenedorCentral.Controls.Add(pnlBuscador);
+            pnlContenedorCentral.Dock = DockStyle.Fill;
+            pnlContenedorCentral.Location = new Point(0, 50);
+            pnlContenedorCentral.Name = "pnlContenedorCentral";
+            pnlContenedorCentral.Padding = new Padding(30);
+            pnlContenedorCentral.Size = new Size(950, 550);
+            pnlContenedorCentral.TabIndex = 1;
             // 
-            // label2
+            // dgvAuditoria
             // 
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(31, 71);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(72, 25);
-            label2.TabIndex = 20;
-            label2.Text = "Buscar:";
+            dgvAuditoria.AllowUserToAddRows = false;
+            dgvAuditoria.AllowUserToDeleteRows = false;
+            dgvAuditoria.AllowUserToResizeRows = false;
+            dgvAuditoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvAuditoria.BackgroundColor = Color.White;
+            dgvAuditoria.BorderStyle = BorderStyle.None;
+            dgvAuditoria.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvAuditoria.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(52, 73, 94);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(52, 73, 94);
+            dgvAuditoria.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvAuditoria.ColumnHeadersHeight = 40;
+            dgvAuditoria.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle2.Padding = new Padding(5);
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(236, 240, 241);
+            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvAuditoria.DefaultCellStyle = dataGridViewCellStyle2;
+            dgvAuditoria.Dock = DockStyle.Fill;
+            dgvAuditoria.EnableHeadersVisualStyles = false;
+            dgvAuditoria.Location = new Point(30, 75);
+            dgvAuditoria.MultiSelect = false;
+            dgvAuditoria.Name = "dgvAuditoria";
+            dgvAuditoria.ReadOnly = true;
+            dgvAuditoria.RowHeadersVisible = false;
+            dgvAuditoria.RowTemplate.Height = 35;
+            dgvAuditoria.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAuditoria.Size = new Size(890, 445);
+            dgvAuditoria.TabIndex = 1;
             // 
-            // btn_Actualizar
+            // pnlBuscador
             // 
-            btn_Actualizar.Location = new System.Drawing.Point(426, 65);
-            btn_Actualizar.Name = "btn_Actualizar";
-            btn_Actualizar.Size = new System.Drawing.Size(120, 35);
-            btn_Actualizar.TabIndex = 21;
-            btn_Actualizar.Text = "Actualizar";
-            btn_Actualizar.UseVisualStyleBackColor = true;
-            btn_Actualizar.Click += btn_Actualizar_Click;
+            pnlBuscador.BackColor = Color.White;
+            pnlBuscador.Controls.Add(txtBuscar);
+            pnlBuscador.Controls.Add(iconBuscar);
+            pnlBuscador.Dock = DockStyle.Top;
+            pnlBuscador.Location = new Point(30, 30);
+            pnlBuscador.Name = "pnlBuscador";
+            pnlBuscador.Size = new Size(890, 45);
+            pnlBuscador.TabIndex = 0;
+            // 
+            // txtBuscar
+            // 
+            txtBuscar.BorderStyle = BorderStyle.None;
+            txtBuscar.Font = new Font("Segoe UI", 12F);
+            txtBuscar.ForeColor = Color.Gray;
+            txtBuscar.Location = new Point(50, 12);
+            txtBuscar.Name = "txtBuscar";
+            txtBuscar.Size = new Size(800, 22);
+            txtBuscar.TabIndex = 0;
+            txtBuscar.Text = "Buscar por usuario, acción o tabla afectada...";
+            txtBuscar.TextChanged += txtBuscar_TextChanged;
+            txtBuscar.Enter += txtBuscar_Enter;
+            txtBuscar.Leave += txtBuscar_Leave;
+            // 
+            // iconBuscar
+            // 
+            iconBuscar.BackColor = Color.White;
+            iconBuscar.ForeColor = Color.Gray;
+            iconBuscar.IconChar = FontAwesome.Sharp.IconChar.Search;
+            iconBuscar.IconColor = Color.Gray;
+            iconBuscar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconBuscar.IconSize = 25;
+            iconBuscar.Location = new Point(15, 10);
+            iconBuscar.Name = "iconBuscar";
+            iconBuscar.Size = new Size(25, 25);
+            iconBuscar.TabIndex = 1;
+            iconBuscar.TabStop = false;
             // 
             // frm_Auditoria
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1024, 620);
-            Controls.Add(btn_Actualizar);
-            Controls.Add(label2);
-            Controls.Add(txt_Buscar);
-            Controls.Add(btn_Salir);
-            Controls.Add(dgv_Auditoria);
-            Controls.Add(label1);
-            Font = new System.Drawing.Font("Segoe UI", 14F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            Margin = new System.Windows.Forms.Padding(5);
+            AutoScaleDimensions = new SizeF(11F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(240, 243, 246);
+            ClientSize = new Size(950, 600);
+            Controls.Add(pnlContenedorCentral);
+            Controls.Add(pnlCabecera);
+            Font = new Font("Segoe UI", 14F);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "frm_Auditoria";
             Text = "Auditoría del Sistema";
             Load += frm_Auditoria_Load;
-            ((System.ComponentModel.ISupportInitialize)dgv_Auditoria).EndInit();
+            pnlCabecera.ResumeLayout(false);
+            pnlContenedorCentral.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvAuditoria).EndInit();
+            pnlBuscador.ResumeLayout(false);
+            pnlBuscador.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)iconBuscar).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dgv_Auditoria;
-        private System.Windows.Forms.Button btn_Salir;
-        private System.Windows.Forms.TextBox txt_Buscar;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btn_Actualizar;
+        #endregion
+
+        private System.Windows.Forms.Panel pnlCabecera;
+        private System.Windows.Forms.Label lblTitulo;
+        private System.Windows.Forms.Button btnCerrar;
+        private System.Windows.Forms.Panel pnlContenedorCentral;
+        private System.Windows.Forms.Panel pnlBuscador;
+        private System.Windows.Forms.TextBox txtBuscar;
+        private FontAwesome.Sharp.IconPictureBox iconBuscar;
+        private System.Windows.Forms.DataGridView dgvAuditoria;
+        private System.Windows.Forms.Timer tmrAutoRefresh;
     }
 }
