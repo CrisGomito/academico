@@ -6,6 +6,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Drawing.Imaging; // Necesario para manipular gráficos y opacidad
 
 namespace DataBase_First.Views.Main
 {
@@ -19,6 +20,27 @@ namespace DataBase_First.Views.Main
         public frm_Principal()
         {
             InitializeComponent();
+        }
+
+        // --- MÉTODO PARA BAJAR LA OPACIDAD DE CUALQUIER IMAGEN ---
+        private Image AjustarOpacidad(Image imagenOriginal, float opacidad)
+        {
+            if (imagenOriginal == null) return null;
+
+            Bitmap bmp = new Bitmap(imagenOriginal.Width, imagenOriginal.Height);
+            using (Graphics gfx = Graphics.FromImage(bmp))
+            {
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.Matrix33 = opacidad; // Aquí se define el % de opacidad (0.0f a 1.0f)
+
+                ImageAttributes attributes = new ImageAttributes();
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+                gfx.DrawImage(imagenOriginal, new Rectangle(0, 0, bmp.Width, bmp.Height),
+                              0, 0, imagenOriginal.Width, imagenOriginal.Height,
+                              GraphicsUnit.Pixel, attributes);
+            }
+            return bmp;
         }
 
         private void frm_Principal_Load(object sender, EventArgs e)
@@ -36,12 +58,28 @@ namespace DataBase_First.Views.Main
 
             AplicarPermisosPorRol();
 
-            // Asignación segura del background desde C# para evitar crasheos del diseñador
-            try
+            // LLAMAMOS AL MÉTODO CENTRAL PARA QUE PONGA EL FONDO OPÁCO AL INICIAR
+            GestionarFondoMdi();
+        }
+
+        // --- LÓGICA DE FORMULARIOS HIJOS Y FONDO ---
+        private void GestionarFondoMdi()
+        {
+            // Verificamos si hay algún formulario abierto dentro del panel
+            if (pnlContenedorHijo.Controls.Count > 0)
             {
-                pnlContenedorHijo.BackgroundImage = global::Academico.Properties.Resources.background_academico1;
+                pnlContenedorHijo.BackgroundImage = null; // Lo ocultamos
             }
-            catch { /* Ignorar si no existe la imagen temporalmente */ }
+            else
+            {
+                // Asignación segura del background desde C# para evitar crasheos del diseñador
+                // Si está vacío, dibujamos la imagen con 15% de opacidad (0.15f)
+                try
+                {
+                    pnlContenedorHijo.BackgroundImage = AjustarOpacidad(Resources.background_academico1, 0.15f);
+                }
+                catch { /* Ignorar si falla la carga temporalmente */ }
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -151,7 +189,8 @@ namespace DataBase_First.Views.Main
             }
 
             currentChildForm = formularioHijo;
-            // Configuración clave: Ya no es un MDI hijo, es un control incrustado en el panel.
+
+            // Configuración clave: Es un control incrustado en el panel.
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
             formularioHijo.Dock = DockStyle.Fill;
@@ -159,26 +198,22 @@ namespace DataBase_First.Views.Main
             pnlContenedorHijo.Controls.Add(formularioHijo);
             pnlContenedorHijo.Tag = formularioHijo;
 
-            // Ocultar imagen de fondo porque vamos a mostrar un formulario
-            pnlContenedorHijo.BackgroundImage = null;
+            // 1. Llamamos al método central: Como ya hay 1 control, ocultará la imagen.
+            GestionarFondoMdi();
 
             // Restaurar imagen de fondo al cerrar
             formularioHijo.FormClosed += (s, args) =>
             {
-                // 1. Forzamos la eliminación del control de la memoria del panel
+                // Forzamos la eliminación del formulario cerrado de la memoria del panel
                 pnlContenedorHijo.Controls.Remove(formularioHijo);
 
-                // 2. Ahora sí, verificamos si el panel quedó totalmente vacío
                 if (pnlContenedorHijo.Controls.Count == 0)
                 {
                     currentChildForm = null;
-                    try
-                    {
-                        // Restauramos la imagen (usando la ruta que tú configuraste)
-                        pnlContenedorHijo.BackgroundImage = Resources.background_academico1;
-                    }
-                    catch { }
                 }
+
+                // 2. Llamamos al método central: Como ya hay 0 controles, dibujará la imagen opaca.
+                GestionarFondoMdi();
             };
 
             formularioHijo.BringToFront();

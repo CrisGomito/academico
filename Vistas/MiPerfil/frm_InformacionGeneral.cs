@@ -1,6 +1,9 @@
 ﻿namespace DataBase_First.Views.Perfil
 {
+    using Academico; // Para acceder a Program.rolId
     using DataBase_First.Views.Main;
+    using FontAwesome.Sharp; // NUEVO: Para usar los iconos en código
+    using global::Academico;
     using global::Academico.Controladores;
     using System;
     using System.Windows.Forms;
@@ -28,6 +31,26 @@
                 lblRol.Text = info.Roles;
                 // Mostramos el correo en texto plano ya que es la vista general privada del usuario
                 lblCorreo.Text = info.CorreoPlano;
+
+                // --- MAGIA: ÍCONO DINÁMICO SEGÚN EL ROL ---
+                Color colorIcono = Color.FromArgb(52, 152, 219); // Azul institucional
+                int tamañoIcono = 120; // Tamaño en píxeles
+
+                if (Program.rolId == 3) // Estudiante
+                {
+                    picAvatar.Image = IconChar.UserGraduate.ToBitmap(colorIcono, tamañoIcono);
+                }
+                else if (Program.rolId == 2) // Docente
+                {
+                    picAvatar.Image = IconChar.ChalkboardTeacher.ToBitmap(colorIcono, tamañoIcono);
+                }
+                else // Admin y Coordinador
+                {
+                    picAvatar.Image = IconChar.UserTie.ToBitmap(colorIcono, tamañoIcono);
+                }
+
+                // Centramos la imagen en el PictureBox
+                picAvatar.SizeMode = PictureBoxSizeMode.CenterImage;
             }
         }
 
