@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
+    using FontAwesome.Sharp;
 
     public partial class frm_Usuarios : Form
     {
@@ -21,6 +22,20 @@
         {
             carga_lista();
         }
+
+        // --- BOTÓN CIRCULAR ROJO PARA CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // ---------------------------------------
 
         private void carga_lista()
         {
@@ -161,6 +176,8 @@
             return true;
         }
 
+        // LIMPIEZA DE CÓDIGO: Al quitar las líneas de Color, respetamos la decisión
+        // de que los botones mantengan su color base (azul, verde, naranja) pero se atenúen con "Enabled = false".
         public void LimpiarCampos(bool bloquearCajas)
         {
             txt_Nombre.Text = "";
@@ -243,11 +260,6 @@
             // Por seguridad, el SP de actualización de tu BD NO permite cambiar Correo ni Clave desde este formulario
             txt_Correo.Enabled = esNuevo;
             txt_Contrasenia.Enabled = esNuevo;
-        }
-
-        private void btn_Salir_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void btn_Editar_Click(object sender, EventArgs e)
