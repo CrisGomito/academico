@@ -73,9 +73,9 @@ namespace Academico.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap background_academico2 {
+        public static System.Drawing.Bitmap background_academico3 {
             get {
-                object obj = ResourceManager.GetObject("background_academico2", resourceCulture);
+                object obj = ResourceManager.GetObject("background_academico3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
