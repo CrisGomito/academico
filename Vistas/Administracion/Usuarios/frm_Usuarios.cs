@@ -286,6 +286,14 @@
             }
 
             var usuarioId = (int)lst_Lista_Usuarios.SelectedValue;
+
+            // --- NUEVA VALIDACIÓN: Evitar que el usuario se elimine a sí mismo ---
+            if (usuarioId == Program.usuarioActualId)
+            {
+                MessageBox.Show("Por motivos de seguridad, no puede eliminar ni deshabilitar su propia cuenta mientras tenga la sesión iniciada.", "Acción Denegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var confirmResult = MessageBox.Show("¿Está seguro de que desea deshabilitar (eliminar lógicamente) este usuario?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirmResult == DialogResult.Yes)
