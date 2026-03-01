@@ -243,7 +243,8 @@
 
         private void VolverAlPerfil()
         {
-            if (this.MdiParent is DataBase_First.Views.Main.frm_Principal principal)
+            var principal = Application.OpenForms.OfType<DataBase_First.Views.Main.frm_Principal>().FirstOrDefault();
+            if (principal != null)
             {
                 principal.AbrirFormularioHijo(new frm_InformacionGeneral());
             }

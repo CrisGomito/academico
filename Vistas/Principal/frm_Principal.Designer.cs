@@ -288,11 +288,11 @@
             lbl_Reloj.AutoSize = true;
             lbl_Reloj.Font = new Font("Segoe UI", 11F);
             lbl_Reloj.ForeColor = Color.FromArgb(64, 64, 64);
-            lbl_Reloj.Location = new Point(950, 10);
+            lbl_Reloj.Location = new Point(1056, 10);
             lbl_Reloj.Name = "lbl_Reloj";
-            lbl_Reloj.Size = new Size(206, 20);
+            lbl_Reloj.Size = new Size(194, 20);
             lbl_Reloj.TabIndex = 0;
-            lbl_Reloj.Text = "00/00/0000 00:00:00 --- 0 min";
+            lbl_Reloj.Text = "00/00/0000 00:00:00 - 0 min";
             // 
             // lbl_Rol
             // 

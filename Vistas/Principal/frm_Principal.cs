@@ -52,7 +52,7 @@ namespace DataBase_First.Views.Main
                 ? $"{(int)tiempo.TotalMinutes} min"
                 : $"{(int)tiempo.TotalHours} h {tiempo.Minutes} min";
 
-            lbl_Reloj.Text = $"{ahora.ToString("dd/MM/yyyy HH:mm:ss")} --- {formatoTiempo}";
+            lbl_Reloj.Text = $"{ahora.ToString("dd/MM/yyyy HH:mm:ss")} - {formatoTiempo}";
         }
 
         // --- ARRASTRAR VENTANA ---

@@ -33,8 +33,8 @@
 
         private void btnCambiarCorreo_Click(object sender, EventArgs e)
         {
-            // Reutilizamos el método público del formulario Padre para no tener ventanas flotantes
-            if (this.MdiParent is frm_Principal principal)
+            var principal = Application.OpenForms.OfType<DataBase_First.Views.Main.frm_Principal>().FirstOrDefault();
+            if (principal != null)
             {
                 principal.AbrirFormularioHijo(new frm_CambiarCorreo());
             }
@@ -42,7 +42,8 @@
 
         private void btnCambiarClave_Click(object sender, EventArgs e)
         {
-            if (this.MdiParent is frm_Principal principal)
+            var principal = Application.OpenForms.OfType<DataBase_First.Views.Main.frm_Principal>().FirstOrDefault();
+            if (principal != null)
             {
                 principal.AbrirFormularioHijo(new frm_CambiarClave());
             }
@@ -50,7 +51,8 @@
 
         private void btnEditarInfo_Click(object sender, EventArgs e)
         {
-            if (this.MdiParent is frm_Principal principal)
+            var principal = Application.OpenForms.OfType<DataBase_First.Views.Main.frm_Principal>().FirstOrDefault();
+            if (principal != null)
             {
                 principal.AbrirFormularioHijo(new frm_EditarInfoPerfil());
             }
