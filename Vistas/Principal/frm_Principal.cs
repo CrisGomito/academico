@@ -240,30 +240,17 @@ namespace DataBase_First.Views.Main
             var confirm = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
-
             {
-
                 // Limpiamos memoria
-
                 Program.logueado = false;
-
                 Program.usuarioActualId = 0;
-
                 Program.nombreUsuario = "";
-
                 Program.rol = "";
-
                 Program.rolId = 0;
-
-
-
-                // Reiniciamos la aplicación completa. Esto destruye el MDI y levanta el Login limpio.
-
+                // Reiniciamos la aplicación completa. Esto destruye el MDI y levanta el Login limpio
                 Application.Restart();
-
             }
         }
-
 
         private void AplicarPermisosPorRol()
         {

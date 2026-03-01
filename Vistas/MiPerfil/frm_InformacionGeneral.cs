@@ -2,7 +2,7 @@
 {
     using Academico; // Para acceder a Program.rolId
     using DataBase_First.Views.Main;
-    using FontAwesome.Sharp; // NUEVO: Para usar los iconos en código
+    using FontAwesome.Sharp; //Para usar los iconos en código
     using global::Academico;
     using global::Academico.Controladores;
     using System;
@@ -32,7 +32,7 @@
                 // Mostramos el correo en texto plano ya que es la vista general privada del usuario
                 lblCorreo.Text = info.CorreoPlano;
 
-                // --- MAGIA: ÍCONO DINÁMICO SEGÚN EL ROL ---
+                // --- ÍCONO DINÁMICO SEGÚN EL ROL ---
                 Color colorIcono = Color.FromArgb(52, 152, 219); // Azul institucional
                 int tamañoIcono = 120; // Tamaño en píxeles
 
