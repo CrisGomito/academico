@@ -319,7 +319,7 @@
             // 
             lbl_Nombre.AutoSize = true;
             lbl_Nombre.Font = new Font("Segoe UI", 11F);
-            lbl_Nombre.Location = new Point(120, 10);
+            lbl_Nombre.Location = new Point(105, 10);
             lbl_Nombre.Name = "lbl_Nombre";
             lbl_Nombre.Size = new Size(114, 20);
             lbl_Nombre.TabIndex = 3;
@@ -332,9 +332,9 @@
             label1.ForeColor = Color.FromArgb(44, 62, 80);
             label1.Location = new Point(20, 10);
             label1.Name = "label1";
-            label1.Size = new Size(91, 20);
+            label1.Size = new Size(87, 20);
             label1.TabIndex = 4;
-            label1.Text = "Bienvenido:";
+            label1.Text = "Bienvenido";
             // 
             // pnlContenedorHijo
             // 
