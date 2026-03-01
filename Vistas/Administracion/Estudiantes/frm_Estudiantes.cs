@@ -4,13 +4,12 @@
     using System;
     using System.Linq;
     using System.Windows.Forms;
+    using FontAwesome.Sharp;
 
     public partial class frm_Estudiantes : Form
     {
         private readonly EstudiantesController _estudiantesController = new EstudiantesController();
         private int idEstudiante_editar = 0;
-
-        // Se guardan para pasarlos al SP de eliminación lógica sin perder el dato
         private string cedula_actual = "";
         private string codigo_actual = "";
 
@@ -24,6 +23,20 @@
             carga_lista();
         }
 
+        // --- BOTÓN CIRCULAR ROJO PARA CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // ---------------------------------------
+
         private void carga_lista()
         {
             var listaEstudiantes = _estudiantesController.ObtenerEstudiantes();
@@ -31,14 +44,13 @@
             var dataSource = listaEstudiantes.Select(e => new
             {
                 IdEstudiante = e.IdEstudiante,
-                DisplayInfo = $"[{e.Codigo}] {e.Nombre} {e.Apellido} - C.I: {e.CedulaPlana}"
+                DisplayInfo = $"{e.Codigo} - {e.Nombre} {e.Apellido}"
             }).ToList();
 
             lst_Lista_Estudiantes.DataSource = dataSource;
             lst_Lista_Estudiantes.DisplayMember = "DisplayInfo";
             lst_Lista_Estudiantes.ValueMember = "IdEstudiante";
 
-            // Cargar usuarios disponibles para asignar (Solo en modo "Nuevo")
             CargarUsuariosDisponibles();
         }
 
@@ -63,9 +75,9 @@
             idEstudiante_editar = 0;
             cedula_actual = "";
             codigo_actual = "";
-            CargarUsuariosDisponibles(); // Refrescar combos
+            CargarUsuariosDisponibles();
             LimpiarCampos(false);
-            activacajas(true); // esNuevo = true
+            activacajas(true);
         }
 
         private void btn_Cancelar_Click(object sender, EventArgs e)
@@ -124,7 +136,7 @@
             }
             else
             {
-                MessageBox.Show("Error al guardar el estudiante. Es probable que el código ya exista.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al guardar el estudiante en la Base de Datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -144,7 +156,7 @@
 
             if (string.IsNullOrWhiteSpace(txt_Codigo.Text))
             {
-                MessageBox.Show("Debe ingresar un Código para el estudiante (Ej: EST-001).");
+                MessageBox.Show("Debe asignar un código institucional al estudiante.");
                 return false;
             }
 
@@ -184,7 +196,6 @@
 
             if (estudiante != null)
             {
-                // Solo mostrar en el combo el nombre del estudiante actual
                 cmb_Usuario.DataSource = new[] { new { Nombre = $"{estudiante.Nombre} {estudiante.Apellido}" } };
                 cmb_Usuario.DisplayMember = "Nombre";
                 cmb_Usuario.SelectedIndex = 0;
@@ -219,13 +230,7 @@
             txt_Codigo.Enabled = true;
             chb_Estado.Enabled = true;
 
-            // Solo se elige usuario nuevo si estamos insertando
             cmb_Usuario.Enabled = esNuevo;
-        }
-
-        private void btn_Salir_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void btn_Editar_Click(object sender, EventArgs e)
@@ -252,8 +257,6 @@
             }
 
             var idEstudiante = (int)lst_Lista_Estudiantes.SelectedValue;
-
-            // Cargar datos actuales en las variables por si acaso no hizo doble click antes
             uno(0);
 
             var confirmResult = MessageBox.Show("¿Está seguro de que desea deshabilitar a este estudiante?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
