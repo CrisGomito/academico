@@ -90,9 +90,9 @@
             label2.ForeColor = Color.White;
             label2.Location = new Point(15, 7);
             label2.Name = "label2";
-            label2.Size = new Size(209, 25);
+            label2.Size = new Size(704, 25);
             label2.TabIndex = 0;
-            label2.Text = "SISTEMA ACADÉMICO";
+            label2.Text = "                                                                                                   SISTEMA ACADÉMICO";
             label2.MouseDown += pnlControlWindow_MouseDown;
             // 
             // btnMinimizar

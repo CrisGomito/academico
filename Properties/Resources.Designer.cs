@@ -63,9 +63,19 @@ namespace Academico.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap background_academico {
+        public static System.Drawing.Bitmap background_academico1 {
             get {
-                object obj = ResourceManager.GetObject("background_academico", resourceCulture);
+                object obj = ResourceManager.GetObject("background_academico1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap background_academico2 {
+            get {
+                object obj = ResourceManager.GetObject("background_academico2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

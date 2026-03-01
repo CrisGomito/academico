@@ -39,7 +39,7 @@ namespace DataBase_First.Views.Main
             // Asignación segura del background desde C# para evitar crasheos del diseñador
             try
             {
-                pnlContenedorHijo.BackgroundImage = global::Academico.Properties.Resources.background_academico;
+                pnlContenedorHijo.BackgroundImage = global::Academico.Properties.Resources.background_academico1;
             }
             catch { /* Ignorar si no existe la imagen temporalmente */ }
         }
@@ -175,7 +175,7 @@ namespace DataBase_First.Views.Main
                     try
                     {
                         // Restauramos la imagen (usando la ruta que tú configuraste)
-                        pnlContenedorHijo.BackgroundImage = Resources.background_academico;
+                        pnlContenedorHijo.BackgroundImage = Resources.background_academico1;
                     }
                     catch { }
                 }
