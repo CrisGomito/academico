@@ -52,8 +52,9 @@ namespace DataBase_First.Views.Perfil
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(50, 110);
+            label2.Location = new Point(455, 130);
             label2.Name = "label2";
             label2.Size = new Size(229, 25);
             label2.TabIndex = 4;
@@ -61,17 +62,19 @@ namespace DataBase_First.Views.Perfil
             // 
             // txtNuevoCorreo
             // 
-            txtNuevoCorreo.Location = new Point(50, 140);
+            txtNuevoCorreo.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtNuevoCorreo.Location = new Point(455, 160);
             txtNuevoCorreo.Name = "txtNuevoCorreo";
             txtNuevoCorreo.Size = new Size(350, 32);
             txtNuevoCorreo.TabIndex = 3;
             // 
             // btnEnviarCodigo
             // 
+            btnEnviarCodigo.Anchor = AnchorStyles.Left;
             btnEnviarCodigo.BackColor = Color.FromArgb(52, 152, 219);
             btnEnviarCodigo.FlatStyle = FlatStyle.Flat;
             btnEnviarCodigo.ForeColor = Color.White;
-            btnEnviarCodigo.Location = new Point(50, 185);
+            btnEnviarCodigo.Location = new Point(455, 205);
             btnEnviarCodigo.Name = "btnEnviarCodigo";
             btnEnviarCodigo.Size = new Size(200, 40);
             btnEnviarCodigo.TabIndex = 2;
@@ -81,10 +84,11 @@ namespace DataBase_First.Views.Perfil
             // 
             // pnlValidacion
             // 
+            pnlValidacion.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             pnlValidacion.Controls.Add(label3);
             pnlValidacion.Controls.Add(txtCodigo);
             pnlValidacion.Controls.Add(btnConfirmar);
-            pnlValidacion.Location = new Point(50, 240);
+            pnlValidacion.Location = new Point(455, 260);
             pnlValidacion.Name = "pnlValidacion";
             pnlValidacion.Size = new Size(400, 150);
             pnlValidacion.TabIndex = 1;
@@ -123,9 +127,10 @@ namespace DataBase_First.Views.Perfil
             // 
             // btnCerrar
             // 
+            btnCerrar.Anchor = AnchorStyles.Right;
             btnCerrar.BackColor = Color.Silver;
             btnCerrar.FlatStyle = FlatStyle.Flat;
-            btnCerrar.Location = new Point(260, 185);
+            btnCerrar.Location = new Point(665, 205);
             btnCerrar.Name = "btnCerrar";
             btnCerrar.Size = new Size(140, 40);
             btnCerrar.TabIndex = 0;
@@ -138,7 +143,7 @@ namespace DataBase_First.Views.Perfil
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(800, 500);
+            ClientSize = new Size(1280, 590);
             Controls.Add(btnCerrar);
             Controls.Add(pnlValidacion);
             Controls.Add(btnEnviarCodigo);

@@ -15,123 +15,193 @@ namespace DataBase_First.Views.Perfil
 
         private void InitializeComponent()
         {
-            label1 = new System.Windows.Forms.Label();
-            label2 = new System.Windows.Forms.Label();
-            txtNombre = new System.Windows.Forms.TextBox();
-            label3 = new System.Windows.Forms.Label();
-            txtApellido = new System.Windows.Forms.TextBox();
-            label4 = new System.Windows.Forms.Label();
-            txtCorreo = new System.Windows.Forms.TextBox();
-            btnValidarCorreo = new System.Windows.Forms.Button();
-            txtCodigo = new System.Windows.Forms.TextBox();
-            btnConfirmarCodigo = new System.Windows.Forms.Button();
-            lblVerificado = new System.Windows.Forms.Label();
-            btnGuardar = new System.Windows.Forms.Button();
-            btnCancelar = new System.Windows.Forms.Button();
+            label1 = new Label();
+            label2 = new Label();
+            txtNombre = new TextBox();
+            label3 = new Label();
+            txtApellido = new TextBox();
+            label4 = new Label();
+            txtCorreo = new TextBox();
+            btnValidarCorreo = new Button();
+            txtCodigo = new TextBox();
+            btnConfirmarCodigo = new Button();
+            lblVerificado = new Label();
+            btnGuardar = new Button();
+            btnCancelar = new Button();
+            btnCancelarValidacion = new Button();
             SuspendLayout();
-
+            // 
+            // label1
+            // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            label1.ForeColor = System.Drawing.Color.FromArgb(41, 128, 185);
-            label1.Location = new System.Drawing.Point(50, 30);
+            label1.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(41, 128, 185);
+            label1.Location = new Point(50, 30);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(250, 30);
+            label1.Size = new Size(251, 30);
+            label1.TabIndex = 12;
             label1.Text = "EDITAR INFORMACIÓN";
-
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Left;
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(50, 90);
+            label2.Location = new Point(391, 120);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(89, 25);
+            label2.Size = new Size(89, 25);
+            label2.TabIndex = 11;
             label2.Text = "Nombres";
-
-            txtNombre.Location = new System.Drawing.Point(50, 120);
+            // 
+            // txtNombre
+            // 
+            txtNombre.Anchor = AnchorStyles.Left;
+            txtNombre.Location = new Point(391, 150);
             txtNombre.Name = "txtNombre";
-            txtNombre.Size = new System.Drawing.Size(300, 32);
+            txtNombre.Size = new Size(300, 32);
+            txtNombre.TabIndex = 10;
             txtNombre.TextChanged += campos_TextChanged;
-
+            // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Left;
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(370, 90);
+            label3.Location = new Point(711, 120);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(90, 25);
+            label3.Size = new Size(90, 25);
+            label3.TabIndex = 9;
             label3.Text = "Apellidos";
-
-            txtApellido.Location = new System.Drawing.Point(370, 120);
+            // 
+            // txtApellido
+            // 
+            txtApellido.Anchor = AnchorStyles.Left;
+            txtApellido.Location = new Point(711, 150);
             txtApellido.Name = "txtApellido";
-            txtApellido.Size = new System.Drawing.Size(300, 32);
+            txtApellido.Size = new Size(300, 32);
+            txtApellido.TabIndex = 8;
             txtApellido.TextChanged += campos_TextChanged;
-
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Left;
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(50, 180);
+            label4.Location = new Point(391, 210);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(169, 25);
+            label4.Size = new Size(169, 25);
+            label4.TabIndex = 7;
             label4.Text = "Correo Electrónico";
-
-            txtCorreo.Location = new System.Drawing.Point(50, 210);
+            // 
+            // txtCorreo
+            // 
+            txtCorreo.Anchor = AnchorStyles.Left;
+            txtCorreo.Location = new Point(391, 240);
             txtCorreo.Name = "txtCorreo";
-            txtCorreo.Size = new System.Drawing.Size(300, 32);
+            txtCorreo.Size = new Size(300, 32);
+            txtCorreo.TabIndex = 6;
             txtCorreo.TextChanged += txtCorreo_TextChanged;
-
-            btnValidarCorreo.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
-            btnValidarCorreo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnValidarCorreo.ForeColor = System.Drawing.Color.White;
-            btnValidarCorreo.Location = new System.Drawing.Point(360, 208);
+            // 
+            // btnValidarCorreo
+            // 
+            btnValidarCorreo.Anchor = AnchorStyles.Left;
+            btnValidarCorreo.BackColor = Color.FromArgb(52, 152, 219);
+            btnValidarCorreo.FlatStyle = FlatStyle.Flat;
+            btnValidarCorreo.ForeColor = Color.White;
+            btnValidarCorreo.Location = new Point(701, 238);
             btnValidarCorreo.Name = "btnValidarCorreo";
-            btnValidarCorreo.Size = new System.Drawing.Size(100, 35);
+            btnValidarCorreo.Size = new Size(100, 35);
+            btnValidarCorreo.TabIndex = 5;
             btnValidarCorreo.Text = "Validar";
             btnValidarCorreo.UseVisualStyleBackColor = false;
             btnValidarCorreo.Visible = false;
             btnValidarCorreo.Click += btnValidarCorreo_Click;
-
-            txtCodigo.Location = new System.Drawing.Point(470, 210);
+            // 
+            // txtCodigo
+            // 
+            txtCodigo.Anchor = AnchorStyles.Left;
+            txtCodigo.Location = new Point(811, 240);
             txtCodigo.MaxLength = 6;
             txtCodigo.Name = "txtCodigo";
-            txtCodigo.Size = new System.Drawing.Size(100, 32);
+            txtCodigo.Size = new Size(100, 32);
+            txtCodigo.TabIndex = 4;
             txtCodigo.Visible = false;
-
-            btnConfirmarCodigo.BackColor = System.Drawing.Color.FromArgb(39, 174, 96);
-            btnConfirmarCodigo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnConfirmarCodigo.ForeColor = System.Drawing.Color.White;
-            btnConfirmarCodigo.Location = new System.Drawing.Point(580, 208);
+            // 
+            // btnConfirmarCodigo
+            // 
+            btnConfirmarCodigo.Anchor = AnchorStyles.Left;
+            btnConfirmarCodigo.BackColor = Color.FromArgb(39, 174, 96);
+            btnConfirmarCodigo.FlatStyle = FlatStyle.Flat;
+            btnConfirmarCodigo.ForeColor = Color.White;
+            btnConfirmarCodigo.Location = new Point(921, 238);
             btnConfirmarCodigo.Name = "btnConfirmarCodigo";
-            btnConfirmarCodigo.Size = new System.Drawing.Size(100, 35);
+            btnConfirmarCodigo.Size = new Size(100, 35);
+            btnConfirmarCodigo.TabIndex = 3;
             btnConfirmarCodigo.Text = "Ok";
             btnConfirmarCodigo.UseVisualStyleBackColor = false;
             btnConfirmarCodigo.Visible = false;
             btnConfirmarCodigo.Click += btnConfirmarCodigo_Click;
-
+            // 
+            // lblVerificado
+            // 
+            lblVerificado.Anchor = AnchorStyles.Left;
             lblVerificado.AutoSize = true;
-            lblVerificado.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            lblVerificado.ForeColor = System.Drawing.Color.FromArgb(39, 174, 96);
-            lblVerificado.Location = new System.Drawing.Point(360, 215);
+            lblVerificado.Font = new System.Drawing.Font("Segoe UI", 12F, FontStyle.Bold);
+            lblVerificado.ForeColor = Color.FromArgb(39, 174, 96);
+            lblVerificado.Location = new Point(701, 245);
             lblVerificado.Name = "lblVerificado";
-            lblVerificado.Size = new System.Drawing.Size(104, 21);
+            lblVerificado.Size = new Size(105, 21);
+            lblVerificado.TabIndex = 2;
             lblVerificado.Text = "✓ Verificado";
             lblVerificado.Visible = false;
-
-            btnGuardar.BackColor = System.Drawing.Color.FromArgb(39, 174, 96);
-            btnGuardar.Enabled = false; // Solo se habilita si hay cambios
-            btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnGuardar.ForeColor = System.Drawing.Color.White;
-            btnGuardar.Location = new System.Drawing.Point(50, 320);
+            // 
+            // btnGuardar
+            // 
+            btnGuardar.Anchor = AnchorStyles.Left;
+            btnGuardar.BackColor = Color.FromArgb(39, 174, 96);
+            btnGuardar.Enabled = false;
+            btnGuardar.FlatStyle = FlatStyle.Flat;
+            btnGuardar.ForeColor = Color.White;
+            btnGuardar.Location = new Point(391, 350);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new System.Drawing.Size(140, 40);
+            btnGuardar.Size = new Size(140, 40);
+            btnGuardar.TabIndex = 1;
             btnGuardar.Text = "Guardar";
             btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click;
-
-            btnCancelar.BackColor = System.Drawing.Color.Silver;
-            btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCancelar.Location = new System.Drawing.Point(210, 320);
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.Anchor = AnchorStyles.Left;
+            btnCancelar.BackColor = Color.Silver;
+            btnCancelar.FlatStyle = FlatStyle.Flat;
+            btnCancelar.Location = new Point(551, 350);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new System.Drawing.Size(140, 40);
+            btnCancelar.Size = new Size(140, 40);
+            btnCancelar.TabIndex = 0;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = false;
             btnCancelar.Click += btnCancelar_Click;
-
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.Color.White;
-            ClientSize = new System.Drawing.Size(800, 500);
+            // 
+            // btnCancelarValidacion
+            // 
+            btnCancelarValidacion.Anchor = AnchorStyles.Left;
+            btnCancelarValidacion.BackColor = Color.FromArgb(231, 76, 60);
+            btnCancelarValidacion.FlatStyle = FlatStyle.Flat;
+            btnCancelarValidacion.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            btnCancelarValidacion.ForeColor = Color.White;
+            btnCancelarValidacion.Location = new Point(1026, 238);
+            btnCancelarValidacion.Name = "btnCancelarValidacion";
+            btnCancelarValidacion.Size = new Size(35, 35);
+            btnCancelarValidacion.TabIndex = 13;
+            btnCancelarValidacion.Text = "X";
+            btnCancelarValidacion.UseVisualStyleBackColor = false;
+            btnCancelarValidacion.Visible = false;
+            btnCancelarValidacion.Click += btnCancelarValidacion_Click;
+            // 
+            // frm_EditarInfoPerfil
+            // 
+            AutoScaleDimensions = new SizeF(11F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(1280, 590);
             Controls.Add(btnCancelar);
             Controls.Add(btnGuardar);
             Controls.Add(lblVerificado);
@@ -145,33 +215,15 @@ namespace DataBase_First.Views.Perfil
             Controls.Add(txtNombre);
             Controls.Add(label2);
             Controls.Add(label1);
+            Controls.Add(btnCancelarValidacion);
             Font = new System.Drawing.Font("Segoe UI", 14F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "frm_EditarInfoPerfil";
             Text = "Editar Perfil";
-            Load += frm_EditarInfoPerfil_Load;
             FormClosing += frm_EditarInfoPerfil_FormClosing;
+            Load += frm_EditarInfoPerfil_Load;
             ResumeLayout(false);
             PerformLayout();
-            // (Todo lo de arriba se queda igual...)
-
-            btnCancelarValidacion = new System.Windows.Forms.Button(); // NUEVO
-
-            // btnCancelarValidacion (La 'X' roja al lado del OK)
-            btnCancelarValidacion.BackColor = System.Drawing.Color.FromArgb(231, 76, 60);
-            btnCancelarValidacion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCancelarValidacion.ForeColor = System.Drawing.Color.White;
-            btnCancelarValidacion.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            btnCancelarValidacion.Location = new System.Drawing.Point(685, 208); // Al lado de btnConfirmarCodigo
-            btnCancelarValidacion.Name = "btnCancelarValidacion";
-            btnCancelarValidacion.Size = new System.Drawing.Size(35, 35);
-            btnCancelarValidacion.Text = "X";
-            btnCancelarValidacion.UseVisualStyleBackColor = false;
-            btnCancelarValidacion.Visible = false;
-            btnCancelarValidacion.Click += btnCancelarValidacion_Click;
-
-            // ... (agrega btnCancelarValidacion al panel)
-            Controls.Add(btnCancelarValidacion);
         }
 
         private System.Windows.Forms.Label label1;

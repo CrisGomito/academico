@@ -15,81 +15,118 @@ namespace DataBase_First.Views.Perfil
 
         private void InitializeComponent()
         {
-            label1 = new System.Windows.Forms.Label();
-            label2 = new System.Windows.Forms.Label();
-            txtClaveActual = new System.Windows.Forms.TextBox();
-            label3 = new System.Windows.Forms.Label();
-            txtNuevaClave = new System.Windows.Forms.TextBox();
-            label4 = new System.Windows.Forms.Label();
-            txtConfirmar = new System.Windows.Forms.TextBox();
-            btnGuardar = new System.Windows.Forms.Button();
-            btnCerrar = new System.Windows.Forms.Button();
+            label1 = new Label();
+            label2 = new Label();
+            txtClaveActual = new TextBox();
+            label3 = new Label();
+            txtNuevaClave = new TextBox();
+            label4 = new Label();
+            txtConfirmar = new TextBox();
+            btnGuardar = new Button();
+            btnCerrar = new Button();
             SuspendLayout();
-
+            // 
+            // label1
+            // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            label1.ForeColor = System.Drawing.Color.FromArgb(41, 128, 185);
-            label1.Location = new System.Drawing.Point(50, 30);
+            label1.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(41, 128, 185);
+            label1.Location = new Point(50, 30);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(268, 30);
+            label1.Size = new Size(265, 30);
+            label1.TabIndex = 8;
             label1.Text = "CAMBIAR CONTRASEÑA";
-
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(50, 90);
+            label2.Location = new Point(450, 130);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(161, 25);
+            label2.Size = new Size(166, 25);
+            label2.TabIndex = 7;
             label2.Text = "Contraseña Actual";
-
-            txtClaveActual.Location = new System.Drawing.Point(50, 120);
+            // 
+            // txtClaveActual
+            // 
+            txtClaveActual.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtClaveActual.Location = new Point(450, 158);
             txtClaveActual.Name = "txtClaveActual";
-            txtClaveActual.Size = new System.Drawing.Size(300, 32);
+            txtClaveActual.Size = new Size(300, 32);
+            txtClaveActual.TabIndex = 6;
             txtClaveActual.UseSystemPasswordChar = true;
-
+            // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(50, 170);
+            label3.Location = new Point(450, 210);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(166, 25);
+            label3.Size = new Size(167, 25);
+            label3.TabIndex = 5;
             label3.Text = "Nueva Contraseña";
-
-            txtNuevaClave.Location = new System.Drawing.Point(50, 200);
+            // 
+            // txtNuevaClave
+            // 
+            txtNuevaClave.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtNuevaClave.Location = new Point(450, 238);
             txtNuevaClave.Name = "txtNuevaClave";
-            txtNuevaClave.Size = new System.Drawing.Size(300, 32);
+            txtNuevaClave.Size = new Size(300, 32);
+            txtNuevaClave.TabIndex = 4;
             txtNuevaClave.UseSystemPasswordChar = true;
-
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(50, 250);
+            label4.Location = new Point(450, 288);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(248, 25);
+            label4.Size = new Size(257, 25);
+            label4.TabIndex = 3;
             label4.Text = "Confirmar Nueva Contraseña";
-
-            txtConfirmar.Location = new System.Drawing.Point(50, 280);
+            // 
+            // txtConfirmar
+            // 
+            txtConfirmar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtConfirmar.Location = new Point(450, 318);
             txtConfirmar.Name = "txtConfirmar";
-            txtConfirmar.Size = new System.Drawing.Size(300, 32);
+            txtConfirmar.Size = new Size(300, 32);
+            txtConfirmar.TabIndex = 2;
             txtConfirmar.UseSystemPasswordChar = true;
-
-            btnGuardar.BackColor = System.Drawing.Color.FromArgb(39, 174, 96);
-            btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnGuardar.ForeColor = System.Drawing.Color.White;
-            btnGuardar.Location = new System.Drawing.Point(50, 350);
+            // 
+            // btnGuardar
+            // 
+            btnGuardar.Anchor = AnchorStyles.Left;
+            btnGuardar.BackColor = Color.FromArgb(39, 174, 96);
+            btnGuardar.FlatStyle = FlatStyle.Flat;
+            btnGuardar.ForeColor = Color.White;
+            btnGuardar.Location = new Point(450, 388);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new System.Drawing.Size(140, 40);
+            btnGuardar.Size = new Size(140, 40);
+            btnGuardar.TabIndex = 1;
             btnGuardar.Text = "Actualizar";
             btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click;
-
-            btnCerrar.BackColor = System.Drawing.Color.Silver;
-            btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCerrar.Location = new System.Drawing.Point(210, 350);
+            // 
+            // btnCerrar
+            // 
+            btnCerrar.Anchor = AnchorStyles.Right;
+            btnCerrar.BackColor = Color.Silver;
+            btnCerrar.FlatStyle = FlatStyle.Flat;
+            btnCerrar.Location = new Point(610, 388);
             btnCerrar.Name = "btnCerrar";
-            btnCerrar.Size = new System.Drawing.Size(140, 40);
+            btnCerrar.Size = new Size(140, 40);
+            btnCerrar.TabIndex = 0;
             btnCerrar.Text = "Cancelar";
             btnCerrar.UseVisualStyleBackColor = false;
             btnCerrar.Click += btnCerrar_Click;
-
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            BackColor = System.Drawing.Color.White;
-            ClientSize = new System.Drawing.Size(800, 500);
+            // 
+            // frm_CambiarClave
+            // 
+            AutoScaleDimensions = new SizeF(11F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(1280, 590);
             Controls.Add(btnCerrar);
             Controls.Add(btnGuardar);
             Controls.Add(txtConfirmar);
@@ -100,7 +137,7 @@ namespace DataBase_First.Views.Perfil
             Controls.Add(label2);
             Controls.Add(label1);
             Font = new System.Drawing.Font("Segoe UI", 14F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             Name = "frm_CambiarClave";
             Text = "Cambiar Contraseña";
             ResumeLayout(false);

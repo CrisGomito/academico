@@ -43,27 +43,28 @@ namespace DataBase_First.Views.Perfil
             pnlCard.Controls.Add(lblRol);
             pnlCard.Controls.Add(lblNombreCompleto);
             pnlCard.Controls.Add(picAvatar);
-            pnlCard.Location = new Point(160, 100);
+            pnlCard.Location = new Point(297, 124);
             pnlCard.Name = "pnlCard";
             pnlCard.Size = new Size(700, 350);
             pnlCard.TabIndex = 0;
             // 
             // btnCerrarPerfil
             // 
-            btnCerrarPerfil.BackColor = System.Drawing.Color.FromArgb(231, 76, 60); // Rojo puro
+            btnCerrarPerfil.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnCerrarPerfil.BackColor = Color.FromArgb(231, 76, 60);
             btnCerrarPerfil.FlatAppearance.BorderSize = 0;
-            btnCerrarPerfil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCerrarPerfil.Location = new System.Drawing.Point(670, 10); // Arriba a la derecha del Card
+            btnCerrarPerfil.FlatStyle = FlatStyle.Flat;
+            btnCerrarPerfil.Location = new Point(670, 10);
             btnCerrarPerfil.Name = "btnCerrarPerfil";
-            btnCerrarPerfil.Size = new System.Drawing.Size(20, 20); // Pequeño y cuadrado
+            btnCerrarPerfil.Size = new Size(20, 20);
             btnCerrarPerfil.TabIndex = 8;
-            btnCerrarPerfil.Text = ""; // Sin texto
             btnCerrarPerfil.UseVisualStyleBackColor = false;
             btnCerrarPerfil.Click += btnCerrarPerfil_Click;
-            btnCerrarPerfil.Paint += BtnCerrarPerfil_Paint; // NUEVO EVENTO PARA HACERLO CIRCULAR
+            btnCerrarPerfil.Paint += BtnCerrarPerfil_Paint;
             // 
             // btnEditarInfo
             // 
+            btnEditarInfo.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnEditarInfo.BackColor = Color.FromArgb(52, 152, 219);
             btnEditarInfo.FlatAppearance.BorderSize = 0;
             btnEditarInfo.FlatStyle = FlatStyle.Flat;
@@ -79,6 +80,7 @@ namespace DataBase_First.Views.Perfil
             // 
             // btnCambiarClave
             // 
+            btnCambiarClave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCambiarClave.BackColor = Color.FromArgb(236, 240, 241);
             btnCambiarClave.FlatAppearance.BorderSize = 0;
             btnCambiarClave.FlatStyle = FlatStyle.Flat;
@@ -93,6 +95,7 @@ namespace DataBase_First.Views.Perfil
             // 
             // btnCambiarCorreo
             // 
+            btnCambiarCorreo.Anchor = AnchorStyles.Bottom;
             btnCambiarCorreo.BackColor = Color.FromArgb(236, 240, 241);
             btnCambiarCorreo.FlatAppearance.BorderSize = 0;
             btnCambiarCorreo.FlatStyle = FlatStyle.Flat;
@@ -107,6 +110,7 @@ namespace DataBase_First.Views.Perfil
             // 
             // lblCorreo
             // 
+            lblCorreo.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             lblCorreo.AutoSize = true;
             lblCorreo.Font = new System.Drawing.Font("Segoe UI", 14F);
             lblCorreo.Location = new Point(265, 165);
@@ -117,6 +121,7 @@ namespace DataBase_First.Views.Perfil
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Segoe UI", 12F, FontStyle.Bold);
             label1.ForeColor = Color.Gray;
@@ -128,6 +133,7 @@ namespace DataBase_First.Views.Perfil
             // 
             // lblRol
             // 
+            lblRol.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lblRol.AutoSize = true;
             lblRol.Font = new System.Drawing.Font("Segoe UI", 12F);
             lblRol.ForeColor = Color.FromArgb(52, 152, 219);
@@ -139,6 +145,7 @@ namespace DataBase_First.Views.Perfil
             // 
             // lblNombreCompleto
             // 
+            lblNombreCompleto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lblNombreCompleto.AutoSize = true;
             lblNombreCompleto.Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold);
             lblNombreCompleto.Location = new Point(260, 50);
@@ -163,7 +170,7 @@ namespace DataBase_First.Views.Perfil
             lblTitulo.AutoSize = true;
             lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(44, 62, 80);
-            lblTitulo.Location = new Point(30, 20);
+            lblTitulo.Location = new Point(50, 30);
             lblTitulo.Name = "lblTitulo";
             lblTitulo.Size = new Size(253, 30);
             lblTitulo.TabIndex = 1;
@@ -174,7 +181,7 @@ namespace DataBase_First.Views.Perfil
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.WhiteSmoke;
-            ClientSize = new Size(1024, 620);
+            ClientSize = new Size(1280, 590);
             Controls.Add(pnlCard);
             Controls.Add(lblTitulo);
             Font = new System.Drawing.Font("Segoe UI", 14F);
