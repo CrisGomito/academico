@@ -1,9 +1,4 @@
-﻿using System.Drawing.Printing;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace DataBase_First.Views.Academico.Asignaturas
+﻿namespace DataBase_First.Views.Academico.Asignaturas
 {
     partial class frm_Asignaturas
     {
@@ -11,201 +6,262 @@ namespace DataBase_First.Views.Academico.Asignaturas
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
         private void InitializeComponent()
         {
-            lst_Lista_Asignaturas = new System.Windows.Forms.ListBox();
-            label1 = new System.Windows.Forms.Label();
-            btn_Nuevo = new System.Windows.Forms.Button();
-            label2 = new System.Windows.Forms.Label();
-            txt_Nombre = new System.Windows.Forms.TextBox();
-            label3 = new System.Windows.Forms.Label();
-            txt_Creditos = new System.Windows.Forms.TextBox();
-            btn_Guardar = new System.Windows.Forms.Button();
-            btn_Editar = new System.Windows.Forms.Button();
-            btn_Cancelar = new System.Windows.Forms.Button();
-            btn_Salir = new System.Windows.Forms.Button();
-            btn_Eliminar = new System.Windows.Forms.Button();
-            SuspendLayout();
-            // 
+            this.pnlCabecera = new System.Windows.Forms.Panel();
+            this.lblTitulo = new System.Windows.Forms.Label();
+            this.btnCerrar = new System.Windows.Forms.Button();
+            this.pnlContenedorCentral = new System.Windows.Forms.Panel();
+            this.lst_Lista_Asignaturas = new System.Windows.Forms.ListBox();
+
+            this.label2 = new System.Windows.Forms.Label();
+            this.txt_Nombre = new System.Windows.Forms.TextBox();
+
+            this.label3 = new System.Windows.Forms.Label();
+            this.txt_Creditos = new System.Windows.Forms.TextBox();
+
+            this.btn_Nuevo = new FontAwesome.Sharp.IconButton();
+            this.btn_Guardar = new FontAwesome.Sharp.IconButton();
+            this.btn_Editar = new FontAwesome.Sharp.IconButton();
+            this.btn_Cancelar = new FontAwesome.Sharp.IconButton();
+            this.btn_Eliminar = new FontAwesome.Sharp.IconButton();
+
+            this.pnlCabecera.SuspendLayout();
+            this.pnlContenedorCentral.SuspendLayout();
+            this.SuspendLayout();
+
+            // --- PANEL CABECERA ---
+            this.pnlCabecera.BackColor = System.Drawing.Color.White;
+            this.pnlCabecera.Controls.Add(this.btnCerrar);
+            this.pnlCabecera.Controls.Add(this.lblTitulo);
+            this.pnlCabecera.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCabecera.Location = new System.Drawing.Point(0, 0);
+            this.pnlCabecera.Name = "pnlCabecera";
+            this.pnlCabecera.Size = new System.Drawing.Size(950, 50);
+
+            // btnCerrar (Botón Circular Rojo)
+            this.btnCerrar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.btnCerrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60)))));
+            this.btnCerrar.FlatAppearance.BorderSize = 0;
+            this.btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrar.Location = new System.Drawing.Point(915, 15);
+            this.btnCerrar.Name = "btnCerrar";
+            this.btnCerrar.Size = new System.Drawing.Size(20, 20);
+            this.btnCerrar.UseVisualStyleBackColor = false;
+            this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
+            this.btnCerrar.Paint += new System.Windows.Forms.PaintEventHandler(this.btnCerrar_Paint);
+
+            // lblTitulo
+            this.lblTitulo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
+            this.lblTitulo.Location = new System.Drawing.Point(0, 0);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(950, 50);
+            this.lblTitulo.Text = "GESTIÓN DE ASIGNATURAS";
+            this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+
+            // --- PANEL CONTENEDOR CENTRAL ---
+            this.pnlContenedorCentral.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.pnlContenedorCentral.BackColor = System.Drawing.Color.White;
+            this.pnlContenedorCentral.Controls.Add(this.btn_Eliminar);
+            this.pnlContenedorCentral.Controls.Add(this.btn_Cancelar);
+            this.pnlContenedorCentral.Controls.Add(this.btn_Editar);
+            this.pnlContenedorCentral.Controls.Add(this.btn_Guardar);
+            this.pnlContenedorCentral.Controls.Add(this.btn_Nuevo);
+            this.pnlContenedorCentral.Controls.Add(this.txt_Creditos);
+            this.pnlContenedorCentral.Controls.Add(this.label3);
+            this.pnlContenedorCentral.Controls.Add(this.txt_Nombre);
+            this.pnlContenedorCentral.Controls.Add(this.label2);
+            this.pnlContenedorCentral.Controls.Add(this.lst_Lista_Asignaturas);
+            this.pnlContenedorCentral.Location = new System.Drawing.Point(50, 70);
+            this.pnlContenedorCentral.Name = "pnlContenedorCentral";
+            this.pnlContenedorCentral.Size = new System.Drawing.Size(850, 500);
+
             // lst_Lista_Asignaturas
-            // 
-            lst_Lista_Asignaturas.FormattingEnabled = true;
-            lst_Lista_Asignaturas.ItemHeight = 25;
-            lst_Lista_Asignaturas.Location = new System.Drawing.Point(294, 68);
-            lst_Lista_Asignaturas.Margin = new System.Windows.Forms.Padding(5);
-            lst_Lista_Asignaturas.Name = "lst_Lista_Asignaturas";
-            lst_Lista_Asignaturas.Size = new System.Drawing.Size(372, 329);
-            lst_Lista_Asignaturas.TabIndex = 0;
-            lst_Lista_Asignaturas.DoubleClick += lst_Lista_Asignaturas_DoubleClick;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            label1.Location = new System.Drawing.Point(240, 9);
-            label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(256, 25);
-            label1.TabIndex = 1;
-            label1.Text = "GESTIÓN DE ASIGNATURAS";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 14F);
-            label2.Location = new System.Drawing.Point(36, 68);
-            label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(193, 25);
-            label2.TabIndex = 4;
-            label2.Text = "Nombre Asignatura*";
-            // 
+            this.lst_Lista_Asignaturas.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lst_Lista_Asignaturas.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lst_Lista_Asignaturas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lst_Lista_Asignaturas.FormattingEnabled = true;
+            this.lst_Lista_Asignaturas.ItemHeight = 21;
+            this.lst_Lista_Asignaturas.Location = new System.Drawing.Point(380, 40);
+            this.lst_Lista_Asignaturas.Name = "lst_Lista_Asignaturas";
+            this.lst_Lista_Asignaturas.Size = new System.Drawing.Size(430, 336);
+            this.lst_Lista_Asignaturas.DoubleClick += new System.EventHandler(this.lst_Lista_Asignaturas_DoubleClick);
+
+            // label2 (Nombre)
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.Gray;
+            this.label2.Location = new System.Drawing.Point(36, 120);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(207, 19);
+            this.label2.Text = "NOMBRE DE LA ASIGNATURA*";
+
             // txt_Nombre
-            // 
-            txt_Nombre.Enabled = false;
-            txt_Nombre.Location = new System.Drawing.Point(36, 98);
-            txt_Nombre.Margin = new System.Windows.Forms.Padding(5);
-            txt_Nombre.MaxLength = 60;
-            txt_Nombre.Name = "txt_Nombre";
-            txt_Nombre.Size = new System.Drawing.Size(222, 32);
-            txt_Nombre.TabIndex = 2;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new System.Drawing.Font("Segoe UI", 14F);
-            label3.Location = new System.Drawing.Point(36, 155);
-            label3.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(94, 25);
-            label3.TabIndex = 6;
-            label3.Text = "Créditos*";
-            // 
+            this.txt_Nombre.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txt_Nombre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txt_Nombre.Enabled = false;
+            this.txt_Nombre.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txt_Nombre.Location = new System.Drawing.Point(40, 145);
+            this.txt_Nombre.Name = "txt_Nombre";
+            this.txt_Nombre.Size = new System.Drawing.Size(300, 29);
+
+            // label3 (Créditos)
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label3.ForeColor = System.Drawing.Color.Gray;
+            this.label3.Location = new System.Drawing.Point(36, 210);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 19);
+            this.label3.Text = "CRÉDITOS*";
+
             // txt_Creditos
-            // 
-            txt_Creditos.Enabled = false;
-            txt_Creditos.Location = new System.Drawing.Point(36, 185);
-            txt_Creditos.Margin = new System.Windows.Forms.Padding(5);
-            txt_Creditos.MaxLength = 2;
-            txt_Creditos.Name = "txt_Creditos";
-            txt_Creditos.Size = new System.Drawing.Size(222, 32);
-            txt_Creditos.TabIndex = 5;
-            txt_Creditos.KeyPress += txt_Creditos_KeyPress;
-            // 
+            this.txt_Creditos.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txt_Creditos.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txt_Creditos.Enabled = false;
+            this.txt_Creditos.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txt_Creditos.Location = new System.Drawing.Point(40, 235);
+            this.txt_Creditos.Name = "txt_Creditos";
+            this.txt_Creditos.Size = new System.Drawing.Size(120, 29);
+            this.txt_Creditos.MaxLength = 2;
+            this.txt_Creditos.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_Creditos_KeyPress);
+
+            // --- BOTONES MODERNOS ---
             // btn_Nuevo
-            // 
-            btn_Nuevo.Location = new System.Drawing.Point(36, 469);
-            btn_Nuevo.Margin = new System.Windows.Forms.Padding(5);
-            btn_Nuevo.Name = "btn_Nuevo";
-            btn_Nuevo.Size = new System.Drawing.Size(118, 38);
-            btn_Nuevo.TabIndex = 3;
-            btn_Nuevo.Text = "Nuevo";
-            btn_Nuevo.UseVisualStyleBackColor = true;
-            btn_Nuevo.Click += btn_Nuevo_Click;
-            // 
+            this.btn_Nuevo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219)))));
+            this.btn_Nuevo.FlatAppearance.BorderSize = 0;
+            this.btn_Nuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Nuevo.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btn_Nuevo.ForeColor = System.Drawing.Color.White;
+            this.btn_Nuevo.IconChar = FontAwesome.Sharp.IconChar.Plus;
+            this.btn_Nuevo.IconColor = System.Drawing.Color.White;
+            this.btn_Nuevo.IconSize = 24;
+            this.btn_Nuevo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Nuevo.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Nuevo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btn_Nuevo.Location = new System.Drawing.Point(40, 420);
+            this.btn_Nuevo.Name = "btn_Nuevo";
+            this.btn_Nuevo.Size = new System.Drawing.Size(120, 40);
+            this.btn_Nuevo.Text = " Nuevo";
+            this.btn_Nuevo.UseVisualStyleBackColor = false;
+            this.btn_Nuevo.Click += new System.EventHandler(this.btn_Nuevo_Click);
+
             // btn_Guardar
-            // 
-            btn_Guardar.Enabled = false;
-            btn_Guardar.Location = new System.Drawing.Point(164, 469);
-            btn_Guardar.Margin = new System.Windows.Forms.Padding(5);
-            btn_Guardar.Name = "btn_Guardar";
-            btn_Guardar.Size = new System.Drawing.Size(118, 38);
-            btn_Guardar.TabIndex = 14;
-            btn_Guardar.Text = "Guardar";
-            btn_Guardar.UseVisualStyleBackColor = true;
-            btn_Guardar.Click += btn_Guardar_Click;
-            // 
-            // btn_Editar
-            // 
-            btn_Editar.Location = new System.Drawing.Point(292, 469);
-            btn_Editar.Margin = new System.Windows.Forms.Padding(5);
-            btn_Editar.Name = "btn_Editar";
-            btn_Editar.Size = new System.Drawing.Size(118, 38);
-            btn_Editar.TabIndex = 15;
-            btn_Editar.Text = "Editar";
-            btn_Editar.UseVisualStyleBackColor = true;
-            btn_Editar.Click += btn_Editar_Click;
-            // 
-            // btn_Eliminar
-            // 
-            btn_Eliminar.ForeColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            btn_Eliminar.Location = new System.Drawing.Point(420, 407);
-            btn_Eliminar.Margin = new System.Windows.Forms.Padding(5);
-            btn_Eliminar.Name = "btn_Eliminar";
-            btn_Eliminar.Size = new System.Drawing.Size(118, 38);
-            btn_Eliminar.TabIndex = 20;
-            btn_Eliminar.Text = "Eliminar";
-            btn_Eliminar.UseVisualStyleBackColor = false;
-            btn_Eliminar.Click += btn_Eliminar_Click;
-            // 
+            this.btn_Guardar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(174)))), ((int)(((byte)(96)))));
+            this.btn_Guardar.Enabled = false;
+            this.btn_Guardar.FlatAppearance.BorderSize = 0;
+            this.btn_Guardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Guardar.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btn_Guardar.ForeColor = System.Drawing.Color.White;
+            this.btn_Guardar.IconChar = FontAwesome.Sharp.IconChar.Save;
+            this.btn_Guardar.IconColor = System.Drawing.Color.White;
+            this.btn_Guardar.IconSize = 24;
+            this.btn_Guardar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Guardar.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Guardar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btn_Guardar.Location = new System.Drawing.Point(175, 420);
+            this.btn_Guardar.Name = "btn_Guardar";
+            this.btn_Guardar.Size = new System.Drawing.Size(130, 40);
+            this.btn_Guardar.Text = " Guardar";
+            this.btn_Guardar.UseVisualStyleBackColor = false;
+            this.btn_Guardar.Click += new System.EventHandler(this.btn_Guardar_Click);
+
+            // btn_Editar (Turquesa)
+            this.btn_Editar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(188)))), ((int)(((byte)(156)))));
+            this.btn_Editar.FlatAppearance.BorderSize = 0;
+            this.btn_Editar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Editar.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btn_Editar.ForeColor = System.Drawing.Color.White;
+            this.btn_Editar.IconChar = FontAwesome.Sharp.IconChar.Edit;
+            this.btn_Editar.IconColor = System.Drawing.Color.White;
+            this.btn_Editar.IconSize = 24;
+            this.btn_Editar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Editar.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Editar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btn_Editar.Location = new System.Drawing.Point(320, 420);
+            this.btn_Editar.Name = "btn_Editar";
+            this.btn_Editar.Size = new System.Drawing.Size(120, 40);
+            this.btn_Editar.Text = " Editar";
+            this.btn_Editar.UseVisualStyleBackColor = false;
+            this.btn_Editar.Click += new System.EventHandler(this.btn_Editar_Click);
+
             // btn_Cancelar
-            // 
-            btn_Cancelar.Enabled = false;
-            btn_Cancelar.Location = new System.Drawing.Point(420, 469);
-            btn_Cancelar.Margin = new System.Windows.Forms.Padding(5);
-            btn_Cancelar.Name = "btn_Cancelar";
-            btn_Cancelar.Size = new System.Drawing.Size(118, 38);
-            btn_Cancelar.TabIndex = 16;
-            btn_Cancelar.Text = "Cancelar";
-            btn_Cancelar.UseVisualStyleBackColor = true;
-            btn_Cancelar.Click += btn_Cancelar_Click;
-            // 
-            // btn_Salir
-            // 
-            btn_Salir.Location = new System.Drawing.Point(548, 469);
-            btn_Salir.Margin = new System.Windows.Forms.Padding(5);
-            btn_Salir.Name = "btn_Salir";
-            btn_Salir.Size = new System.Drawing.Size(118, 38);
-            btn_Salir.TabIndex = 17;
-            btn_Salir.Text = "Salir";
-            btn_Salir.UseVisualStyleBackColor = true;
-            btn_Salir.Click += btn_Salir_Click;
-            // 
+            this.btn_Cancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(165)))), ((int)(((byte)(166)))));
+            this.btn_Cancelar.Enabled = false;
+            this.btn_Cancelar.FlatAppearance.BorderSize = 0;
+            this.btn_Cancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Cancelar.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btn_Cancelar.ForeColor = System.Drawing.Color.White;
+            this.btn_Cancelar.IconChar = FontAwesome.Sharp.IconChar.Times;
+            this.btn_Cancelar.IconColor = System.Drawing.Color.White;
+            this.btn_Cancelar.IconSize = 24;
+            this.btn_Cancelar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Cancelar.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Cancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btn_Cancelar.Location = new System.Drawing.Point(455, 420);
+            this.btn_Cancelar.Name = "btn_Cancelar";
+            this.btn_Cancelar.Size = new System.Drawing.Size(130, 40);
+            this.btn_Cancelar.Text = " Cancelar";
+            this.btn_Cancelar.UseVisualStyleBackColor = false;
+            this.btn_Cancelar.Click += new System.EventHandler(this.btn_Cancelar_Click);
+
+            // btn_Eliminar
+            this.btn_Eliminar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60)))));
+            this.btn_Eliminar.FlatAppearance.BorderSize = 0;
+            this.btn_Eliminar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Eliminar.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btn_Eliminar.ForeColor = System.Drawing.Color.White;
+            this.btn_Eliminar.IconChar = FontAwesome.Sharp.IconChar.TrashAlt;
+            this.btn_Eliminar.IconColor = System.Drawing.Color.White;
+            this.btn_Eliminar.IconSize = 24;
+            this.btn_Eliminar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Eliminar.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btn_Eliminar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btn_Eliminar.Location = new System.Drawing.Point(600, 420);
+            this.btn_Eliminar.Name = "btn_Eliminar";
+            this.btn_Eliminar.Size = new System.Drawing.Size(130, 40);
+            this.btn_Eliminar.Text = " Eliminar";
+            this.btn_Eliminar.UseVisualStyleBackColor = false;
+            this.btn_Eliminar.Click += new System.EventHandler(this.btn_Eliminar_Click);
+
             // frm_Asignaturas
-            // 
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(694, 521);
-            Controls.Add(txt_Creditos);
-            Controls.Add(label3);
-            Controls.Add(btn_Eliminar);
-            Controls.Add(btn_Salir);
-            Controls.Add(btn_Cancelar);
-            Controls.Add(btn_Editar);
-            Controls.Add(btn_Guardar);
-            Controls.Add(txt_Nombre);
-            Controls.Add(label2);
-            Controls.Add(btn_Nuevo);
-            Controls.Add(label1);
-            Controls.Add(lst_Lista_Asignaturas);
-            Font = new System.Drawing.Font("Segoe UI", 14F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            Margin = new System.Windows.Forms.Padding(5);
-            Name = "frm_Asignaturas";
-            Text = "Gestión de Asignaturas";
-            Load += frm_Asignaturas_Load;
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(243)))), ((int)(((byte)(246)))));
+            this.ClientSize = new System.Drawing.Size(950, 600);
+            this.Controls.Add(this.pnlContenedorCentral);
+            this.Controls.Add(this.pnlCabecera);
+            this.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "frm_Asignaturas";
+            this.Text = "Gestión de Asignaturas";
+            this.Load += new System.EventHandler(this.frm_Asignaturas_Load);
+            this.pnlCabecera.ResumeLayout(false);
+            this.pnlContenedorCentral.ResumeLayout(false);
+            this.pnlContenedorCentral.PerformLayout();
+            this.ResumeLayout(false);
         }
 
+        private System.Windows.Forms.Panel pnlCabecera;
+        private System.Windows.Forms.Label lblTitulo;
+        private System.Windows.Forms.Button btnCerrar;
+        private System.Windows.Forms.Panel pnlContenedorCentral;
+
         private System.Windows.Forms.ListBox lst_Lista_Asignaturas;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btn_Nuevo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txt_Nombre;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txt_Creditos;
-        private System.Windows.Forms.Button btn_Guardar;
-        private System.Windows.Forms.Button btn_Editar;
-        private System.Windows.Forms.Button btn_Cancelar;
-        private System.Windows.Forms.Button btn_Salir;
-        private System.Windows.Forms.Button btn_Eliminar;
+
+        private FontAwesome.Sharp.IconButton btn_Nuevo;
+        private FontAwesome.Sharp.IconButton btn_Guardar;
+        private FontAwesome.Sharp.IconButton btn_Editar;
+        private FontAwesome.Sharp.IconButton btn_Cancelar;
+        private FontAwesome.Sharp.IconButton btn_Eliminar;
     }
 }

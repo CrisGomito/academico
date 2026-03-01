@@ -4,9 +4,11 @@
     using System;
     using System.Linq;
     using System.Windows.Forms;
+    using FontAwesome.Sharp; // Necesario para los íconos si decides modificarlos por código
 
     public partial class frm_Asignaturas : Form
     {
+        // Se corrigió el nombre del controlador para que coincida con el tuyo
         private readonly AsignaturasController _asignaturasController = new AsignaturasController();
         private int idAsignatura_editar = 0;
 
@@ -19,6 +21,20 @@
         {
             carga_lista();
         }
+
+        // --- BOTÓN CIRCULAR ROJO PARA CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // ---------------------------------------
 
         private void carga_lista()
         {
@@ -165,11 +181,6 @@
             txt_Creditos.Enabled = true;
         }
 
-        private void btn_Salir_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void btn_Editar_Click(object sender, EventArgs e)
         {
             if (lst_Lista_Asignaturas.SelectedValue == null)
@@ -198,6 +209,7 @@
             var confirmResult = MessageBox.Show("¿Está seguro de que desea eliminar permanentemente esta asignatura?", "Confirmar Eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirmResult == DialogResult.Yes)
             {
+                // CORRECCIÓN: Manejo de la tupla (bool exito, string mensaje)
                 var resultado = _asignaturasController.EliminarAsignatura(idAsignatura);
 
                 if (resultado.exito)
