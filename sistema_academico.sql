@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-02-2026 a las 23:35:35
+-- Tiempo de generación: 01-03-2026 a las 04:26:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -578,7 +578,67 @@ INSERT INTO `auditoria_sistema` (`id_auditoria`, `ip_user`, `id_usuario`, `id_ro
 (103, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 02:39:45'),
 (104, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 1, '{\"nota\": \"9.50\"}', '{\"nota\": \"9.50\"}', '2026-02-27 02:46:01'),
 (105, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 3, '{\"nota\": \"6.50\"}', '{\"nota\": \"6.50\"}', '2026-02-27 02:46:01'),
-(106, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 15:42:00');
+(106, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 15:42:00'),
+(107, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 18:41:37'),
+(108, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 20:39:17'),
+(109, '169.254.243.153', 11, 1, 'INSERT', 'usuario', 12, NULL, '{\"nombre\": \"Pepito\", \"apellido\": \"Pérez\", \"id_rol\": \"3\"}', '2026-02-27 20:44:35'),
+(110, '169.254.243.153', 11, 1, 'INSERT', 'estudiante', 3, NULL, '{\"codigo\": \"EST-003\", \"id_usuario\": \"12\"}', '2026-02-27 20:44:57'),
+(111, '169.254.243.153', 11, 1, 'INSERT', 'matricula', 3, NULL, '{\"id_estudiante\": \"3\", \"id_asignatura\": \"4\"}', '2026-02-27 20:45:17'),
+(112, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 1, '{\"nota\": \"9.50\"}', '{\"nota\": \"9.50\"}', '2026-02-27 20:45:59'),
+(113, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 3, '{\"nota\": \"6.50\"}', '{\"nota\": \"6.50\"}', '2026-02-27 20:45:59'),
+(114, '169.254.243.153', 11, 1, 'INSERT', 'calificacion', 4, NULL, '{\"nota\": \"10.00\"}', '2026-02-27 20:45:59'),
+(115, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 2, '{\"nota\": \"8.75\"}', '{\"nota\": \"8.75\"}', '2026-02-27 20:46:14'),
+(116, '169.254.243.153', 11, 1, 'INSERT', 'calificacion', 5, NULL, '{\"nota\": \"7.00\"}', '2026-02-27 20:46:14'),
+(117, '169.254.243.153', 11, 1, 'INSERT', 'calificacion', 6, NULL, '{\"nota\": \"9.00\"}', '2026-02-27 20:46:56'),
+(118, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 20:47:59'),
+(119, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:06:56'),
+(120, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:09:45'),
+(121, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:15:51'),
+(122, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:18:10'),
+(123, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:20:22'),
+(124, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:27:30'),
+(125, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:30:08'),
+(126, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:34:55'),
+(127, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:39:23'),
+(128, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:42:23'),
+(129, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:47:51'),
+(130, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:52:40'),
+(131, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"FAILED_PASSWORD\"}', '2026-02-27 22:54:09'),
+(132, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-27 22:54:29'),
+(133, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 15:14:22'),
+(134, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 15:45:09'),
+(135, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 18:12:47'),
+(136, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 18:21:14'),
+(137, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 18:38:36'),
+(138, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 18:46:59'),
+(139, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:00:22'),
+(140, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:02:12'),
+(141, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:09:21'),
+(142, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:12:09'),
+(143, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:16:58'),
+(144, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:29:25'),
+(145, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:53:49'),
+(146, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 19:55:21'),
+(147, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 20:16:16'),
+(148, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 20:47:23'),
+(149, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 20:49:17'),
+(150, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 20:53:24'),
+(151, '169.254.243.153', 11, 1, 'INSERT', 'usuario', 13, NULL, '{\"nombre\": \"Alisson\", \"apellido\": \"Paredes\", \"id_rol\": \"4\"}', '2026-02-28 20:58:02'),
+(152, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:00:17'),
+(153, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:02:14'),
+(154, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:04:40'),
+(155, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:41:17'),
+(156, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:52:57'),
+(157, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:56:17'),
+(158, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 21:58:44'),
+(159, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:01:50'),
+(160, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:06:16'),
+(161, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:09:14'),
+(162, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:10:55'),
+(163, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:14:14'),
+(164, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:19:41'),
+(165, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:21:06'),
+(166, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:22:47');
 
 -- --------------------------------------------------------
 
@@ -602,7 +662,10 @@ CREATE TABLE `calificacion` (
 INSERT INTO `calificacion` (`id_calificacion`, `id_estudiante`, `id_evaluacion`, `nota`, `fecha_registro`, `activo`) VALUES
 (1, 1, 1, 9.50, '2026-02-25 16:41:16', 1),
 (2, 1, 2, 8.75, '2026-02-25 16:41:16', 1),
-(3, 2, 1, 6.50, '2026-02-25 16:41:16', 1);
+(3, 2, 1, 6.50, '2026-02-25 16:41:16', 1),
+(4, 3, 1, 10.00, '2026-02-27 20:45:59', 1),
+(5, 3, 2, 7.00, '2026-02-27 20:46:14', 1),
+(6, 3, 5, 9.00, '2026-02-27 20:46:56', 1);
 
 --
 -- Disparadores `calificacion`
@@ -690,7 +753,8 @@ CREATE TABLE `estudiante` (
 
 INSERT INTO `estudiante` (`id_estudiante`, `cedula`, `cedula_hash`, `codigo`, `id_usuario`, `fecha_registro`, `estado`) VALUES
 (1, 0x112fb64dbd0c50f09a679b66b7085c71, 0x895cd9c4bada417d6759f7200e8c99bde7c5ca07fb7a5a7bdcb37c63cbb2405b, 'EST-001', 9, '2026-02-25 16:41:16', 1),
-(2, 0x5e63e6c6f3c29239a9ad95796fb1c537, 0x3e623249fb3c3827d405c6719e80f82bdea3bb159c81ef50324290433727dce7, 'EST-002', 10, '2026-02-25 16:41:16', 1);
+(2, 0x5e63e6c6f3c29239a9ad95796fb1c537, 0x3e623249fb3c3827d405c6719e80f82bdea3bb159c81ef50324290433727dce7, 'EST-002', 10, '2026-02-25 16:41:16', 1),
+(3, 0x094c050a8fb5dd1eeb127d1430d75205, 0xffda55a3438e7f3e6cbbd0e5e48ef5e62a7f6ebb9756880e788eec7112620de5, 'EST-003', 12, '2026-02-27 20:44:57', 1);
 
 --
 -- Disparadores `estudiante`
@@ -786,7 +850,8 @@ CREATE TABLE `matricula` (
 
 INSERT INTO `matricula` (`id_matricula`, `id_estudiante`, `id_asignatura`, `id_periodo`) VALUES
 (1, 1, 4, 1),
-(2, 2, 4, 1);
+(2, 2, 4, 1),
+(3, 3, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -898,7 +963,9 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `correo`, `correo_has
 (8, 'Andres Roberto', 'Leon Yacelga', 0xf96b65607c8432979876d433a76ce977879efaa446e49ff13fbdcd350f92af5b, 0x27d1c86e08541f62b436fef636412d808f47389f66f8550598be369caee13f03, NULL, NULL, '41cfb30a0c16b0ea26d7892a8a1ff486876228557448614e2825716655de5774', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
 (9, 'María Josefina', 'Gómez López', 0xb954ddf445ac49b6ec8c9e165ae38cc8d2edf97505c540ff157fdfb2eab0d8c2, 0x04fbfd94d5c54407ee9a8ec0241a4c117b675eac4875f05c241c7a00b19a0635, NULL, NULL, '7016fa198a233f51a7f0d47cabbd65244822adcecc7c4c491367e245ab302236', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
 (10, 'Pedro', 'Maldonado', 0xae6ae395d74e8ba99b9cee6609e4a1d4f8337c401cc2b79969930867e2218a3f, 0x5272ee1c015036a57c2b13d4a084c70e0d4b37eead62606e814469fbb1028169, NULL, NULL, '7016fa198a233f51a7f0d47cabbd65244822adcecc7c4c491367e245ab302236', 1, '2026-02-25 16:41:16', 0, NULL, '2026-02-25 16:41:16'),
-(11, 'Cristian', 'Pilco', 0xed6b44d649d54187dde2f61079152638fe831782c95fde276aa9f697a071445b, 0xb3a9de62dafd476b6ca28cf89066b3d5423f02813b93348fac249ce88a945f7f, NULL, NULL, '82c2cb4784186792c6646a2b53ad4ca895c3e61e74796306190453c003804169', 1, '2026-02-26 22:28:11', 0, NULL, '2026-02-25 23:46:50');
+(11, 'Cristian', 'Pilco', 0xed6b44d649d54187dde2f61079152638fe831782c95fde276aa9f697a071445b, 0xb3a9de62dafd476b6ca28cf89066b3d5423f02813b93348fac249ce88a945f7f, NULL, NULL, '82c2cb4784186792c6646a2b53ad4ca895c3e61e74796306190453c003804169', 1, '2026-02-26 22:28:11', 0, NULL, '2026-02-25 23:46:50'),
+(12, 'Pepito', 'Pérez', 0xfa6a49e1210487ce4b5c96ecaeeb1a4e991aa391898bfab0bec6bf76d4421b56, 0x40ca7cfc6d82e7ce0aa5cfb5ccbf2501b29cadb05c31f5994d7b6ee18155177a, NULL, NULL, 'eab7a03a74b0be827f960dc32c42b58f48ca4586a639efcdac5d79cc31582f14', 1, '2026-02-27 20:44:35', 0, NULL, '2026-02-27 20:44:35'),
+(13, 'Alisson', 'Paredes', 0x48176b23648d093ada448fea112518032c8dfbd801127e655f0b52406ab2567b, 0x88d05428b2bf9d9c3d49c405c164c1c165c84e21d619ca15abf4394a4b2508d2, NULL, NULL, 'eac6403ee6425e5a04d3c63527f350e4816a242b4c4bb71346fd48367a7af6a0', 1, '2026-02-28 20:58:02', 0, NULL, '2026-02-28 20:58:02');
 
 --
 -- Disparadores `usuario`
@@ -959,7 +1026,9 @@ INSERT INTO `usuario_rol` (`id_usuario`, `id_rol`, `fecha_asignacion`) VALUES
 (8, 2, '2026-02-25 16:41:16'),
 (9, 3, '2026-02-25 16:41:16'),
 (10, 2, '2026-02-26 17:31:13'),
-(11, 1, '2026-02-26 17:06:05');
+(11, 1, '2026-02-26 17:06:05'),
+(12, 3, '2026-02-27 20:44:35'),
+(13, 4, '2026-02-28 20:58:02');
 
 -- --------------------------------------------------------
 
@@ -1356,13 +1425,13 @@ ALTER TABLE `asignatura`
 -- AUTO_INCREMENT de la tabla `auditoria_sistema`
 --
 ALTER TABLE `auditoria_sistema`
-  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
 
 --
 -- AUTO_INCREMENT de la tabla `calificacion`
 --
 ALTER TABLE `calificacion`
-  MODIFY `id_calificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_calificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `docente`
@@ -1374,7 +1443,7 @@ ALTER TABLE `docente`
 -- AUTO_INCREMENT de la tabla `estudiante`
 --
 ALTER TABLE `estudiante`
-  MODIFY `id_estudiante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_estudiante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `evaluacion`
@@ -1386,7 +1455,7 @@ ALTER TABLE `evaluacion`
 -- AUTO_INCREMENT de la tabla `matricula`
 --
 ALTER TABLE `matricula`
-  MODIFY `id_matricula` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_matricula` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `periodoacademico`
@@ -1410,7 +1479,7 @@ ALTER TABLE `tipoevaluacion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Restricciones para tablas volcadas
