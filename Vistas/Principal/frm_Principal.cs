@@ -1,4 +1,5 @@
 ﻿using Academico;
+using Academico.Properties;
 using DataBase_First.Views.Perfil;
 using FontAwesome.Sharp;
 using System;
@@ -143,6 +144,7 @@ namespace DataBase_First.Views.Main
         {
             OcultarSubMenus();
 
+            // Cerramos cualquier otro formulario hijo abierto
             if (currentChildForm != null)
             {
                 currentChildForm.Close();
@@ -157,15 +159,25 @@ namespace DataBase_First.Views.Main
             pnlContenedorHijo.Controls.Add(formularioHijo);
             pnlContenedorHijo.Tag = formularioHijo;
 
-            // Ocultar imagen de fondo
+            // Ocultar imagen de fondo porque vamos a mostrar un formulario
             pnlContenedorHijo.BackgroundImage = null;
 
             // Restaurar imagen de fondo al cerrar
             formularioHijo.FormClosed += (s, args) =>
             {
+                // 1. Forzamos la eliminación del control de la memoria del panel
+                pnlContenedorHijo.Controls.Remove(formularioHijo);
+
+                // 2. Ahora sí, verificamos si el panel quedó totalmente vacío
                 if (pnlContenedorHijo.Controls.Count == 0)
                 {
-                    try { pnlContenedorHijo.BackgroundImage = global::Academico.Properties.Resources.background_academico; } catch { }
+                    currentChildForm = null;
+                    try
+                    {
+                        // Restauramos la imagen (usando la ruta que tú configuraste)
+                        pnlContenedorHijo.BackgroundImage = Resources.background_academico;
+                    }
+                    catch { }
                 }
             };
 
