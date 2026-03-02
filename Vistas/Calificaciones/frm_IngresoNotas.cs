@@ -14,8 +14,10 @@
         private int _idDocenteActual = 0;
         private List<CalificacionesController.AlumnoNotaDTO> _listaActual = new List<CalificacionesController.AlumnoNotaDTO>();
 
-        // Usamos un diccionario para rastrear qué filas fueron editadas para no enviar datos innecesarios
+        // Rastreo de modificaciones
         private Dictionary<int, bool> _filasEditadas = new Dictionary<int, bool>();
+        // Rastreo de celdas con errores manuales (para pintar el ❗)
+        private Dictionary<int, bool> _filasConError = new Dictionary<int, bool>();
         private bool _hayCambiosSinGuardar = false;
 
         public frm_IngresoNotas()
@@ -43,6 +45,10 @@
                     return;
                 }
             }
+
+            // Suscribimos el evento de pintado para dibujar el ❗ manualmente
+            dgvAlumnos.CellPainting += dgvAlumnos_CellPainting;
+
             CargarPeriodos();
         }
 
@@ -164,8 +170,8 @@
 
             ConfigurarGrilla();
 
-            // Reseteamos el control de cambios
             _filasEditadas.Clear();
+            _filasConError.Clear();
             _hayCambiosSinGuardar = false;
         }
 
@@ -183,7 +189,8 @@
                 dgvAlumnos.Columns["NombreCompleto"].HeaderText = "ESTUDIANTE";
                 dgvAlumnos.Columns["NombreCompleto"].ReadOnly = true;
 
-                dgvAlumnos.Columns["Nota"].HeaderText = "CALIFICACIÓN (0,00 - 10,00)"; // Modificado encabezado
+                // SE ACLARA EL USO DE PUNTO EN EL ENCABEZADO
+                dgvAlumnos.Columns["Nota"].HeaderText = "CALIFICACIÓN (Ej: 8.5)";
                 dgvAlumnos.Columns["Nota"].DefaultCellStyle.BackColor = Color.LightYellow;
                 dgvAlumnos.Columns["Nota"].DefaultCellStyle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
                 dgvAlumnos.Columns["Nota"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -191,7 +198,7 @@
             }
         }
 
-        // Detecta qué filas fueron editadas realmente y si hubo un cambio (Incluso si escribió lo mismo)
+        // Detecta edición para habilitar el guardado
         private void dgvAlumnos_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "Nota")
@@ -201,13 +208,40 @@
             }
         }
 
-        // Quita la alerta roja de la celda en cuanto el usuario corrige y sale de ella
+        // Quita la marca de error inmediatamente si el usuario vuelve a editar la celda
         private void dgvAlumnos_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "Nota")
             {
-                // Limpia el mensaje de error temporalmente para ver si al guardar pasa
-                dgvAlumnos.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+                if (_filasConError.ContainsKey(e.RowIndex))
+                {
+                    _filasConError[e.RowIndex] = false;
+                    dgvAlumnos.InvalidateCell(e.ColumnIndex, e.RowIndex); // Obliga a repintar para quitar el ❗
+                }
+            }
+        }
+
+        // PINTADO MANUAL DEL SIGNO DE EXCLAMACIÓN (❗) EN ROJO
+        private void dgvAlumnos_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "Nota")
+            {
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+
+                // Si la fila está marcada con error, dibujamos el ❗ en la esquina superior derecha
+                if (_filasConError.ContainsKey(e.RowIndex) && _filasConError[e.RowIndex] == true)
+                {
+                    using (Brush brush = new SolidBrush(Color.Red))
+                    {
+                        using (Font font = new Font("Segoe UI", 14, FontStyle.Bold))
+                        {
+                            // Ajustar coordenadas para que quede arriba a la derecha
+                            PointF ubicacion = new PointF(e.CellBounds.Right - 20, e.CellBounds.Top + 5);
+                            e.Graphics.DrawString("!", font, brush, ubicacion);
+                        }
+                    }
+                }
+                e.Handled = true;
             }
         }
 
@@ -222,29 +256,33 @@
             }
 
             bool hayErrores = false;
+            _filasConError.Clear(); // Limpiamos errores anteriores
 
             // 1. VALIDACIÓN PREVIA MASIVA
             foreach (DataGridViewRow row in dgvAlumnos.Rows)
             {
-                // Solo validamos las filas que realmente intentó modificar el usuario
                 if (_filasEditadas.ContainsKey(row.Index) && _filasEditadas[row.Index] == true)
                 {
                     var celdaNota = row.Cells["Nota"].Value;
 
                     if (celdaNota != null && !string.IsNullOrWhiteSpace(celdaNota.ToString()))
                     {
-                        string valorIngresado = celdaNota.ToString().Replace(".", ",");
+                        // Convertimos comas a puntos internamente para que C# no falle según la cultura de la PC
+                        string valorIngresado = celdaNota.ToString().Replace(",", ".");
 
-                        if (!decimal.TryParse(valorIngresado, out decimal notaFinal) || notaFinal < 0 || notaFinal > 10)
+                        // Usamos InvariantCulture para forzar el parseo entendiendo el punto (.) como decimal
+                        if (!decimal.TryParse(valorIngresado, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal notaFinal)
+                            || notaFinal < 0 || notaFinal > 10)
                         {
-                            // Le ponemos el icono rojo en la esquina de la celda
-                            row.Cells["Nota"].ErrorText = "La nota debe ser un número válido entre 0 y 10 (Use coma para decimales).";
+                            // Marcamos la fila con error y repintamos para que aparezca el ❗
+                            _filasConError[row.Index] = true;
+                            dgvAlumnos.InvalidateCell(row.Cells["Nota"].ColumnIndex, row.Index);
                             hayErrores = true;
                         }
                         else
                         {
-                            row.Cells["Nota"].ErrorText = string.Empty;
-                            row.Cells["Nota"].Value = notaFinal; // Normaliza la vista en caso de usar punto
+                            // Formatea visualmente a dos decimales con punto
+                            row.Cells["Nota"].Value = notaFinal.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
                         }
                     }
                 }
@@ -252,8 +290,8 @@
 
             if (hayErrores)
             {
-                MessageBox.Show("Se han encontrado formatos incorrectos en las casillas marcadas con el ícono rojo (!). Por favor, corríjalas antes de guardar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return; // Bloqueamos el guardado hasta que corrija
+                MessageBox.Show("Existen calificaciones con formato incorrecto (Marcadas con un ! rojo).\nLas notas deben ser números entre 0 y 10.\nUtilice el PUNTO (.) para los decimales.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; // Se detiene el proceso de guardado
             }
 
             // 2. CONFIRMACIÓN DE GUARDADO
@@ -267,12 +305,12 @@
                 {
                     var celdaNota = row.Cells["Nota"].Value;
                     int idEstudiante = (int)row.Cells["IdEstudiante"].Value;
-
                     var alumno = _listaActual.First(a => a.IdEstudiante == idEstudiante);
 
                     if (celdaNota != null && !string.IsNullOrWhiteSpace(celdaNota.ToString()))
                     {
-                        alumno.Nota = Convert.ToDecimal(celdaNota);
+                        string strValor = celdaNota.ToString().Replace(",", ".");
+                        alumno.Nota = decimal.Parse(strValor, System.Globalization.CultureInfo.InvariantCulture);
                     }
                     else
                     {
@@ -289,7 +327,8 @@
                 MessageBox.Show(resultado.mensaje, "Notas Guardadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 _hayCambiosSinGuardar = false;
                 _filasEditadas.Clear();
-                btnCargar.PerformClick(); // Recargar para obtener los IDs nuevos insertados
+                _filasConError.Clear();
+                btnCargar.PerformClick(); // Recarga limpia
             }
             else
             {
