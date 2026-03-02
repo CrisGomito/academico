@@ -194,7 +194,7 @@
             txt_Creditos.BorderStyle = BorderStyle.FixedSingle;
             txt_Creditos.Enabled = false;
             txt_Creditos.Font = new Font("Segoe UI", 12F);
-            txt_Creditos.Location = new Point(40, 235);
+            txt_Creditos.Location = new Point(44, 140);
             txt_Creditos.MaxLength = 2;
             txt_Creditos.Name = "txt_Creditos";
             txt_Creditos.Size = new Size(120, 29);
@@ -206,7 +206,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label3.ForeColor = Color.Gray;
-            label3.Location = new Point(36, 210);
+            label3.Location = new Point(40, 115);
             label3.Name = "label3";
             label3.Size = new Size(80, 19);
             label3.TabIndex = 6;
@@ -218,7 +218,7 @@
             txt_Nombre.BorderStyle = BorderStyle.FixedSingle;
             txt_Nombre.Enabled = false;
             txt_Nombre.Font = new Font("Segoe UI", 12F);
-            txt_Nombre.Location = new Point(40, 145);
+            txt_Nombre.Location = new Point(40, 62);
             txt_Nombre.Name = "txt_Nombre";
             txt_Nombre.Size = new Size(300, 29);
             txt_Nombre.TabIndex = 7;
@@ -228,7 +228,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label2.ForeColor = Color.Gray;
-            label2.Location = new Point(36, 120);
+            label2.Location = new Point(40, 40);
             label2.Name = "label2";
             label2.Size = new Size(209, 19);
             label2.TabIndex = 8;
