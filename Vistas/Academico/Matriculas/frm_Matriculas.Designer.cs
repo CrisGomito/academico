@@ -248,7 +248,7 @@
             lst_Lista_Matriculas.ItemHeight = 21;
             lst_Lista_Matriculas.Location = new Point(395, 40);
             lst_Lista_Matriculas.Name = "lst_Lista_Matriculas";
-            lst_Lista_Matriculas.Size = new Size(727, 336);
+            lst_Lista_Matriculas.Size = new Size(727, 357);
             lst_Lista_Matriculas.TabIndex = 10;
             lst_Lista_Matriculas.DoubleClick += lst_Lista_Matriculas_DoubleClick;
             // 
