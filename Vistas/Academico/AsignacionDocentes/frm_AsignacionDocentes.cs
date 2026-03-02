@@ -4,6 +4,7 @@
     using System;
     using System.Linq;
     using System.Windows.Forms;
+    using FontAwesome.Sharp;
 
     public partial class frm_AsignacionDocentes : Form
     {
@@ -19,6 +20,20 @@
             CargarCombos();
             carga_lista();
         }
+
+        // --- BOTÓN CIRCULAR ROJO PARA CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // ---------------------------------------
 
         private void CargarCombos()
         {
@@ -52,6 +67,32 @@
             lst_Lista_Asignaciones.DataSource = listaAsignaciones;
             lst_Lista_Asignaciones.DisplayMember = "DisplayInfo";
             lst_Lista_Asignaciones.ValueMember = "IdAsignacion";
+        }
+
+        // --- MÉTODO PARA RELLENAR DATOS EN DOBLE CLIC (SOLO LECTURA) ---
+        private void lst_Lista_Asignaciones_DoubleClick(object sender, EventArgs e)
+        {
+            if (lst_Lista_Asignaciones.SelectedValue == null) return;
+
+            int idAsignacion = (int)lst_Lista_Asignaciones.SelectedValue;
+
+            // Obtenemos la asignación de la base de datos (basado en el DTO que retorna ObtenerAsignaciones)
+            var asignacion = _asignacionController.ObtenerAsignaciones().FirstOrDefault(a => a.IdAsignacion == idAsignacion);
+
+            if (asignacion != null)
+            {
+                // Limpiamos y bloqueamos
+                LimpiarCampos(true);
+
+                // Usamos .Text porque el DTO trae Strings formateados, y así el Combo lo autoselecciona
+                cmb_Docente.Text = asignacion.DocenteInfo;
+                cmb_Asignatura.Text = asignacion.AsignaturaNombre;
+                cmb_Periodo.Text = asignacion.PeriodoNombre;
+
+                cmb_Docente.Enabled = false;
+                cmb_Asignatura.Enabled = false;
+                cmb_Periodo.Enabled = false;
+            }
         }
 
         private void btn_Nuevo_Click(object sender, EventArgs e)
@@ -142,11 +183,6 @@
             cmb_Periodo.Enabled = true;
         }
 
-        private void btn_Salir_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             if (lst_Lista_Asignaciones.SelectedValue == null)
@@ -166,6 +202,7 @@
                 {
                     MessageBox.Show("La asignación ha sido eliminada con éxito.", "Gestión Académica", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     carga_lista();
+                    LimpiarCampos(true);
                 }
                 else
                 {
