@@ -21,7 +21,13 @@
         {
             // Agregamos un margen visual entre el buscador y la tabla
             pnlBuscador.Margin = new Padding(0, 0, 0, 15);
+
+            // Aseguramos que el TextBox inicie con el placeholder visualmente correcto
+            txtBuscar.Text = PLACEHOLDER_TEXT;
+            txtBuscar.ForeColor = Color.Gray;
+
             CargarAuditoria(); // Carga inicial usando ObtenerHistorial()
+
             // Configurar auto-actualización silenciosa cada 5 segundos
             tmrAutoRefresh = new System.Windows.Forms.Timer();
             tmrAutoRefresh.Interval = 5000; // 5000 milisegundos = 5 segundos
@@ -60,7 +66,7 @@
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar la auditoría: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Ignoramos el MessageBox en el timer para no saturar al usuario si falla la red un instante
             }
         }
 
@@ -84,22 +90,46 @@
 
             if (dgvAuditoria.Columns.Count > 0)
             {
-                // Ajustamos anchos para que se vea estético
+                // CLAVAMOS LOS ANCHOS: Bloqueamos el AutoSize de estas columnas
+                dgvAuditoria.Columns["ID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 dgvAuditoria.Columns["ID"].Width = 60;
-                dgvAuditoria.Columns["Registro"].Width = 80;
-                dgvAuditoria.Columns["Fecha"].Width = 160;
+
+                dgvAuditoria.Columns["Registro"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvAuditoria.Columns["Registro"].Width = 100;
+
+                dgvAuditoria.Columns["Fecha"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvAuditoria.Columns["Fecha"].Width = 180;
+
+                dgvAuditoria.Columns["Acción"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvAuditoria.Columns["Acción"].Width = 120;
+
+                dgvAuditoria.Columns["Rol"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvAuditoria.Columns["Rol"].Width = 200;
+
+                // Las demás columnas (Usuario, Rol, Tabla) se ajustan automáticamente con Fill
+            }
+
+            // LLEVAMOS EL SCROLL ARRIBA: Aseguramos que siempre se vea el registro más reciente
+            if (dgvAuditoria.Rows.Count > 0)
+            {
+                dgvAuditoria.FirstDisplayedScrollingRowIndex = 0;
             }
         }
 
         // =========================================================
-        // LÓGICA DEL PLACEHOLDER (Texto Atenuado)
+        // LÓGICA DEL PLACEHOLDER (Texto Atenuado) CORREGIDA
         // =========================================================
         private void txtBuscar_Enter(object sender, EventArgs e)
         {
             if (txtBuscar.Text == PLACEHOLDER_TEXT)
             {
+                // Detenemos el evento para que no haya falsas búsquedas
+                txtBuscar.TextChanged -= txtBuscar_TextChanged;
+
                 txtBuscar.Text = "";
                 txtBuscar.ForeColor = Color.Black; // Color activo
+
+                txtBuscar.TextChanged += txtBuscar_TextChanged;
             }
         }
 
@@ -107,8 +137,12 @@
         {
             if (string.IsNullOrWhiteSpace(txtBuscar.Text))
             {
+                txtBuscar.TextChanged -= txtBuscar_TextChanged;
+
                 txtBuscar.Text = PLACEHOLDER_TEXT;
                 txtBuscar.ForeColor = Color.Gray; // Color atenuado
+
+                txtBuscar.TextChanged += txtBuscar_TextChanged;
                 CargarAuditoria(); // Restauramos la lista completa
             }
         }

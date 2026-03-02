@@ -42,6 +42,7 @@
             btnInfoGeneral = new FontAwesome.Sharp.IconButton();
             pnlSubMenuAdmin = new Panel();
             btnAuditoria = new FontAwesome.Sharp.IconButton();
+            FontAwesome.Sharp.IconButton btnAuditoriaDetallada = new FontAwesome.Sharp.IconButton();
             btnEstudiantes = new FontAwesome.Sharp.IconButton();
             btnDocentes = new FontAwesome.Sharp.IconButton();
             btnUsuarios = new FontAwesome.Sharp.IconButton();
@@ -396,13 +397,14 @@
             // pnlSubMenuAdmin
             // 
             pnlSubMenuAdmin.BackColor = Color.FromArgb(65, 85, 105);
+            pnlSubMenuAdmin.Controls.Add(btnAuditoriaDetallada); // AGREGADO AQUÍ
             pnlSubMenuAdmin.Controls.Add(btnAuditoria);
             pnlSubMenuAdmin.Controls.Add(btnEstudiantes);
             pnlSubMenuAdmin.Controls.Add(btnDocentes);
             pnlSubMenuAdmin.Controls.Add(btnUsuarios);
             pnlSubMenuAdmin.Location = new Point(0, 0);
             pnlSubMenuAdmin.Name = "pnlSubMenuAdmin";
-            pnlSubMenuAdmin.Size = new Size(200, 160);
+            pnlSubMenuAdmin.Size = new Size(200, 200);
             pnlSubMenuAdmin.TabIndex = 4;
             pnlSubMenuAdmin.Visible = false;
             // 
@@ -422,6 +424,23 @@
             btnAuditoria.Text = " Auditoría";
             btnAuditoria.TextAlign = ContentAlignment.MiddleLeft;
             btnAuditoria.Click += btnAuditoria_Click;
+            // 
+            // btnAuditoriaDetallada
+            // 
+            btnAuditoriaDetallada.Dock = DockStyle.Top;
+            btnAuditoriaDetallada.FlatAppearance.BorderSize = 0;
+            btnAuditoriaDetallada.FlatStyle = FlatStyle.Flat;
+            btnAuditoriaDetallada.ForeColor = Color.Silver;
+            btnAuditoriaDetallada.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnAuditoriaDetallada.IconColor = Color.Black;
+            btnAuditoriaDetallada.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnAuditoriaDetallada.Location = new Point(0, 160);
+            btnAuditoriaDetallada.Name = "btnAuditoriaDetallada";
+            btnAuditoriaDetallada.Size = new Size(200, 40);
+            btnAuditoriaDetallada.TabIndex = 4;
+            btnAuditoriaDetallada.Text = " Auditoría Detallada";
+            btnAuditoriaDetallada.TextAlign = ContentAlignment.MiddleLeft;
+            btnAuditoriaDetallada.Click += btnAuditoriaDetallada_Click;
             // 
             // btnEstudiantes
             // 
