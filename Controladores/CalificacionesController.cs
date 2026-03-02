@@ -18,6 +18,8 @@ namespace Academico.Controladores
             public string NombreCompleto { get; set; }
             public int IdCalificacion { get; set; } // 0 si no tiene nota aún
             public decimal? Nota { get; set; } // Null si no tiene nota
+            // NUEVO CAMPO: Evita bloqueos nativos de Windows Forms
+            public string NotaUI { get; set; }
         }
 
         // Obtener el ID del docente a partir del ID de Usuario actual
@@ -175,7 +177,9 @@ namespace Academico.Controladores
                         Codigo = estudiante.Codigo,
                         NombreCompleto = $"{estudiante.IdUsuarioNavigation.Apellido} {estudiante.IdUsuarioNavigation.Nombre}",
                         IdCalificacion = calif != null ? calif.IdCalificacion : 0,
-                        Nota = calif != null ? calif.Nota : (decimal?)null
+                        Nota = calif != null ? calif.Nota : (decimal?)null,
+                        // Inicializamos la vista UI formateada siempre con punto
+                        NotaUI = calif != null ? calif.Nota.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) : ""
                     });
                 }
 

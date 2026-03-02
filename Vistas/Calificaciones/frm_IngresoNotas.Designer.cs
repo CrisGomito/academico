@@ -6,10 +6,7 @@
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -19,7 +16,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlFiltros = new System.Windows.Forms.Panel();
             this.btnCerrar = new System.Windows.Forms.Button();
-            this.btnNuevaEval = new System.Windows.Forms.Button();
             this.btnCargar = new System.Windows.Forms.Button();
             this.cmbEvaluacion = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -36,10 +32,9 @@
             this.pnlFooter.SuspendLayout();
             this.SuspendLayout();
 
-            // --- PANEL FILTROS ---
+            // pnlFiltros
             this.pnlFiltros.BackColor = System.Drawing.Color.White;
             this.pnlFiltros.Controls.Add(this.btnCerrar);
-            this.pnlFiltros.Controls.Add(this.btnNuevaEval);
             this.pnlFiltros.Controls.Add(this.btnCargar);
             this.pnlFiltros.Controls.Add(this.cmbEvaluacion);
             this.pnlFiltros.Controls.Add(this.label4);
@@ -52,7 +47,6 @@
             this.pnlFiltros.Location = new System.Drawing.Point(0, 0);
             this.pnlFiltros.Name = "pnlFiltros";
             this.pnlFiltros.Size = new System.Drawing.Size(1024, 140);
-            this.pnlFiltros.TabIndex = 0;
 
             // btnCerrar (Botón Circular Rojo)
             this.btnCerrar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
@@ -62,23 +56,9 @@
             this.btnCerrar.Location = new System.Drawing.Point(985, 15);
             this.btnCerrar.Name = "btnCerrar";
             this.btnCerrar.Size = new System.Drawing.Size(20, 20);
-            this.btnCerrar.TabIndex = 9;
             this.btnCerrar.UseVisualStyleBackColor = false;
             this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             this.btnCerrar.Paint += new System.Windows.Forms.PaintEventHandler(this.btnCerrar_Paint);
-
-            // btnNuevaEval
-            this.btnNuevaEval.BackColor = System.Drawing.Color.LightGray;
-            this.btnNuevaEval.FlatAppearance.BorderSize = 0;
-            this.btnNuevaEval.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNuevaEval.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnNuevaEval.Location = new System.Drawing.Point(600, 62);
-            this.btnNuevaEval.Name = "btnNuevaEval";
-            this.btnNuevaEval.Size = new System.Drawing.Size(164, 25);
-            this.btnNuevaEval.TabIndex = 8;
-            this.btnNuevaEval.Text = "+ Crear Evaluación";
-            this.btnNuevaEval.UseVisualStyleBackColor = false;
-            this.btnNuevaEval.Click += new System.EventHandler(this.btnNuevaEval_Click);
 
             // btnCargar
             this.btnCargar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
@@ -89,7 +69,6 @@
             this.btnCargar.Location = new System.Drawing.Point(790, 88);
             this.btnCargar.Name = "btnCargar";
             this.btnCargar.Size = new System.Drawing.Size(130, 32);
-            this.btnCargar.TabIndex = 7;
             this.btnCargar.Text = "Cargar Lista";
             this.btnCargar.UseVisualStyleBackColor = false;
             this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
@@ -101,7 +80,6 @@
             this.cmbEvaluacion.Location = new System.Drawing.Point(514, 90);
             this.cmbEvaluacion.Name = "cmbEvaluacion";
             this.cmbEvaluacion.Size = new System.Drawing.Size(250, 28);
-            this.cmbEvaluacion.TabIndex = 6;
 
             // label4
             this.label4.AutoSize = true;
@@ -109,7 +87,6 @@
             this.label4.Location = new System.Drawing.Point(510, 65);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(83, 20);
-            this.label4.TabIndex = 5;
             this.label4.Text = "Evaluación";
 
             // cmbAsignatura
@@ -119,7 +96,6 @@
             this.cmbAsignatura.Location = new System.Drawing.Point(244, 90);
             this.cmbAsignatura.Name = "cmbAsignatura";
             this.cmbAsignatura.Size = new System.Drawing.Size(250, 28);
-            this.cmbAsignatura.TabIndex = 4;
             this.cmbAsignatura.SelectedIndexChanged += new System.EventHandler(this.cmbAsignatura_SelectedIndexChanged);
 
             // label3
@@ -128,7 +104,6 @@
             this.label3.Location = new System.Drawing.Point(240, 65);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(86, 20);
-            this.label3.TabIndex = 3;
             this.label3.Text = "Asignatura";
 
             // cmbPeriodo
@@ -138,7 +113,6 @@
             this.cmbPeriodo.Location = new System.Drawing.Point(25, 90);
             this.cmbPeriodo.Name = "cmbPeriodo";
             this.cmbPeriodo.Size = new System.Drawing.Size(200, 28);
-            this.cmbPeriodo.TabIndex = 2;
             this.cmbPeriodo.SelectedIndexChanged += new System.EventHandler(this.cmbPeriodo_SelectedIndexChanged);
 
             // label2
@@ -147,7 +121,6 @@
             this.label2.Location = new System.Drawing.Point(21, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 20);
-            this.label2.TabIndex = 1;
             this.label2.Text = "Periodo";
 
             // lblTitulo
@@ -156,11 +129,9 @@
             this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(128)))), ((int)(((byte)(185)))));
             this.lblTitulo.Location = new System.Drawing.Point(20, 15);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(331, 30);
-            this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "REGISTRO DE CALIFICACIONES";
 
-            // --- DATA GRID VIEW ---
+            // dgvAlumnos
             this.dgvAlumnos.AllowUserToAddRows = false;
             this.dgvAlumnos.AllowUserToDeleteRows = false;
             this.dgvAlumnos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -173,16 +144,13 @@
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvAlumnos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvAlumnos.ColumnHeadersHeight = 40;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 12F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvAlumnos.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvAlumnos.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvAlumnos.EnableHeadersVisualStyles = false;
@@ -193,20 +161,15 @@
             this.dgvAlumnos.RowTemplate.Height = 35;
             this.dgvAlumnos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgvAlumnos.Size = new System.Drawing.Size(1024, 400);
-            this.dgvAlumnos.TabIndex = 1;
-            // Se eliminó el CellValidating para hacerlo manual al Guardar.
-            // En su lugar, usaremos CellEndEdit para quitar la alerta roja si corrige
             this.dgvAlumnos.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlumnos_CellEndEdit);
             this.dgvAlumnos.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlumnos_CellValueChanged);
 
-            // --- PANEL FOOTER ---
+            // pnlFooter
             this.pnlFooter.BackColor = System.Drawing.Color.White;
             this.pnlFooter.Controls.Add(this.btnGuardar);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlFooter.Location = new System.Drawing.Point(0, 540);
-            this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(1024, 80);
-            this.pnlFooter.TabIndex = 2;
 
             // btnGuardar
             this.btnGuardar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
@@ -218,7 +181,6 @@
             this.btnGuardar.Location = new System.Drawing.Point(820, 20);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(180, 45);
-            this.btnGuardar.TabIndex = 0;
             this.btnGuardar.Text = "Guardar Notas";
             this.btnGuardar.UseVisualStyleBackColor = false;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
@@ -251,10 +213,9 @@
         private System.Windows.Forms.ComboBox cmbPeriodo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnCargar;
-        private System.Windows.Forms.Button btnNuevaEval;
         private System.Windows.Forms.DataGridView dgvAlumnos;
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.Button btnGuardar;
-        private System.Windows.Forms.Button btnCerrar; // Movido arriba
+        private System.Windows.Forms.Button btnCerrar;
     }
 }
