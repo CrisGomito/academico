@@ -14,6 +14,10 @@
         private int _idDocenteActual = 0;
         private List<CalificacionesController.AlumnoNotaDTO> _listaActual = new List<CalificacionesController.AlumnoNotaDTO>();
 
+        // Usamos un diccionario para rastrear qué filas fueron editadas para no enviar datos innecesarios
+        private Dictionary<int, bool> _filasEditadas = new Dictionary<int, bool>();
+        private bool _hayCambiosSinGuardar = false;
+
         public frm_IngresoNotas()
         {
             InitializeComponent();
@@ -21,16 +25,14 @@
 
         private void frm_IngresoNotas_Load(object sender, EventArgs e)
         {
-            // 1. Obtener ID del docente autenticado
             _idDocenteActual = _califController.ObtenerIdDocenteActual();
 
-            // BYPASS PARA TESTING
             if (_idDocenteActual == 0)
             {
-                if (Program.rolId == 1 || Program.rolId == 4) // ADMIN O COORDINADOR (Testing)
+                if (Program.rolId == 1 || Program.rolId == 4)
                 {
                     MessageBox.Show("Modo Superusuario activado: Podrá visualizar y gestionar las calificaciones de todos los docentes y materias.", "Modo Administración", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    _idDocenteActual = 0; // Lo dejamos en 0 para que el Controlador active la vista global
+                    _idDocenteActual = 0;
                 }
                 else
                 {
@@ -41,60 +43,53 @@
                     return;
                 }
             }
-            /*
-
-if (_idDocenteActual == 0)
-
-{
-
-    MessageBox.Show("Atención: Su usuario no está registrado como Docente. No podrá ingresar notas.", "Acceso Restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-    btnCargar.Enabled = false;
-
-    btnGuardar.Enabled = false;
-
-    btnNuevaEval.Enabled = false;
-
-    return;
-
-}
-
-*/
             CargarPeriodos();
         }
+
+        // --- BOTÓN CIRCULAR ROJO DE CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            if (_hayCambiosSinGuardar)
+            {
+                var confirm = MessageBox.Show("Tiene notas sin guardar. ¿Está seguro que desea salir y perder los cambios?", "Cambios no guardados", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (confirm == DialogResult.No)
+                {
+                    return;
+                }
+            }
+            this.Close();
+        }
+        // -------------------------------------
 
         private void CargarPeriodos()
         {
             var periodos = _califController.ObtenerPeriodosDelDocente(_idDocenteActual);
-
-            // Apagamos los eventos temporalmente para evitar que se disparen en cadena mientras llenamos
             cmbPeriodo.SelectedIndexChanged -= cmbPeriodo_SelectedIndexChanged;
-
             cmbPeriodo.DataSource = periodos;
             cmbPeriodo.DisplayMember = "Nombre";
             cmbPeriodo.ValueMember = "IdPeriodo";
             cmbPeriodo.SelectedIndex = -1;
-
-            // Volvemos a encender el evento
             cmbPeriodo.SelectedIndexChanged += cmbPeriodo_SelectedIndexChanged;
         }
 
         private void cmbPeriodo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Validación de seguridad para el casteo: Comprobamos que SelectedValue sea realmente un entero
             if (cmbPeriodo.SelectedIndex != -1 && cmbPeriodo.SelectedValue is int idPeriodo)
             {
                 var asignaturas = _califController.ObtenerAsignaturasDelDocente(_idDocenteActual, idPeriodo);
-
                 cmbAsignatura.SelectedIndexChanged -= cmbAsignatura_SelectedIndexChanged;
-
                 cmbAsignatura.DataSource = asignaturas;
                 cmbAsignatura.DisplayMember = "Nombre";
                 cmbAsignatura.ValueMember = "IdAsignatura";
                 cmbAsignatura.SelectedIndex = -1;
-
-                cmbEvaluacion.DataSource = null; // Limpiar evaluaciones
-
+                cmbEvaluacion.DataSource = null;
                 cmbAsignatura.SelectedIndexChanged += cmbAsignatura_SelectedIndexChanged;
             }
         }
@@ -109,17 +104,10 @@ if (_idDocenteActual == 0)
 
         private void CargarEvaluaciones()
         {
-            // Validamos casteos antes de consultar a BD
             if (cmbAsignatura.SelectedValue is int idAsignatura && cmbPeriodo.SelectedValue is int idPeriodo)
             {
                 var evaluaciones = _califController.ObtenerEvaluaciones(idAsignatura, idPeriodo);
-                var source = evaluaciones.Select(ev => new
-                {
-                    ev.IdEvaluacion,
-
-                    Display = ev.Descripcion
-                }).ToList();
-
+                var source = evaluaciones.Select(ev => new { ev.IdEvaluacion, Display = ev.Descripcion }).ToList();
                 cmbEvaluacion.DataSource = source;
                 cmbEvaluacion.DisplayMember = "Display";
                 cmbEvaluacion.ValueMember = "IdEvaluacion";
@@ -127,7 +115,6 @@ if (_idDocenteActual == 0)
             }
         }
 
-        // --- BOTÓN PARA CREAR UNA EVALUACIÓN RÁPIDA ---
         private void btnNuevaEval_Click(object sender, EventArgs e)
         {
             if (cmbAsignatura.SelectedIndex == -1 || cmbPeriodo.SelectedIndex == -1)
@@ -152,7 +139,6 @@ if (_idDocenteActual == 0)
             }
         }
 
-        // --- CARGAR ALUMNOS Y NOTAS EN LA GRILLA ---
         private void btnCargar_Click(object sender, EventArgs e)
         {
             if (cmbEvaluacion.SelectedIndex == -1)
@@ -161,27 +147,35 @@ if (_idDocenteActual == 0)
                 return;
             }
 
+            if (_hayCambiosSinGuardar)
+            {
+                var confirm = MessageBox.Show("Hay notas sin guardar. Si carga otra lista perderá sus cambios actuales. ¿Desea continuar?", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (confirm == DialogResult.No) return;
+            }
+
             int idAsignatura = (int)cmbAsignatura.SelectedValue;
             int idPeriodo = (int)cmbPeriodo.SelectedValue;
             int idEvaluacion = (int)cmbEvaluacion.SelectedValue;
 
             _listaActual = _califController.ObtenerEstudiantesParaCalificar(idAsignatura, idPeriodo, idEvaluacion);
 
-            dgvAlumnos.DataSource = null; // Reset
+            dgvAlumnos.DataSource = null;
             dgvAlumnos.DataSource = _listaActual;
 
             ConfigurarGrilla();
+
+            // Reseteamos el control de cambios
+            _filasEditadas.Clear();
+            _hayCambiosSinGuardar = false;
         }
 
         private void ConfigurarGrilla()
         {
             if (dgvAlumnos.Columns.Count > 0)
             {
-                // Ocultamos IDs internos
                 dgvAlumnos.Columns["IdEstudiante"].Visible = false;
                 dgvAlumnos.Columns["IdCalificacion"].Visible = false;
 
-                // Nombramos las columnas
                 dgvAlumnos.Columns["Codigo"].HeaderText = "CÓDIGO";
                 dgvAlumnos.Columns["Codigo"].ReadOnly = true;
                 dgvAlumnos.Columns["Codigo"].Width = 150;
@@ -189,54 +183,101 @@ if (_idDocenteActual == 0)
                 dgvAlumnos.Columns["NombreCompleto"].HeaderText = "ESTUDIANTE";
                 dgvAlumnos.Columns["NombreCompleto"].ReadOnly = true;
 
-                // Configurar columna de NOTA (La única editable)
-                dgvAlumnos.Columns["Nota"].HeaderText = "CALIFICACIÓN (0-10)";
+                dgvAlumnos.Columns["Nota"].HeaderText = "CALIFICACIÓN (0,00 - 10,00)"; // Modificado encabezado
                 dgvAlumnos.Columns["Nota"].DefaultCellStyle.BackColor = Color.LightYellow;
                 dgvAlumnos.Columns["Nota"].DefaultCellStyle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
                 dgvAlumnos.Columns["Nota"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvAlumnos.Columns["Nota"].Width = 200;
+                dgvAlumnos.Columns["Nota"].Width = 250;
             }
         }
 
-        // --- VALIDACIÓN ESTRICTA DE LA NOTA AL ESCRIBIR ---
-        private void dgvAlumnos_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        // Detecta qué filas fueron editadas realmente y si hubo un cambio (Incluso si escribió lo mismo)
+        private void dgvAlumnos_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvAlumnos.Columns[e.ColumnIndex].Name == "Nota")
+            if (e.RowIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "Nota")
             {
-                string valorIngresado = e.FormattedValue.ToString();
-
-                if (!string.IsNullOrWhiteSpace(valorIngresado))
-                {
-                    valorIngresado = valorIngresado.Replace(".", ",");
-
-                    if (!decimal.TryParse(valorIngresado, out decimal notaFinal) || notaFinal < 0 || notaFinal > 10)
-                    {
-                        MessageBox.Show("La nota debe ser un número válido entre 0 y 10.", "Valor Incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        e.Cancel = true;
-                    }
-                }
+                _filasEditadas[e.RowIndex] = true;
+                _hayCambiosSinGuardar = true;
             }
         }
 
-        // --- GUARDADO MASIVO DE NOTAS ---
+        // Quita la alerta roja de la celda en cuanto el usuario corrige y sale de ella
+        private void dgvAlumnos_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "Nota")
+            {
+                // Limpia el mensaje de error temporalmente para ver si al guardar pasa
+                dgvAlumnos.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+            }
+        }
+
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (_listaActual.Count == 0 || cmbEvaluacion.SelectedIndex == -1) return;
 
+            if (!_hayCambiosSinGuardar)
+            {
+                MessageBox.Show("No se han detectado modificaciones en las notas.", "Sin cambios", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            bool hayErrores = false;
+
+            // 1. VALIDACIÓN PREVIA MASIVA
             foreach (DataGridViewRow row in dgvAlumnos.Rows)
             {
-                var celdaNota = row.Cells["Nota"].Value;
-                int idEstudiante = (int)row.Cells["IdEstudiante"].Value;
-
-                var alumno = _listaActual.First(a => a.IdEstudiante == idEstudiante);
-
-                if (celdaNota != null && !string.IsNullOrWhiteSpace(celdaNota.ToString()))
+                // Solo validamos las filas que realmente intentó modificar el usuario
+                if (_filasEditadas.ContainsKey(row.Index) && _filasEditadas[row.Index] == true)
                 {
-                    alumno.Nota = Convert.ToDecimal(celdaNota);
+                    var celdaNota = row.Cells["Nota"].Value;
+
+                    if (celdaNota != null && !string.IsNullOrWhiteSpace(celdaNota.ToString()))
+                    {
+                        string valorIngresado = celdaNota.ToString().Replace(".", ",");
+
+                        if (!decimal.TryParse(valorIngresado, out decimal notaFinal) || notaFinal < 0 || notaFinal > 10)
+                        {
+                            // Le ponemos el icono rojo en la esquina de la celda
+                            row.Cells["Nota"].ErrorText = "La nota debe ser un número válido entre 0 y 10 (Use coma para decimales).";
+                            hayErrores = true;
+                        }
+                        else
+                        {
+                            row.Cells["Nota"].ErrorText = string.Empty;
+                            row.Cells["Nota"].Value = notaFinal; // Normaliza la vista en caso de usar punto
+                        }
+                    }
                 }
-                else
+            }
+
+            if (hayErrores)
+            {
+                MessageBox.Show("Se han encontrado formatos incorrectos en las casillas marcadas con el ícono rojo (!). Por favor, corríjalas antes de guardar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; // Bloqueamos el guardado hasta que corrija
+            }
+
+            // 2. CONFIRMACIÓN DE GUARDADO
+            var confirm = MessageBox.Show("¿Está seguro de guardar las calificaciones ingresadas para estos estudiantes?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            // 3. ASIGNACIÓN AL DTO Y GUARDADO
+            foreach (DataGridViewRow row in dgvAlumnos.Rows)
+            {
+                if (_filasEditadas.ContainsKey(row.Index) && _filasEditadas[row.Index] == true)
                 {
-                    alumno.Nota = null;
+                    var celdaNota = row.Cells["Nota"].Value;
+                    int idEstudiante = (int)row.Cells["IdEstudiante"].Value;
+
+                    var alumno = _listaActual.First(a => a.IdEstudiante == idEstudiante);
+
+                    if (celdaNota != null && !string.IsNullOrWhiteSpace(celdaNota.ToString()))
+                    {
+                        alumno.Nota = Convert.ToDecimal(celdaNota);
+                    }
+                    else
+                    {
+                        alumno.Nota = null;
+                    }
                 }
             }
 
@@ -246,17 +287,14 @@ if (_idDocenteActual == 0)
             if (resultado.exito)
             {
                 MessageBox.Show(resultado.mensaje, "Notas Guardadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                btnCargar.PerformClick(); // Recargar
+                _hayCambiosSinGuardar = false;
+                _filasEditadas.Clear();
+                btnCargar.PerformClick(); // Recargar para obtener los IDs nuevos insertados
             }
             else
             {
                 MessageBox.Show(resultado.mensaje, "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btnCerrar_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }
