@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Forms;
     using FontAwesome.Sharp;
+    using global::Academico.Config;
 
     public partial class frm_AsignacionDocentes : Form
     {
@@ -76,19 +77,31 @@
 
             int idAsignacion = (int)lst_Lista_Asignaciones.SelectedValue;
 
-            // Obtenemos la asignación de la base de datos (basado en el DTO que retorna ObtenerAsignaciones)
-            var asignacion = _asignacionController.ObtenerAsignaciones().FirstOrDefault(a => a.IdAsignacion == idAsignacion);
+            // Obtenemos la asignación DTO
+            var asignacionDTO = _asignacionController.ObtenerAsignaciones().FirstOrDefault(a => a.IdAsignacion == idAsignacion);
 
-            if (asignacion != null)
+            if (asignacionDTO != null)
             {
-                // Limpiamos y bloqueamos
+                // Limpiamos la UI pero mantenemos los controles bloqueados (modo vista)
                 LimpiarCampos(true);
 
-                // Usamos .Text porque el DTO trae Strings formateados, y así el Combo lo autoselecciona
-                cmb_Docente.Text = asignacion.DocenteInfo;
-                cmb_Asignatura.Text = asignacion.AsignaturaNombre;
-                cmb_Periodo.Text = asignacion.PeriodoNombre;
+                // Asignatura y Periodo se pueden mapear por texto porque coinciden exactamente
+                cmb_Asignatura.Text = asignacionDTO.AsignaturaNombre;
+                cmb_Periodo.Text = asignacionDTO.PeriodoNombre;
 
+                // CORRECCIÓN PARA EL DOCENTE:
+                // Como el DTO no trae el ID del Docente ni la cédula, lo buscamos en la base
+                using (var _context = new SistemaAcademicoContext())
+                {
+                    var asignacionOriginal = _context.Asignaciondocentes.FirstOrDefault(a => a.IdAsignacion == idAsignacion);
+                    if (asignacionOriginal != null)
+                    {
+                        // Le decimos al ComboBox que seleccione el ID real del docente
+                        cmb_Docente.SelectedValue = asignacionOriginal.IdDocente;
+                    }
+                }
+
+                // Forzamos a que sigan bloqueados (Solo lectura)
                 cmb_Docente.Enabled = false;
                 cmb_Asignatura.Enabled = false;
                 cmb_Periodo.Enabled = false;
