@@ -4,6 +4,7 @@
     using System;
     using System.Linq;
     using System.Windows.Forms;
+    using FontAwesome.Sharp;
 
     public partial class frm_Matriculas : Form
     {
@@ -19,6 +20,20 @@
             CargarCombos();
             carga_lista();
         }
+
+        // --- BOTÓN CIRCULAR ROJO PARA CERRAR ---
+        private void btnCerrar_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath botonCircular = new System.Drawing.Drawing2D.GraphicsPath();
+            botonCircular.AddEllipse(0, 0, btnCerrar.Width, btnCerrar.Height);
+            btnCerrar.Region = new System.Drawing.Region(botonCircular);
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // ---------------------------------------
 
         private void CargarCombos()
         {
@@ -52,6 +67,34 @@
             lst_Lista_Matriculas.DataSource = listaMatriculas;
             lst_Lista_Matriculas.DisplayMember = "DisplayInfo";
             lst_Lista_Matriculas.ValueMember = "IdMatricula";
+        }
+
+        // --- MÉTODO CORREGIDO PARA RELLENAR DATOS EN DOBLE CLIC (SOLO LECTURA) ---
+        private void lst_Lista_Matriculas_DoubleClick(object sender, EventArgs e)
+        {
+            if (lst_Lista_Matriculas.SelectedValue == null) return;
+
+            int idMatricula = (int)lst_Lista_Matriculas.SelectedValue;
+
+            // Obtenemos la matrícula DTO de la lista cargada
+            var matricula = _matriculasController.ObtenerMatriculas().FirstOrDefault(m => m.IdMatricula == idMatricula);
+
+            if (matricula != null)
+            {
+                // Limpiamos la UI pero mantenemos los controles bloqueados (modo vista)
+                LimpiarCampos(true);
+
+                // IMPORTANTE: Como el DTO trae los nombres (Strings) y no los IDs, usamos .Text 
+                // para que el ComboBox seleccione automáticamente el item que coincida con el texto.
+                cmb_Estudiante.Text = matricula.EstudianteInfo;
+                cmb_Asignatura.Text = matricula.AsignaturaNombre;
+                cmb_Periodo.Text = matricula.PeriodoNombre;
+
+                // Forzamos a que sigan bloqueados (Solo lectura)
+                cmb_Estudiante.Enabled = false;
+                cmb_Asignatura.Enabled = false;
+                cmb_Periodo.Enabled = false;
+            }
         }
 
         private void btn_Nuevo_Click(object sender, EventArgs e)
@@ -142,11 +185,6 @@
             cmb_Periodo.Enabled = true;
         }
 
-        private void btn_Salir_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             if (lst_Lista_Matriculas.SelectedValue == null)
@@ -166,6 +204,7 @@
                 {
                     MessageBox.Show("La matrícula ha sido eliminada con éxito.", "Gestión Académica", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     carga_lista();
+                    LimpiarCampos(true); // Limpia la vista si se eliminó la que estaba seleccionada
                 }
                 else
                 {
