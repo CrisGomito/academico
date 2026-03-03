@@ -13,10 +13,11 @@ namespace Academico.Controladores
         public class DetalleSimulacionDTO
         {
             public int IdEvaluacion { get; set; }
+            public int IdTipoEvaluacion { get; set; } // CRÍTICO: 1=EF1, 2=EP1, 3=EF2, 4=EP2, 5=Final, 6=Remedial
             public string EvaluacionInfo { get; set; }
-            public decimal PesoPorcentaje { get; set; }
             public decimal? NotaReal { get; set; }
             public decimal NotaSimulada { get; set; }
+            public string NotaSimuladaUI { get; set; } // PUENTE UX: Para que el usuario escriba libremente (Ej: "8,5")
         }
 
         // Obtener el ID del estudiante a partir del ID de Usuario actual
@@ -74,18 +75,18 @@ namespace Academico.Controladores
             }
         }
 
-        // OBTENER EL MODELO MATEMÁTICO (Las evaluaciones y sus pesos)
+        // OBTENER EL MODELO ESTRUCTURAL DE EVALUACIONES PARA MONTECARLO
         public List<DetalleSimulacionDTO> ObtenerDatosSimulacion(int idEstudiante, int idAsignatura, int idPeriodo)
         {
             using (var _context = new SistemaAcademicoContext())
             {
                 // 1. Traer todas las evaluaciones de esa asignatura/periodo
                 var evaluaciones = _context.Evaluacions
-                    .Include(e => e.IdTipoEvaluacionNavigation)
                     .Where(e => e.IdAsignatura == idAsignatura && e.IdPeriodo == idPeriodo)
+                    .OrderBy(e => e.IdTipoEvaluacion) // Ordenamos lógicamente: EF1, EP1, EF2...
                     .ToList();
 
-                // 2. Traer las calificaciones reales del estudiante
+                // 2. Traer las calificaciones reales (ya ingresadas por el docente)
                 var notasReales = _context.Calificacions
                     .Where(c => c.IdEstudiante == idEstudiante && c.Activo == true)
                     .ToList();
@@ -97,15 +98,18 @@ namespace Academico.Controladores
                     var notaRealObj = notasReales.FirstOrDefault(n => n.IdEvaluacion == eval.IdEvaluacion);
                     decimal? notaReal = notaRealObj?.Nota;
 
+                    // Valor inicial de la simulación
+                    decimal notaInicialSimulacion = notaReal ?? 0;
+
                     listaSimulacion.Add(new DetalleSimulacionDTO
                     {
                         IdEvaluacion = eval.IdEvaluacion,
-
+                        IdTipoEvaluacion = eval.IdTipoEvaluacion, // Asignamos la llave maestra del reglamento
                         EvaluacionInfo = eval.Descripcion,
-                        PesoPorcentaje = eval.IdTipoEvaluacionNavigation.Peso,
                         NotaReal = notaReal,
-                        // Si hay nota real, la simulada inicia con ese valor, si no, inicia en 0
-                        NotaSimulada = notaReal ?? 0
+                        NotaSimulada = notaInicialSimulacion,
+                        // Formateamos visualmente para la grilla usando cultura neutral (punto)
+                        NotaSimuladaUI = notaInicialSimulacion.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
                     });
                 }
 
