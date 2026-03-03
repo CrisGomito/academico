@@ -1,0 +1,270 @@
+﻿namespace DataBase_First.Views.Simulacion
+{
+    partial class frm_SimuladorMontecarlo
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null)) components.Dispose();
+            base.Dispose(disposing);
+        }
+
+        private void InitializeComponent()
+        {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.pnlFiltros = new System.Windows.Forms.Panel();
+            this.btnCerrar = new System.Windows.Forms.Button();
+            this.lblEstudianteInfo = new System.Windows.Forms.Label();
+            this.btnCargarMateria = new System.Windows.Forms.Button();
+            this.cmbAsignatura = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmbPeriodo = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lblTitulo = new System.Windows.Forms.Label();
+            this.dgvSimulador = new System.Windows.Forms.DataGridView();
+            this.pnlResultados = new System.Windows.Forms.Panel();
+            this.btnSimularMontecarlo = new System.Windows.Forms.Button();
+            this.lblProbReprobado = new System.Windows.Forms.Label();
+            this.lblProbRemedial = new System.Windows.Forms.Label();
+            this.lblProbAprobado = new System.Windows.Forms.Label();
+            this.lblEsperado = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.pnlFiltros.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSimulador)).BeginInit();
+            this.pnlResultados.SuspendLayout();
+            this.SuspendLayout();
+
+            // --- PANEL FILTROS ---
+            this.pnlFiltros.BackColor = System.Drawing.Color.White;
+            this.pnlFiltros.Controls.Add(this.btnCerrar);
+            this.pnlFiltros.Controls.Add(this.lblEstudianteInfo);
+            this.pnlFiltros.Controls.Add(this.btnCargarMateria);
+            this.pnlFiltros.Controls.Add(this.cmbAsignatura);
+            this.pnlFiltros.Controls.Add(this.label3);
+            this.pnlFiltros.Controls.Add(this.cmbPeriodo);
+            this.pnlFiltros.Controls.Add(this.label2);
+            this.pnlFiltros.Controls.Add(this.lblTitulo);
+            this.pnlFiltros.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlFiltros.Location = new System.Drawing.Point(0, 0);
+            this.pnlFiltros.Name = "pnlFiltros";
+            this.pnlFiltros.Size = new System.Drawing.Size(1024, 140);
+
+            // btnCerrar
+            this.btnCerrar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.btnCerrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60)))));
+            this.btnCerrar.FlatAppearance.BorderSize = 0;
+            this.btnCerrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrar.Location = new System.Drawing.Point(985, 15);
+            this.btnCerrar.Name = "btnCerrar";
+            this.btnCerrar.Size = new System.Drawing.Size(20, 20);
+            this.btnCerrar.UseVisualStyleBackColor = false;
+            this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
+            this.btnCerrar.Paint += new System.Windows.Forms.PaintEventHandler(this.btnCerrar_Paint);
+
+            // lblEstudianteInfo
+            this.lblEstudianteInfo.AutoSize = true;
+            this.lblEstudianteInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic);
+            this.lblEstudianteInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblEstudianteInfo.Location = new System.Drawing.Point(360, 20);
+            this.lblEstudianteInfo.Name = "lblEstudianteInfo";
+            this.lblEstudianteInfo.Size = new System.Drawing.Size(168, 21);
+            this.lblEstudianteInfo.Text = "Estudiante: Cargando...";
+
+            // btnCargarMateria
+            this.btnCargarMateria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219))))); // Azul tech para diferenciarlo
+            this.btnCargarMateria.FlatAppearance.BorderSize = 0;
+            this.btnCargarMateria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCargarMateria.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.btnCargarMateria.ForeColor = System.Drawing.Color.White;
+            this.btnCargarMateria.Location = new System.Drawing.Point(630, 88);
+            this.btnCargarMateria.Name = "btnCargarMateria";
+            this.btnCargarMateria.Size = new System.Drawing.Size(150, 32);
+            this.btnCargarMateria.Text = "Cargar Modelo";
+            this.btnCargarMateria.UseVisualStyleBackColor = false;
+            this.btnCargarMateria.Click += new System.EventHandler(this.btnCargarMateria_Click);
+
+            // cmbAsignatura
+            this.cmbAsignatura.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAsignatura.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.cmbAsignatura.FormattingEnabled = true;
+            this.cmbAsignatura.Location = new System.Drawing.Point(304, 90);
+            this.cmbAsignatura.Name = "cmbAsignatura";
+            this.cmbAsignatura.Size = new System.Drawing.Size(300, 28);
+
+            // label3
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.label3.Location = new System.Drawing.Point(300, 65);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(86, 20);
+            this.label3.Text = "Asignatura";
+
+            // cmbPeriodo
+            this.cmbPeriodo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPeriodo.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.cmbPeriodo.FormattingEnabled = true;
+            this.cmbPeriodo.Location = new System.Drawing.Point(25, 90);
+            this.cmbPeriodo.Name = "cmbPeriodo";
+            this.cmbPeriodo.Size = new System.Drawing.Size(250, 28);
+            this.cmbPeriodo.SelectedIndexChanged += new System.EventHandler(this.cmbPeriodo_SelectedIndexChanged);
+
+            // label2
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.label2.Location = new System.Drawing.Point(21, 65);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(63, 20);
+            this.label2.Text = "Periodo";
+
+            // lblTitulo
+            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219))))); // Azul tech
+            this.lblTitulo.Location = new System.Drawing.Point(20, 15);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(280, 30);
+            this.lblTitulo.Text = "SIMULADOR MONTE CARLO";
+
+            // --- DATA GRID VIEW ---
+            this.dgvSimulador.AllowUserToAddRows = false;
+            this.dgvSimulador.AllowUserToDeleteRows = false;
+            this.dgvSimulador.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvSimulador.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            this.dgvSimulador.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvSimulador.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219))))); // Azul tech
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.dgvSimulador.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvSimulador.ColumnHeadersHeight = 40;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 12F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(212)))), ((int)(((byte)(230)))), ((int)(((byte)(241)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgvSimulador.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvSimulador.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvSimulador.EnableHeadersVisualStyles = false;
+            this.dgvSimulador.Location = new System.Drawing.Point(0, 140);
+            this.dgvSimulador.Name = "dgvSimulador";
+            this.dgvSimulador.RowHeadersVisible = false;
+            this.dgvSimulador.RowTemplate.Height = 35;
+            this.dgvSimulador.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect; // No se edita, solo se lee
+            this.dgvSimulador.Size = new System.Drawing.Size(1024, 330);
+
+            // --- PANEL RESULTADOS ---
+            this.pnlResultados.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(240)))), ((int)(((byte)(241)))));
+            this.pnlResultados.Controls.Add(this.btnSimularMontecarlo);
+            this.pnlResultados.Controls.Add(this.lblProbReprobado);
+            this.pnlResultados.Controls.Add(this.lblProbRemedial);
+            this.pnlResultados.Controls.Add(this.lblProbAprobado);
+            this.pnlResultados.Controls.Add(this.lblEsperado);
+            this.pnlResultados.Controls.Add(this.label5);
+            this.pnlResultados.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlResultados.Location = new System.Drawing.Point(0, 470);
+            this.pnlResultados.Name = "pnlResultados";
+            this.pnlResultados.Size = new System.Drawing.Size(1024, 150); // Más alto para los resultados
+
+            // btnSimularMontecarlo
+            this.btnSimularMontecarlo.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            this.btnSimularMontecarlo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(174)))), ((int)(((byte)(96)))));
+            this.btnSimularMontecarlo.FlatAppearance.BorderSize = 0;
+            this.btnSimularMontecarlo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSimularMontecarlo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSimularMontecarlo.ForeColor = System.Drawing.Color.White;
+            this.btnSimularMontecarlo.Location = new System.Drawing.Point(800, 50);
+            this.btnSimularMontecarlo.Name = "btnSimularMontecarlo";
+            this.btnSimularMontecarlo.Size = new System.Drawing.Size(200, 50);
+            this.btnSimularMontecarlo.Text = "Ejecutar Montecarlo (10k Iteraciones)";
+            this.btnSimularMontecarlo.UseVisualStyleBackColor = false;
+            this.btnSimularMontecarlo.Click += new System.EventHandler(this.btnSimularMontecarlo_Click);
+
+            // label5
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.label5.Location = new System.Drawing.Point(20, 20);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(250, 25);
+            this.label5.Text = "Valor Esperado (Promedio):";
+
+            // lblEsperado
+            this.lblEsperado.AutoSize = true;
+            this.lblEsperado.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
+            this.lblEsperado.ForeColor = System.Drawing.Color.Black;
+            this.lblEsperado.Location = new Point(270, 10);
+            this.lblEsperado.Name = "lblEsperado";
+            this.lblEsperado.Size = new System.Drawing.Size(83, 45);
+            this.lblEsperado.Text = "0.00";
+
+            // lblProbAprobado
+            this.lblProbAprobado.AutoSize = true;
+            this.lblProbAprobado.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblProbAprobado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(174)))), ((int)(((byte)(96)))));
+            this.lblProbAprobado.Location = new System.Drawing.Point(20, 70);
+            this.lblProbAprobado.Name = "lblProbAprobado";
+            this.lblProbAprobado.Size = new System.Drawing.Size(193, 25);
+            this.lblProbAprobado.Text = "Aprobar Directo: 0%";
+
+            // lblProbRemedial
+            this.lblProbRemedial.AutoSize = true;
+            this.lblProbRemedial.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblProbRemedial.ForeColor = System.Drawing.Color.DarkOrange;
+            this.lblProbRemedial.Location = new Point(270, 70);
+            this.lblProbRemedial.Name = "lblProbRemedial";
+            this.lblProbRemedial.Size = new System.Drawing.Size(176, 25);
+            this.lblProbRemedial.Text = "Ir a Remedial: 0%";
+
+            // lblProbReprobado
+            this.lblProbReprobado.AutoSize = true;
+            this.lblProbReprobado.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblProbReprobado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(57)))), ((int)(((byte)(43)))));
+            this.lblProbReprobado.Location = new System.Drawing.Point(500, 70);
+            this.lblProbReprobado.Name = "lblProbReprobado";
+            this.lblProbReprobado.Size = new System.Drawing.Size(147, 25);
+            this.lblProbReprobado.Text = "Reprobar: 0%";
+
+            // frm_SimuladorMontecarlo
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1024, 620);
+            this.Controls.Add(this.dgvSimulador);
+            this.Controls.Add(this.pnlResultados);
+            this.Controls.Add(this.pnlFiltros);
+            this.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "frm_SimuladorMontecarlo";
+            this.Text = "Simulador Montecarlo";
+            this.Load += new System.EventHandler(this.frm_SimuladorMontecarlo_Load);
+            this.pnlFiltros.ResumeLayout(false);
+            this.pnlFiltros.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSimulador)).EndInit();
+            this.pnlResultados.ResumeLayout(false);
+            this.pnlResultados.PerformLayout();
+            this.ResumeLayout(false);
+        }
+
+        private System.Windows.Forms.Panel pnlFiltros;
+        private System.Windows.Forms.Label lblTitulo;
+        private System.Windows.Forms.Label lblEstudianteInfo;
+        private System.Windows.Forms.ComboBox cmbAsignatura;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmbPeriodo;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnCargarMateria;
+        private System.Windows.Forms.DataGridView dgvSimulador;
+        private System.Windows.Forms.Panel pnlResultados;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblEsperado;
+        private System.Windows.Forms.Label lblProbAprobado;
+        private System.Windows.Forms.Label lblProbRemedial;
+        private System.Windows.Forms.Label lblProbReprobado;
+        private System.Windows.Forms.Button btnCerrar;
+        private System.Windows.Forms.Button btnSimularMontecarlo;
+    }
+}

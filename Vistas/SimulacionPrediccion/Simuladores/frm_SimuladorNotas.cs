@@ -138,10 +138,23 @@
                 dgvSimulador.Columns["NotaReal"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 dgvSimulador.Columns["NotaSimuladaUI"].HeaderText = "SIMULAR NOTA (0.00 - 10.00)";
-                dgvSimulador.Columns["NotaSimuladaUI"].ReadOnly = false;
+                dgvSimulador.Columns["NotaSimuladaUI"].ReadOnly = false;// Por defecto editable
                 dgvSimulador.Columns["NotaSimuladaUI"].DefaultCellStyle.BackColor = Color.LightYellow;
                 dgvSimulador.Columns["NotaSimuladaUI"].DefaultCellStyle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
                 dgvSimulador.Columns["NotaSimuladaUI"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                
+                // --- BLOQUEO ESPECÍFICO DEL REMEDIAL ---
+                // Iteramos por las filas y bloqueamos la celda de simulación si el Tipo de Evaluación es 6 (Remedial)
+                foreach (DataGridViewRow row in dgvSimulador.Rows)
+                {
+                    if ((int)row.Cells["IdTipoEvaluacion"].Value == 6)
+                    {
+                        row.Cells["NotaSimuladaUI"].ReadOnly = true;
+                        // Opcional: Cambiarle el color para que el estudiante entienda que no se puede editar
+                        row.Cells["NotaSimuladaUI"].Style.BackColor = Color.LightGray;
+                        row.Cells["NotaSimuladaUI"].Style.ForeColor = Color.Gray;
+                    }
+                }
             }
         }
 

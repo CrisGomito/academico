@@ -42,7 +42,8 @@
             btnInfoGeneral = new FontAwesome.Sharp.IconButton();
             pnlSubMenuAdmin = new Panel();
             btnAuditoria = new FontAwesome.Sharp.IconButton();
-            FontAwesome.Sharp.IconButton btnAuditoriaDetallada = new FontAwesome.Sharp.IconButton();
+            btnAuditoriaDetallada = new FontAwesome.Sharp.IconButton();
+            btnSimMontecarlo = new FontAwesome.Sharp.IconButton();
             btnEstudiantes = new FontAwesome.Sharp.IconButton();
             btnDocentes = new FontAwesome.Sharp.IconButton();
             btnUsuarios = new FontAwesome.Sharp.IconButton();
@@ -604,11 +605,12 @@
             // pnlSubMenuSimulacion
             // 
             pnlSubMenuSimulacion.BackColor = Color.FromArgb(65, 85, 105);
-            pnlSubMenuSimulacion.Controls.Add(btnDashRendimiento);
-            pnlSubMenuSimulacion.Controls.Add(btnSimPromedios);
+            pnlSubMenuSimulacion.Controls.Add(this.btnDashRendimiento);
+            pnlSubMenuSimulacion.Controls.Add(this.btnSimMontecarlo); // <- NUEVO BOTÓN
+            pnlSubMenuSimulacion.Controls.Add(this.btnSimPromedios);
             pnlSubMenuSimulacion.Location = new Point(0, 0);
             pnlSubMenuSimulacion.Name = "pnlSubMenuSimulacion";
-            pnlSubMenuSimulacion.Size = new Size(220, 80);
+            pnlSubMenuSimulacion.Size = new Size(220, 120); // <- TAMAÑO AMPLIADO
             pnlSubMenuSimulacion.TabIndex = 1;
             pnlSubMenuSimulacion.Visible = false;
             // 
@@ -621,13 +623,30 @@
             btnDashRendimiento.IconChar = FontAwesome.Sharp.IconChar.None;
             btnDashRendimiento.IconColor = Color.Black;
             btnDashRendimiento.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnDashRendimiento.Location = new Point(0, 40);
+            btnDashRendimiento.Location = new Point(0, 80);
             btnDashRendimiento.Name = "btnDashRendimiento";
             btnDashRendimiento.Size = new Size(220, 40);
             btnDashRendimiento.TabIndex = 0;
             btnDashRendimiento.Text = " Dashboard Predicción";
             btnDashRendimiento.TextAlign = ContentAlignment.MiddleLeft;
             btnDashRendimiento.Click += btnDashRendimiento_Click;
+            //
+            // btnSimMontecarlo
+            //
+            btnSimMontecarlo.Dock = DockStyle.Top;
+            btnSimMontecarlo.FlatAppearance.BorderSize = 0;
+            btnSimMontecarlo.FlatStyle = FlatStyle.Flat;
+            btnSimMontecarlo.ForeColor = Color.Silver;
+            btnSimMontecarlo.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnSimMontecarlo.IconColor = Color.Black;
+            btnSimMontecarlo.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnSimMontecarlo.Location = new Point(0, 40);
+            btnSimMontecarlo.Name = "btnSimMontecarlo";
+            btnSimMontecarlo.Size = new Size(220, 40);
+            btnSimMontecarlo.TabIndex = 2;
+            btnSimMontecarlo.Text = " Simulación Montecarlo";
+            btnSimMontecarlo.TextAlign = ContentAlignment.MiddleLeft;
+            btnSimMontecarlo.Click += new System.EventHandler(this.btnSimMontecarlo_Click);
             // 
             // btnSimPromedios
             // 
@@ -746,12 +765,14 @@
         private FontAwesome.Sharp.IconButton btnDocentes;
         private FontAwesome.Sharp.IconButton btnEstudiantes;
         private FontAwesome.Sharp.IconButton btnAuditoria;
+        private FontAwesome.Sharp.IconButton btnAuditoriaDetallada;
         private FontAwesome.Sharp.IconButton btnAsignaturas;
         private FontAwesome.Sharp.IconButton btnPeriodos;
         private FontAwesome.Sharp.IconButton btnMatriculas;
         private FontAwesome.Sharp.IconButton btnAsigDocentes;
         private FontAwesome.Sharp.IconButton btnIngresoNotas;
         private FontAwesome.Sharp.IconButton btnSimPromedios;
+        private FontAwesome.Sharp.IconButton btnSimMontecarlo;
         private FontAwesome.Sharp.IconButton btnDashRendimiento;
         private FontAwesome.Sharp.IconButton btnRptAcademico;
 

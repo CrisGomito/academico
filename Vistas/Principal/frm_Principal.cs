@@ -233,6 +233,7 @@ namespace DataBase_First.Views.Main
         private void btnAsigDocentes_Click(object sender, EventArgs e) => AbrirFormularioHijo(new Academico.AsignacionDocentes.frm_AsignacionDocentes());
         private void btnIngresoNotas_Click(object sender, EventArgs e) => AbrirFormularioHijo(new Calificaciones.frm_IngresoNotas());
         private void btnSimPromedios_Click(object sender, EventArgs e) => AbrirFormularioHijo(new Simulacion.frm_SimuladorNotas());
+        private void btnSimMontecarlo_Click(object sender, EventArgs e) => AbrirFormularioHijo(new Simulacion.frm_SimuladorMontecarlo());
         private void btnDashRendimiento_Click(object sender, EventArgs e) => AbrirFormularioHijo(new Dashboard.frm_DashboardPrediccion());
         private void btnRptAcademico_Click(object sender, EventArgs e) => AbrirFormularioHijo(new Reportes.frm_Reportes());
 
