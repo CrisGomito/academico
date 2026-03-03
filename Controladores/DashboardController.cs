@@ -9,13 +9,12 @@ namespace Academico.Controladores
 {
     public class DashboardController
     {
-        // DTO para la tabla de Predicción
         public class EstudianteRendimientoDTO
         {
             public string Codigo { get; set; }
             public string Estudiante { get; set; }
             public decimal PromedioActual { get; set; }
-            public decimal NotaMaximaPosible { get; set; }
+            public decimal NotaRequerida { get; set; } // LO QUE NECESITA SACAR PARA APROBAR
             public string Prediccion { get; set; }
         }
 
@@ -28,12 +27,11 @@ namespace Academico.Controladores
             }
         }
 
-        // Obtener Periodos (Igual que en calificaciones, con Bypass para Admin/Coordinador)
         public List<Periodoacademico> ObtenerPeriodos(int idDocente)
         {
             using (var _context = new SistemaAcademicoContext())
             {
-                if (idDocente == 0) // Admin o Coordinador
+                if (idDocente == 0)
                 {
                     return _context.Periodoacademicos.Where(p => p.Estado == "Activo").OrderByDescending(p => p.FechaInicio).ToList();
                 }
@@ -43,7 +41,6 @@ namespace Academico.Controladores
             }
         }
 
-        // Obtener Asignaturas
         public List<Asignatura> ObtenerAsignaturas(int idDocente, int idPeriodo)
         {
             using (var _context = new SistemaAcademicoContext())
@@ -59,76 +56,83 @@ namespace Academico.Controladores
             }
         }
 
-        // EL ALGORITMO DE PREDICCIÓN
+        // MODELO DE BÚSQUEDA DE META (GOAL-SEEKING)
         public List<EstudianteRendimientoDTO> AnalizarRendimiento(int idAsignatura, int idPeriodo)
         {
             using (var _context = new SistemaAcademicoContext())
             {
                 var listaResultados = new List<EstudianteRendimientoDTO>();
 
-                // 1. Obtener todos los alumnos matriculados
                 var matriculados = _context.Matriculas
                     .Include(m => m.IdEstudianteNavigation).ThenInclude(e => e.IdUsuarioNavigation)
                     .Where(m => m.IdAsignatura == idAsignatura && m.IdPeriodo == idPeriodo)
                     .ToList();
 
-                // 2. Obtener la estructura de evaluaciones y sus pesos
                 var evaluaciones = _context.Evaluacions
-                    .Include(e => e.IdTipoEvaluacionNavigation)
                     .Where(e => e.IdAsignatura == idAsignatura && e.IdPeriodo == idPeriodo)
                     .ToList();
 
                 if (evaluaciones.Count == 0 || matriculados.Count == 0) return listaResultados;
 
-                decimal pesoTotalConfigurado = evaluaciones.Sum(e => e.IdTipoEvaluacionNavigation.Peso);
-
-                // 3. Traer todas las calificaciones de esa asignatura en ese periodo
                 var idEvaluaciones = evaluaciones.Select(e => e.IdEvaluacion).ToList();
                 var calificacionesMatriz = _context.Calificacions
                     .Where(c => idEvaluaciones.Contains(c.IdEvaluacion) && c.Activo == true)
                     .ToList();
 
-                // 4. Procesar matemáticamente estudiante por estudiante
                 foreach (var mat in matriculados)
                 {
                     var est = mat.IdEstudianteNavigation;
-                    decimal promedioActual = 0;
-                    decimal pesoEvaluado = 0;
 
-                    foreach (var eval in evaluaciones)
+                    decimal? ef1 = GetNota(calificacionesMatriz, evaluaciones, est.IdEstudiante, 1);
+                    decimal? ep1 = GetNota(calificacionesMatriz, evaluaciones, est.IdEstudiante, 2);
+                    decimal? ef2 = GetNota(calificacionesMatriz, evaluaciones, est.IdEstudiante, 3);
+                    decimal? ep2 = GetNota(calificacionesMatriz, evaluaciones, est.IdEstudiante, 4);
+                    decimal? exf = GetNota(calificacionesMatriz, evaluaciones, est.IdEstudiante, 5);
+
+                    // Calculamos los parciales completados
+                    decimal p1 = ((ef1 ?? 0) + (ep1 ?? 0)) / (ef1.HasValue || ep1.HasValue ? (ef1.HasValue && ep1.HasValue ? 2m : 1m) : 1m);
+                    decimal p2 = ((ef2 ?? 0) + (ep2 ?? 0)) / (ef2.HasValue || ep2.HasValue ? (ef2.HasValue && ep2.HasValue ? 2m : 1m) : 1m);
+
+                    // Promedio actual para la UI
+                    int notasRegistradas = (ef1.HasValue || ep1.HasValue ? 1 : 0) + (ef2.HasValue || ep2.HasValue ? 1 : 0) + (exf.HasValue ? 1 : 0);
+                    decimal promedioActual = notasRegistradas > 0 ? (p1 * (ef1.HasValue || ep1.HasValue ? 1 : 0) + p2 * (ef2.HasValue || ep2.HasValue ? 1 : 0) + (exf ?? 0)) / notasRegistradas : 0;
+
+                    // LÓGICA DE EXIGENCIA (Necesita llegar a 21 puntos en total)
+                    decimal puntosActuales = (ef1.HasValue || ep1.HasValue ? p1 : 0) + (ef2.HasValue || ep2.HasValue ? p2 : 0) + (exf ?? 0);
+                    int evaluacionesFaltantes = 3 - notasRegistradas;
+
+                    decimal notaRequeridaPromedio = 0;
+                    string estadoPrediccion = "EN CURSO";
+
+                    if (evaluacionesFaltantes > 0)
                     {
-                        var notaObj = calificacionesMatriz.FirstOrDefault(c => c.IdEstudiante == est.IdEstudiante && c.IdEvaluacion == eval.IdEvaluacion);
-                        decimal pesoEval = eval.IdTipoEvaluacionNavigation.Peso;
+                        // ¿Cuántos puntos le faltan para llegar a 21?
+                        decimal puntosFaltantes = 21m - puntosActuales;
+                        notaRequeridaPromedio = puntosFaltantes / evaluacionesFaltantes;
 
-                        if (notaObj != null)
+                        // REGLA DEL 7: Si solo le falta el Examen Final, DEBE sacar al menos 7 aunque matemáticamente necesite menos
+                        if (evaluacionesFaltantes == 1 && !exf.HasValue)
                         {
-                            promedioActual += notaObj.Nota * (pesoEval / 100m);
-                            pesoEvaluado += pesoEval;
+                            notaRequeridaPromedio = Math.Max(notaRequeridaPromedio, 7.0m);
                         }
-                    }
 
-                    decimal pesoFaltante = 100m - pesoEvaluado;
-
-                    // ¿Qué pasa si saca 10 en todo lo que le falta?
-                    decimal notaMaximaPosible = promedioActual + (10m * (pesoFaltante / 100m));
-
-                    string estadoPrediccion = "BUEN RENDIMIENTO";
-
-                    if (notaMaximaPosible < 7.0m)
-                    {
-                        estadoPrediccion = "REPROBADO MATEMÁTICAMENTE";
+                        // Clasificamos el nivel de riesgo según lo que necesita sacar
+                        if (notaRequeridaPromedio > 10m)
+                            estadoPrediccion = "REMEDIAL INMINENTE"; // No le alcanza ni con 10
+                        else if (notaRequeridaPromedio >= 8.5m)
+                            estadoPrediccion = "ALTO RIESGO"; // Necesita notas casi perfectas
+                        else if (notaRequeridaPromedio >= 7.0m)
+                            estadoPrediccion = "RIESGO MODERADO"; // Necesita mantener el mínimo
+                        else
+                            estadoPrediccion = "BUEN RENDIMIENTO"; // Va sobrado
                     }
-                    else if (promedioActual < 4.0m && pesoFaltante < 50m) // Si tiene baja nota y ya pasó más de la mitad del curso
+                    else
                     {
-                        estadoPrediccion = "ALTO RIESGO";
-                    }
-                    else if (promedioActual < 6.0m && pesoEvaluado > 0)
-                    {
-                        estadoPrediccion = "EN RIESGO";
-                    }
-                    else if (promedioActual >= 7.0m)
-                    {
-                        estadoPrediccion = "APROBADO";
+                        // Ya terminó todas las notas
+                        if (promedioActual >= 7.0m && (exf ?? 0) >= 7.0m)
+                            estadoPrediccion = "APROBADO";
+                        else
+                            estadoPrediccion = "REPROBADO / REMEDIAL";
                     }
 
                     listaResultados.Add(new EstudianteRendimientoDTO
@@ -136,13 +140,22 @@ namespace Academico.Controladores
                         Codigo = est.Codigo,
                         Estudiante = $"{est.IdUsuarioNavigation.Apellido} {est.IdUsuarioNavigation.Nombre}",
                         PromedioActual = Math.Round(promedioActual, 2),
-                        NotaMaximaPosible = Math.Round(notaMaximaPosible, 2),
+                        // Si ya terminó, la nota requerida es 0
+                        NotaRequerida = evaluacionesFaltantes == 0 ? 0 : Math.Round(notaRequeridaPromedio, 2),
                         Prediccion = estadoPrediccion
                     });
                 }
 
                 return listaResultados.OrderBy(r => r.Estudiante).ToList();
             }
+        }
+
+        private decimal? GetNota(List<Calificacion> califs, List<Evaluacion> evals, int idEst, int tipoEval)
+        {
+            var eval = evals.FirstOrDefault(e => e.IdTipoEvaluacion == tipoEval);
+            if (eval == null) return null;
+            var c = califs.FirstOrDefault(x => x.IdEstudiante == idEst && x.IdEvaluacion == eval.IdEvaluacion);
+            return c?.Nota;
         }
     }
 }

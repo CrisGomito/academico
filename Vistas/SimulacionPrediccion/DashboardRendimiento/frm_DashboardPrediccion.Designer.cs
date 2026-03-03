@@ -1,8 +1,4 @@
-﻿using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace DataBase_First.Views.Dashboard
+﻿namespace DataBase_First.Views.Dashboard
 {
     partial class frm_DashboardPrediccion
     {
@@ -10,10 +6,7 @@ namespace DataBase_First.Views.Dashboard
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -38,13 +31,16 @@ namespace DataBase_First.Views.Dashboard
             pnlCardTotal = new Panel();
             lblTotalAlumnos = new Label();
             label4 = new Label();
-            pnlGrafico = new Panel();
+            pnlGraficosContenedor = new Panel();
+            pnlGraficoBarras = new Panel();
+            pnlGraficoPastel = new Panel();
             dgvPrediccion = new DataGridView();
             pnlTop.SuspendLayout();
             pnlContadores.SuspendLayout();
             pnlCardRiesgo.SuspendLayout();
             pnlCardAprobados.SuspendLayout();
             pnlCardTotal.SuspendLayout();
+            pnlGraficosContenedor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPrediccion).BeginInit();
             SuspendLayout();
             // 
@@ -61,28 +57,28 @@ namespace DataBase_First.Views.Dashboard
             pnlTop.Dock = DockStyle.Top;
             pnlTop.Location = new Point(0, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.Size = new Size(1024, 127);
+            pnlTop.Size = new Size(1280, 127);
             pnlTop.TabIndex = 3;
             // 
             // btnCerrar
             // 
             btnCerrar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnCerrar.BackColor = Color.Silver;
+            btnCerrar.BackColor = Color.FromArgb(231, 76, 60);
+            btnCerrar.FlatAppearance.BorderSize = 0;
             btnCerrar.FlatStyle = FlatStyle.Flat;
-            btnCerrar.Font = new System.Drawing.Font("Segoe UI", 11F, FontStyle.Bold);
-            btnCerrar.Location = new Point(900, 15);
+            btnCerrar.Location = new Point(1241, 15);
             btnCerrar.Name = "btnCerrar";
-            btnCerrar.Size = new Size(100, 32);
+            btnCerrar.Size = new Size(20, 20);
             btnCerrar.TabIndex = 0;
-            btnCerrar.Text = "Cerrar";
             btnCerrar.UseVisualStyleBackColor = false;
             btnCerrar.Click += btnCerrar_Click;
+            btnCerrar.Paint += btnCerrar_Paint;
             // 
             // btnAnalizar
             // 
             btnAnalizar.BackColor = Color.FromArgb(230, 126, 34);
             btnAnalizar.FlatStyle = FlatStyle.Flat;
-            btnAnalizar.Font = new System.Drawing.Font("Segoe UI", 11F, FontStyle.Bold);
+            btnAnalizar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnAnalizar.ForeColor = Color.White;
             btnAnalizar.Location = new Point(520, 78);
             btnAnalizar.Name = "btnAnalizar";
@@ -95,7 +91,7 @@ namespace DataBase_First.Views.Dashboard
             // cmbAsignatura
             // 
             cmbAsignatura.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbAsignatura.Font = new System.Drawing.Font("Segoe UI", 11F);
+            cmbAsignatura.Font = new Font("Segoe UI", 11F);
             cmbAsignatura.Location = new Point(244, 80);
             cmbAsignatura.Name = "cmbAsignatura";
             cmbAsignatura.Size = new Size(250, 28);
@@ -104,7 +100,7 @@ namespace DataBase_First.Views.Dashboard
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new System.Drawing.Font("Segoe UI", 11F, FontStyle.Bold);
+            label3.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label3.Location = new Point(240, 55);
             label3.Name = "label3";
             label3.Size = new Size(86, 20);
@@ -114,7 +110,7 @@ namespace DataBase_First.Views.Dashboard
             // cmbPeriodo
             // 
             cmbPeriodo.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbPeriodo.Font = new System.Drawing.Font("Segoe UI", 11F);
+            cmbPeriodo.Font = new Font("Segoe UI", 11F);
             cmbPeriodo.Location = new Point(25, 80);
             cmbPeriodo.Name = "cmbPeriodo";
             cmbPeriodo.Size = new Size(200, 28);
@@ -123,7 +119,7 @@ namespace DataBase_First.Views.Dashboard
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 11F, FontStyle.Bold);
+            label2.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label2.Location = new Point(21, 55);
             label2.Name = "label2";
             label2.Size = new Size(63, 20);
@@ -133,7 +129,7 @@ namespace DataBase_First.Views.Dashboard
             // lblTitulo
             // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitulo.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblTitulo.ForeColor = Color.FromArgb(230, 126, 34);
             lblTitulo.Location = new Point(20, 15);
             lblTitulo.Name = "lblTitulo";
@@ -143,14 +139,14 @@ namespace DataBase_First.Views.Dashboard
             // 
             // pnlContadores
             // 
+            pnlContadores.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlContadores.BackColor = Color.WhiteSmoke;
             pnlContadores.Controls.Add(pnlCardRiesgo);
             pnlContadores.Controls.Add(pnlCardAprobados);
             pnlContadores.Controls.Add(pnlCardTotal);
-            pnlContadores.Dock = DockStyle.Top;
             pnlContadores.Location = new Point(0, 127);
             pnlContadores.Name = "pnlContadores";
-            pnlContadores.Size = new Size(1024, 120);
+            pnlContadores.Size = new Size(974, 120);
             pnlContadores.TabIndex = 2;
             // 
             // pnlCardRiesgo
@@ -166,7 +162,7 @@ namespace DataBase_First.Views.Dashboard
             // lblRiesgo
             // 
             lblRiesgo.AutoSize = true;
-            lblRiesgo.Font = new System.Drawing.Font("Segoe UI", 24F, FontStyle.Bold);
+            lblRiesgo.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
             lblRiesgo.ForeColor = Color.White;
             lblRiesgo.Location = new Point(10, 30);
             lblRiesgo.Name = "lblRiesgo";
@@ -197,7 +193,7 @@ namespace DataBase_First.Views.Dashboard
             // lblAprobados
             // 
             lblAprobados.AutoSize = true;
-            lblAprobados.Font = new System.Drawing.Font("Segoe UI", 24F, FontStyle.Bold);
+            lblAprobados.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
             lblAprobados.ForeColor = Color.White;
             lblAprobados.Location = new Point(10, 30);
             lblAprobados.Name = "lblAprobados";
@@ -228,7 +224,7 @@ namespace DataBase_First.Views.Dashboard
             // lblTotalAlumnos
             // 
             lblTotalAlumnos.AutoSize = true;
-            lblTotalAlumnos.Font = new System.Drawing.Font("Segoe UI", 24F, FontStyle.Bold);
+            lblTotalAlumnos.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
             lblTotalAlumnos.ForeColor = Color.White;
             lblTotalAlumnos.Location = new Point(10, 30);
             lblTotalAlumnos.Name = "lblTotalAlumnos";
@@ -246,35 +242,52 @@ namespace DataBase_First.Views.Dashboard
             label4.TabIndex = 1;
             label4.Text = "Matriculados";
             // 
-            // pnlGrafico
+            // pnlGraficosContenedor
             // 
-            pnlGrafico.Dock = DockStyle.Right;
-            pnlGrafico.Location = new Point(559, 247);
-            pnlGrafico.Name = "pnlGrafico";
-            pnlGrafico.Padding = new Padding(10);
-            pnlGrafico.Size = new Size(465, 373);
-            pnlGrafico.TabIndex = 1;
+            pnlGraficosContenedor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            pnlGraficosContenedor.Controls.Add(pnlGraficoBarras);
+            pnlGraficosContenedor.Controls.Add(pnlGraficoPastel);
+            pnlGraficosContenedor.Location = new Point(980, 127);
+            pnlGraficosContenedor.Name = "pnlGraficosContenedor";
+            pnlGraficosContenedor.Size = new Size(300, 463);
+            pnlGraficosContenedor.TabIndex = 1;
+            // 
+            // pnlGraficoBarras
+            // 
+            pnlGraficoBarras.Dock = DockStyle.Fill;
+            pnlGraficoBarras.Location = new Point(0, 225);
+            pnlGraficoBarras.Name = "pnlGraficoBarras";
+            pnlGraficoBarras.Size = new Size(300, 238);
+            pnlGraficoBarras.TabIndex = 0;
+            // 
+            // pnlGraficoPastel
+            // 
+            pnlGraficoPastel.Dock = DockStyle.Top;
+            pnlGraficoPastel.Location = new Point(0, 0);
+            pnlGraficoPastel.Name = "pnlGraficoPastel";
+            pnlGraficoPastel.Size = new Size(300, 225);
+            pnlGraficoPastel.TabIndex = 1;
             // 
             // dgvPrediccion
             // 
             dgvPrediccion.AllowUserToAddRows = false;
             dgvPrediccion.AllowUserToDeleteRows = false;
+            dgvPrediccion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             dgvPrediccion.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPrediccion.BackgroundColor = Color.White;
             dgvPrediccion.BorderStyle = BorderStyle.None;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = Color.FromArgb(230, 126, 34);
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 12F, FontStyle.Bold);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 14F);
             dataGridViewCellStyle1.ForeColor = Color.White;
             dgvPrediccion.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvPrediccion.Dock = DockStyle.Fill;
             dgvPrediccion.EnableHeadersVisualStyles = false;
-            dgvPrediccion.Location = new Point(0, 247);
+            dgvPrediccion.Location = new Point(-6, 247);
             dgvPrediccion.Name = "dgvPrediccion";
             dgvPrediccion.ReadOnly = true;
             dgvPrediccion.RowHeadersVisible = false;
             dgvPrediccion.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPrediccion.Size = new Size(559, 373);
+            dgvPrediccion.Size = new Size(980, 343);
             dgvPrediccion.TabIndex = 0;
             dgvPrediccion.CellFormatting += dgvPrediccion_CellFormatting;
             // 
@@ -282,12 +295,12 @@ namespace DataBase_First.Views.Dashboard
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1024, 620);
+            ClientSize = new Size(1280, 590);
             Controls.Add(dgvPrediccion);
-            Controls.Add(pnlGrafico);
+            Controls.Add(pnlGraficosContenedor);
             Controls.Add(pnlContadores);
             Controls.Add(pnlTop);
-            Font = new System.Drawing.Font("Segoe UI", 14F);
+            Font = new Font("Segoe UI", 14F);
             FormBorderStyle = FormBorderStyle.None;
             Name = "frm_DashboardPrediccion";
             Text = "Dashboard";
@@ -301,6 +314,7 @@ namespace DataBase_First.Views.Dashboard
             pnlCardAprobados.PerformLayout();
             pnlCardTotal.ResumeLayout(false);
             pnlCardTotal.PerformLayout();
+            pnlGraficosContenedor.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvPrediccion).EndInit();
             ResumeLayout(false);
         }
@@ -313,7 +327,6 @@ namespace DataBase_First.Views.Dashboard
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnAnalizar;
         private System.Windows.Forms.Button btnCerrar;
-
         private System.Windows.Forms.Panel pnlContadores;
         private System.Windows.Forms.Panel pnlCardTotal;
         private System.Windows.Forms.Label lblTotalAlumnos;
@@ -324,8 +337,9 @@ namespace DataBase_First.Views.Dashboard
         private System.Windows.Forms.Panel pnlCardRiesgo;
         private System.Windows.Forms.Label lblRiesgo;
         private System.Windows.Forms.Label label7;
-
-        private System.Windows.Forms.Panel pnlGrafico;
+        private System.Windows.Forms.Panel pnlGraficosContenedor;
+        private System.Windows.Forms.Panel pnlGraficoPastel;
+        private System.Windows.Forms.Panel pnlGraficoBarras;
         private System.Windows.Forms.DataGridView dgvPrediccion;
     }
 }
