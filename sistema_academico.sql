@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-03-2026 a las 04:26:00
+-- Tiempo de generación: 03-03-2026 a las 07:24:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -198,22 +198,36 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insertar_asignacion` (IN `p_id_u
     DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
 
     START TRANSACTION;
-        -- Validar permisos de auditoría
+        -- 1. Validar permisos de auditoría
         IF NOT EXISTS (SELECT 1 FROM usuario_rol WHERE id_usuario = p_id_usuario_aud AND id_rol = p_id_rol_aud) THEN 
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Acceso denegado.'; 
         END IF;
 
-        -- Insertar la asignación
+        -- 2. Insertar la asignación del docente
         INSERT INTO asignaciondocente(id_docente, id_asignatura, id_periodo) 
         VALUES(p_id_docente, p_id_asignatura, p_id_periodo);
         
         SET v_id = LAST_INSERT_ID();
         
-        -- Registrar en Auditoría
+        -- 3. Registrar en Auditoría
         INSERT INTO auditoria_sistema(id_usuario, id_rol, accion, tabla_afectada, registro_id, valor_nuevo, ip_user)
         VALUES(p_id_usuario_aud, p_id_rol_aud, 'INSERT', 'asignaciondocente', v_id, 
                JSON_OBJECT('id_docente', p_id_docente, 'id_asignatura', p_id_asignatura, 'id_periodo', p_id_periodo), 
                p_ip_user);
+
+        -- =========================================================================
+        -- 4. MAGIA AUTOMÁTICA: CREAR EVALUACIONES REGLAMENTARIAS SI NO EXISTEN
+        -- =========================================================================
+        IF NOT EXISTS (SELECT 1 FROM evaluacion WHERE id_asignatura = p_id_asignatura AND id_periodo = p_id_periodo) THEN
+            INSERT INTO evaluacion (id_asignatura, id_tipo_evaluacion, id_periodo, descripcion) VALUES
+            (p_id_asignatura, 1, p_id_periodo, 'Evaluación Frecuente 1 (Tareas)'),
+            (p_id_asignatura, 2, p_id_periodo, 'Examen Parcial 1'),
+            (p_id_asignatura, 3, p_id_periodo, 'Evaluación Frecuente 2 (Tareas)'),
+            (p_id_asignatura, 4, p_id_periodo, 'Examen Parcial 2'),
+            (p_id_asignatura, 5, p_id_periodo, 'Proyecto Final Integrador'),
+            (p_id_asignatura, 6, p_id_periodo, 'Examen Remedial');
+        END IF;
+
     COMMIT;
 END$$
 
@@ -379,21 +393,62 @@ END$$
 --
 -- Funciones
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `fn_estado_academico` (`p_nota` DECIMAL(5,2)) RETURNS VARCHAR(15) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
-    RETURN CASE
-        WHEN p_nota >= 7 THEN 'APROBADO'
-        ELSE 'REPROBADO'
-    END;
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_estado_academico` (`p_id_estudiante` INT, `p_id_asignatura` INT) RETURNS VARCHAR(15) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
+    DECLARE v_exf DECIMAL(5,2) DEFAULT 0; DECLARE v_rem DECIMAL(5,2) DEFAULT NULL;
+    DECLARE v_final_usar DECIMAL(5,2) DEFAULT 0; DECLARE v_promedio DECIMAL(5,2);
+
+    SELECT IFNULL(MAX(c.nota), 0) INTO v_exf FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 5 AND c.activo = 1;
+    SELECT MAX(c.nota) INTO v_rem FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 6 AND c.activo = 1;
+
+    IF v_rem IS NOT NULL AND v_rem > v_exf THEN
+        SET v_final_usar = v_rem;
+    ELSE
+        SET v_final_usar = v_exf;
+    END IF;
+
+    SET v_promedio = fn_promedio_ponderado(p_id_estudiante, p_id_asignatura);
+
+    -- Regla Institucional: Promedio >= 7 AND Nota Final >= 7
+    IF v_promedio >= 7 AND v_final_usar >= 7 THEN
+        RETURN 'APROBADO';
+    ELSEIF v_final_usar < 7 AND v_rem IS NULL THEN
+        RETURN 'REMEDIAL';
+    ELSE
+        RETURN 'REPROBADO';
+    END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` FUNCTION `fn_promedio_ponderado` (`p_id_estudiante` INT, `p_id_asignatura` INT) RETURNS DECIMAL(5,2) DETERMINISTIC BEGIN
-    DECLARE v_promedio DECIMAL(5,2);
-    SELECT SUM(c.nota * te.peso / 100) INTO v_promedio
-    FROM calificacion c
-    JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion
-    JOIN tipoevaluacion te ON e.id_tipo_evaluacion = te.id_tipo_evaluacion
-    WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND c.activo = 1;
-    RETURN IFNULL(v_promedio,0);
+    DECLARE v_ef1 DECIMAL(5,2) DEFAULT 0; DECLARE v_ep1 DECIMAL(5,2) DEFAULT 0;
+    DECLARE v_ef2 DECIMAL(5,2) DEFAULT 0; DECLARE v_ep2 DECIMAL(5,2) DEFAULT 0;
+    DECLARE v_exf DECIMAL(5,2) DEFAULT 0; DECLARE v_rem DECIMAL(5,2) DEFAULT NULL;
+    DECLARE v_parcial1 DECIMAL(5,2) DEFAULT 0;
+    DECLARE v_parcial2 DECIMAL(5,2) DEFAULT 0;
+    DECLARE v_final_usar DECIMAL(5,2) DEFAULT 0;
+    DECLARE v_promedio_final DECIMAL(5,2) DEFAULT 0;
+
+    -- Obtener las notas
+    SELECT IFNULL(MAX(c.nota), 0) INTO v_ef1 FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 1 AND c.activo = 1;
+    SELECT IFNULL(MAX(c.nota), 0) INTO v_ep1 FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 2 AND c.activo = 1;
+    SELECT IFNULL(MAX(c.nota), 0) INTO v_ef2 FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 3 AND c.activo = 1;
+    SELECT IFNULL(MAX(c.nota), 0) INTO v_ep2 FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 4 AND c.activo = 1;
+    SELECT IFNULL(MAX(c.nota), 0) INTO v_exf FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 5 AND c.activo = 1;
+    SELECT MAX(c.nota) INTO v_rem FROM calificacion c JOIN evaluacion e ON c.id_evaluacion = e.id_evaluacion WHERE c.id_estudiante = p_id_estudiante AND e.id_asignatura = p_id_asignatura AND e.id_tipo_evaluacion = 6 AND c.activo = 1;
+
+    -- Cálculos (P1 y P2)
+    SET v_parcial1 = (v_ef1 + v_ep1) / 2;
+    SET v_parcial2 = (v_ef2 + v_ep2) / 2;
+    
+    -- Si el estudiante dio remedial y sacó más, se reemplaza la nota del final
+    IF v_rem IS NOT NULL AND v_rem > v_exf THEN
+        SET v_final_usar = v_rem;
+    ELSE
+        SET v_final_usar = v_exf;
+    END IF;
+
+    -- Promedio General
+    SET v_promedio_final = (v_parcial1 + v_parcial2 + v_final_usar) / 3;
+    RETURN ROUND(v_promedio_final, 2);
 END$$
 
 DELIMITER ;
@@ -638,7 +693,103 @@ INSERT INTO `auditoria_sistema` (`id_auditoria`, `ip_user`, `id_usuario`, `id_ro
 (163, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:14:14'),
 (164, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:19:41'),
 (165, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:21:06'),
-(166, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:22:47');
+(166, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-02-28 22:22:47'),
+(167, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 12:59:12'),
+(168, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 14:25:34'),
+(169, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 14:30:20'),
+(170, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"FAILED_PASSWORD\"}', '2026-03-01 14:31:32'),
+(171, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 14:31:51'),
+(172, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 14:33:11'),
+(173, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 14:38:20'),
+(174, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 14:55:11'),
+(175, '169.254.243.153', 11, 1, 'UPDATE', 'usuario', 11, '{\"nombre\": \"Cristian\", \"apellido\": \"Pilco\", \"estado\": \"1\", \"id_rol\": \"1\"}', '{\"nombre\": \"Cristian\", \"apellido\": \"Pilc\", \"estado\": \"1\", \"id_rol\": \"1\"}', '2026-03-01 14:57:36'),
+(176, '169.254.243.153', 11, 1, 'UPDATE', 'usuario', 11, '{\"nombre\": \"Cristian\", \"apellido\": \"Pilc\", \"estado\": \"1\", \"id_rol\": \"1\"}', '{\"nombre\": \"Cristian\", \"apellido\": \"Pilco\", \"estado\": \"1\", \"id_rol\": \"1\"}', '2026-03-01 14:58:02'),
+(177, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 15:17:57'),
+(178, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 15:29:19'),
+(179, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 15:37:37'),
+(180, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 15:42:51'),
+(181, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 15:49:02'),
+(182, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 15:54:46'),
+(183, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 20:26:19'),
+(184, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 20:30:53'),
+(185, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 20:45:43'),
+(186, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 20:48:11'),
+(187, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 20:52:09'),
+(188, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 21:00:35'),
+(189, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 21:07:40'),
+(190, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 21:13:05'),
+(191, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 21:17:05'),
+(192, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 21:24:36'),
+(193, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 21:38:35'),
+(194, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:13:01'),
+(195, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:22:59'),
+(196, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:27:59'),
+(197, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:36:47'),
+(198, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:40:38'),
+(199, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:45:17'),
+(200, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:47:48'),
+(201, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:53:43'),
+(202, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 22:59:05'),
+(203, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:04:09'),
+(204, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:12:15'),
+(205, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:15:32'),
+(206, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:18:05'),
+(207, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:21:37'),
+(208, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:24:43'),
+(209, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:27:00'),
+(210, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:29:44'),
+(211, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:32:14'),
+(212, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:34:03'),
+(213, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:43:01'),
+(214, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:46:22'),
+(215, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-01 23:51:46'),
+(216, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 14:38:43'),
+(217, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 1, '{\"nota\": \"9.50\"}', '{\"nota\": \"9.50\"}', '2026-03-02 14:43:37'),
+(218, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 3, '{\"nota\": \"6.50\"}', '{\"nota\": \"7.00\"}', '2026-03-02 14:43:37'),
+(219, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 4, '{\"nota\": \"10.00\"}', '{\"nota\": \"10.00\"}', '2026-03-02 14:43:37'),
+(220, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 15:19:14'),
+(221, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 16:45:15'),
+(222, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 18:18:01'),
+(223, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 18:24:36'),
+(224, '169.254.243.153', 11, 1, 'INSERT', 'calificacion', 7, NULL, '{\"nota\": \"9.00\"}', '2026-03-02 18:27:30'),
+(225, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 18:45:35'),
+(226, '169.254.243.153', 11, 1, 'INSERT', 'calificacion', 8, NULL, '{\"nota\": \"8.00\"}', '2026-03-02 18:46:51'),
+(227, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 7, '{\"nota\": \"9.00\"}', '{\"nota\": \"9.00\"}', '2026-03-02 18:47:32'),
+(228, '169.254.243.153', 11, 1, 'INSERT', 'calificacion', 9, NULL, '{\"nota\": \"7.50\"}', '2026-03-02 18:47:32'),
+(229, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 7, '{\"nota\": \"9.00\"}', '{\"nota\": \"9.00\"}', '2026-03-02 18:47:39'),
+(230, '169.254.243.153', 11, 1, 'UPDATE', 'calificacion', 9, '{\"nota\": \"7.50\"}', '{\"nota\": \"8.75\"}', '2026-03-02 18:47:39'),
+(231, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 19:04:08'),
+(232, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 19:12:05'),
+(233, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 19:15:27'),
+(234, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 19:18:47'),
+(235, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 19:26:07'),
+(236, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 20:13:34'),
+(237, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 20:49:25'),
+(238, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 20:58:36'),
+(239, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 21:27:54'),
+(240, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 21:53:34'),
+(241, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 22:23:37'),
+(242, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 22:30:22'),
+(243, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 22:36:14'),
+(244, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 23:03:16'),
+(245, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 23:10:38'),
+(246, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 23:36:56'),
+(247, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 23:41:28'),
+(248, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-02 23:56:38'),
+(249, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:08:35'),
+(250, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:10:25'),
+(251, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:13:22'),
+(252, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:15:30'),
+(253, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:17:47'),
+(254, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:20:13'),
+(255, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:23:00'),
+(256, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:25:23'),
+(257, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:29:16'),
+(258, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:31:24'),
+(259, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:38:07'),
+(260, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:47:27'),
+(261, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 00:54:34'),
+(262, '169.254.243.153', 11, 1, 'LOGIN', 'usuario', 11, NULL, '{\"resultado\": \"SUCCESS_2FA\"}', '2026-03-03 01:16:36');
 
 -- --------------------------------------------------------
 
@@ -660,12 +811,9 @@ CREATE TABLE `calificacion` (
 --
 
 INSERT INTO `calificacion` (`id_calificacion`, `id_estudiante`, `id_evaluacion`, `nota`, `fecha_registro`, `activo`) VALUES
-(1, 1, 1, 9.50, '2026-02-25 16:41:16', 1),
-(2, 1, 2, 8.75, '2026-02-25 16:41:16', 1),
-(3, 2, 1, 6.50, '2026-02-25 16:41:16', 1),
-(4, 3, 1, 10.00, '2026-02-27 20:45:59', 1),
-(5, 3, 2, 7.00, '2026-02-27 20:46:14', 1),
-(6, 3, 5, 9.00, '2026-02-27 20:46:56', 1);
+(7, 1, 13, 9.00, '2026-03-02 18:27:30', 1),
+(8, 2, 12, 8.00, '2026-03-02 18:46:51', 1),
+(9, 2, 13, 8.75, '2026-03-02 18:47:32', 1);
 
 --
 -- Disparadores `calificacion`
@@ -795,41 +943,42 @@ CREATE TABLE `evaluacion` (
 --
 
 INSERT INTO `evaluacion` (`id_evaluacion`, `id_asignatura`, `id_tipo_evaluacion`, `id_periodo`, `descripcion`) VALUES
-(1, 4, 1, 1, 'Examen Parcial I'),
-(2, 4, 2, 1, 'Examen Final Práctico'),
-(3, 2, 1, 1, 'Nota 1'),
-(4, 2, 1, 1, 'Nota 2'),
-(5, 4, 1, 1, 'Parcial Nota 1');
-
---
--- Disparadores `evaluacion`
---
-DELIMITER $$
-CREATE TRIGGER `tr_evaluacion_validar_peso_insert` BEFORE INSERT ON `evaluacion` FOR EACH ROW BEGIN
-    DECLARE v_peso_actual DECIMAL(5,2); DECLARE v_nuevo_peso DECIMAL(5,2);
-    SELECT peso INTO v_nuevo_peso FROM tipoevaluacion WHERE id_tipo_evaluacion = NEW.id_tipo_evaluacion;
-    
-    SELECT IFNULL(SUM(te.peso), 0) INTO v_peso_actual FROM evaluacion e
-    JOIN tipoevaluacion te ON e.id_tipo_evaluacion = te.id_tipo_evaluacion
-    WHERE e.id_asignatura = NEW.id_asignatura AND e.id_periodo = NEW.id_periodo;
-    
-    IF (v_peso_actual + v_nuevo_peso) > 100 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Los pesos de evaluación superan el 100%'; END IF;
-END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `tr_evaluacion_validar_peso_update` BEFORE UPDATE ON `evaluacion` FOR EACH ROW BEGIN
-    DECLARE v_peso_actual DECIMAL(5,2); DECLARE v_nuevo_peso DECIMAL(5,2);
-    IF NEW.id_tipo_evaluacion <> OLD.id_tipo_evaluacion THEN
-        SELECT peso INTO v_nuevo_peso FROM tipoevaluacion WHERE id_tipo_evaluacion = NEW.id_tipo_evaluacion;
-        SELECT IFNULL(SUM(te.peso), 0) INTO v_peso_actual FROM evaluacion e
-        JOIN tipoevaluacion te ON e.id_tipo_evaluacion = te.id_tipo_evaluacion
-        WHERE e.id_asignatura = NEW.id_asignatura AND e.id_periodo = NEW.id_periodo AND e.id_evaluacion <> NEW.id_evaluacion;
-        IF (v_peso_actual + v_nuevo_peso) > 100 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Los pesos de evaluación superan el 100%'; END IF;
-    END IF;
-END
-$$
-DELIMITER ;
+(12, 4, 1, 1, 'Evaluación Frecuente 1 (Tareas)'),
+(13, 4, 2, 1, 'Examen Parcial 1'),
+(14, 4, 3, 1, 'Evaluación Frecuente 2 (Tareas)'),
+(15, 4, 4, 1, 'Examen Parcial 2'),
+(16, 4, 5, 1, 'Proyecto Final Integrador'),
+(17, 4, 6, 1, 'Examen Remedial'),
+(18, 1, 1, 1, 'Evaluación Frecuente 1 (Tareas)'),
+(19, 2, 1, 1, 'Evaluación Frecuente 1 (Tareas)'),
+(20, 3, 1, 1, 'Evaluación Frecuente 1 (Tareas)'),
+(21, 5, 1, 1, 'Evaluación Frecuente 1 (Tareas)'),
+(22, 6, 1, 1, 'Evaluación Frecuente 1 (Tareas)'),
+(23, 1, 2, 1, 'Examen Parcial 1'),
+(24, 2, 2, 1, 'Examen Parcial 1'),
+(25, 3, 2, 1, 'Examen Parcial 1'),
+(26, 5, 2, 1, 'Examen Parcial 1'),
+(27, 6, 2, 1, 'Examen Parcial 1'),
+(28, 1, 3, 1, 'Evaluación Frecuente 2 (Tareas)'),
+(29, 2, 3, 1, 'Evaluación Frecuente 2 (Tareas)'),
+(30, 3, 3, 1, 'Evaluación Frecuente 2 (Tareas)'),
+(31, 5, 3, 1, 'Evaluación Frecuente 2 (Tareas)'),
+(32, 6, 3, 1, 'Evaluación Frecuente 2 (Tareas)'),
+(33, 1, 4, 1, 'Examen Parcial 2'),
+(34, 2, 4, 1, 'Examen Parcial 2'),
+(35, 3, 4, 1, 'Examen Parcial 2'),
+(36, 5, 4, 1, 'Examen Parcial 2'),
+(37, 6, 4, 1, 'Examen Parcial 2'),
+(38, 1, 5, 1, 'Proyecto Final Integrador'),
+(39, 2, 5, 1, 'Proyecto Final Integrador'),
+(40, 3, 5, 1, 'Proyecto Final Integrador'),
+(41, 5, 5, 1, 'Proyecto Final Integrador'),
+(42, 6, 5, 1, 'Proyecto Final Integrador'),
+(43, 1, 6, 1, 'Examen Remedial'),
+(44, 2, 6, 1, 'Examen Remedial'),
+(45, 3, 6, 1, 'Examen Remedial'),
+(46, 5, 6, 1, 'Examen Remedial'),
+(47, 6, 6, 1, 'Examen Remedial');
 
 -- --------------------------------------------------------
 
@@ -922,9 +1071,12 @@ CREATE TABLE `tipoevaluacion` (
 --
 
 INSERT INTO `tipoevaluacion` (`id_tipo_evaluacion`, `nombre`, `peso`) VALUES
-(1, 'Examen Parcial', 30.00),
-(2, 'Examen Final', 40.00),
-(3, 'Proyecto', 30.00);
+(1, 'Evaluación Frecuente 1', 16.66),
+(2, 'Examen Parcial 1', 16.67),
+(3, 'Evaluación Frecuente 2', 16.66),
+(4, 'Examen Parcial 2', 16.67),
+(5, 'Examen Final', 33.34),
+(6, 'Remedial Final', 33.34);
 
 -- --------------------------------------------------------
 
@@ -1290,7 +1442,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_reporte_academico`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_reporte_academico`  AS SELECT `e`.`id_estudiante` AS `id_estudiante`, `u`.`nombre` AS `nombres`, `u`.`apellido` AS `apellidos`, `a`.`nombre` AS `asignatura`, `fn_promedio_ponderado`(`e`.`id_estudiante`,`a`.`id_asignatura`) AS `promedio_final`, `fn_estado_academico`(`fn_promedio_ponderado`(`e`.`id_estudiante`,`a`.`id_asignatura`)) AS `estado` FROM (((`estudiante` `e` join `usuario` `u` on(`e`.`id_usuario` = `u`.`id_usuario`)) join `matricula` `m` on(`e`.`id_estudiante` = `m`.`id_estudiante`)) join `asignatura` `a` on(`m`.`id_asignatura` = `a`.`id_asignatura`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_reporte_academico`  AS SELECT `e`.`id_estudiante` AS `id_estudiante`, `u`.`nombre` AS `nombres`, `u`.`apellido` AS `apellidos`, `a`.`nombre` AS `asignatura`, `fn_promedio_ponderado`(`e`.`id_estudiante`,`a`.`id_asignatura`) AS `promedio_final`, `fn_estado_academico`(`e`.`id_estudiante`,`a`.`id_asignatura`) AS `estado` FROM (((`estudiante` `e` join `usuario` `u` on(`e`.`id_usuario` = `u`.`id_usuario`)) join `matricula` `m` on(`e`.`id_estudiante` = `m`.`id_estudiante`)) join `asignatura` `a` on(`m`.`id_asignatura` = `a`.`id_asignatura`)) ;
 
 -- --------------------------------------------------------
 
@@ -1425,13 +1577,13 @@ ALTER TABLE `asignatura`
 -- AUTO_INCREMENT de la tabla `auditoria_sistema`
 --
 ALTER TABLE `auditoria_sistema`
-  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
+  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
 
 --
 -- AUTO_INCREMENT de la tabla `calificacion`
 --
 ALTER TABLE `calificacion`
-  MODIFY `id_calificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_calificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `docente`
@@ -1449,7 +1601,7 @@ ALTER TABLE `estudiante`
 -- AUTO_INCREMENT de la tabla `evaluacion`
 --
 ALTER TABLE `evaluacion`
-  MODIFY `id_evaluacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_evaluacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `matricula`
@@ -1473,7 +1625,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `tipoevaluacion`
 --
 ALTER TABLE `tipoevaluacion`
-  MODIFY `id_tipo_evaluacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_tipo_evaluacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
