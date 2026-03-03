@@ -18,6 +18,12 @@
         private Dictionary<int, bool> _filasConError = new Dictionary<int, bool>();
         private bool _hayCambiosSinGuardar = false;
 
+        // Variables para controlar el estado exacto de la interfaz y evitar guardar en la evaluación equivocada
+        private int _idEvaluacionCargada = 0;
+        private int _lastPeriodoIndex = -1;
+        private int _lastAsignaturaIndex = -1;
+        private int _lastEvaluacionIndex = -1;
+
         public frm_IngresoNotas()
         {
             InitializeComponent();
@@ -43,8 +49,10 @@
                 }
             }
 
-            // Suscribimos los eventos visuales para el ícono de exclamación
             dgvAlumnos.CellPainting += dgvAlumnos_CellPainting;
+
+            // Vinculamos el evento del combobox de evaluación manualmente
+            cmbEvaluacion.SelectedIndexChanged += cmbEvaluacion_SelectedIndexChanged;
 
             CargarPeriodos();
         }
@@ -62,14 +70,12 @@
             if (_hayCambiosSinGuardar)
             {
                 var confirm = MessageBox.Show("Tiene notas sin guardar. ¿Está seguro que desea salir y perder los cambios?", "Cambios no guardados", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (confirm == DialogResult.No)
-                {
-                    return;
-                }
+                if (confirm == DialogResult.No) return;
             }
             this.Close();
         }
 
+        // --- LÓGICA DE COMBOBOXES SEGURA (Evita pérdida de datos accidental) ---
         private void CargarPeriodos()
         {
             var periodos = _califController.ObtenerPeriodosDelDocente(_idDocenteActual);
@@ -78,11 +84,28 @@
             cmbPeriodo.DisplayMember = "Nombre";
             cmbPeriodo.ValueMember = "IdPeriodo";
             cmbPeriodo.SelectedIndex = -1;
+            _lastPeriodoIndex = -1;
             cmbPeriodo.SelectedIndexChanged += cmbPeriodo_SelectedIndexChanged;
         }
 
         private void cmbPeriodo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_hayCambiosSinGuardar)
+            {
+                var confirm = MessageBox.Show("Tiene notas sin guardar. Si cambia de periodo se perderán. ¿Desea continuar?", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (confirm == DialogResult.No)
+                {
+                    // Revertimos sin disparar evento
+                    cmbPeriodo.SelectedIndexChanged -= cmbPeriodo_SelectedIndexChanged;
+                    cmbPeriodo.SelectedIndex = _lastPeriodoIndex;
+                    cmbPeriodo.SelectedIndexChanged += cmbPeriodo_SelectedIndexChanged;
+                    return;
+                }
+            }
+
+            LimpiarEstadoGrilla();
+            _lastPeriodoIndex = cmbPeriodo.SelectedIndex;
+
             if (cmbPeriodo.SelectedIndex != -1 && cmbPeriodo.SelectedValue is int idPeriodo)
             {
                 var asignaturas = _califController.ObtenerAsignaturasDelDocente(_idDocenteActual, idPeriodo);
@@ -91,13 +114,33 @@
                 cmbAsignatura.DisplayMember = "Nombre";
                 cmbAsignatura.ValueMember = "IdAsignatura";
                 cmbAsignatura.SelectedIndex = -1;
-                cmbEvaluacion.DataSource = null;
+                _lastAsignaturaIndex = -1;
                 cmbAsignatura.SelectedIndexChanged += cmbAsignatura_SelectedIndexChanged;
+
+                cmbEvaluacion.SelectedIndexChanged -= cmbEvaluacion_SelectedIndexChanged;
+                cmbEvaluacion.DataSource = null;
+                _lastEvaluacionIndex = -1;
+                cmbEvaluacion.SelectedIndexChanged += cmbEvaluacion_SelectedIndexChanged;
             }
         }
 
         private void cmbAsignatura_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_hayCambiosSinGuardar)
+            {
+                var confirm = MessageBox.Show("Tiene notas sin guardar. Si cambia de asignatura se perderán. ¿Desea continuar?", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (confirm == DialogResult.No)
+                {
+                    cmbAsignatura.SelectedIndexChanged -= cmbAsignatura_SelectedIndexChanged;
+                    cmbAsignatura.SelectedIndex = _lastAsignaturaIndex;
+                    cmbAsignatura.SelectedIndexChanged += cmbAsignatura_SelectedIndexChanged;
+                    return;
+                }
+            }
+
+            LimpiarEstadoGrilla();
+            _lastAsignaturaIndex = cmbAsignatura.SelectedIndex;
+
             if (cmbAsignatura.SelectedIndex != -1 && cmbPeriodo.SelectedIndex != -1)
             {
                 CargarEvaluaciones();
@@ -110,13 +153,46 @@
             {
                 var evaluaciones = _califController.ObtenerEvaluaciones(idAsignatura, idPeriodo);
                 var source = evaluaciones.Select(ev => new { ev.IdEvaluacion, Display = ev.Descripcion }).ToList();
+
+                cmbEvaluacion.SelectedIndexChanged -= cmbEvaluacion_SelectedIndexChanged;
                 cmbEvaluacion.DataSource = source;
                 cmbEvaluacion.DisplayMember = "Display";
                 cmbEvaluacion.ValueMember = "IdEvaluacion";
                 cmbEvaluacion.SelectedIndex = -1;
+                _lastEvaluacionIndex = -1;
+                cmbEvaluacion.SelectedIndexChanged += cmbEvaluacion_SelectedIndexChanged;
             }
         }
 
+        private void cmbEvaluacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_hayCambiosSinGuardar)
+            {
+                var confirm = MessageBox.Show("Tiene notas sin guardar. Si cambia de evaluación se perderán. ¿Desea continuar?", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (confirm == DialogResult.No)
+                {
+                    cmbEvaluacion.SelectedIndexChanged -= cmbEvaluacion_SelectedIndexChanged;
+                    cmbEvaluacion.SelectedIndex = _lastEvaluacionIndex;
+                    cmbEvaluacion.SelectedIndexChanged += cmbEvaluacion_SelectedIndexChanged;
+                    return;
+                }
+            }
+
+            LimpiarEstadoGrilla(); // Limpiamos la grilla para que no guarden notas en evaluaciones equivocadas
+            _lastEvaluacionIndex = cmbEvaluacion.SelectedIndex;
+        }
+
+        // Método auxiliar para resetear la seguridad
+        private void LimpiarEstadoGrilla()
+        {
+            dgvAlumnos.DataSource = null;
+            _filasEditadas.Clear();
+            _filasConError.Clear();
+            _hayCambiosSinGuardar = false;
+            _idEvaluacionCargada = 0; // Invalidamos la evaluación cargada
+        }
+
+        // --- CARGA DE DATOS ---
         private void btnCargar_Click(object sender, EventArgs e)
         {
             if (cmbEvaluacion.SelectedIndex == -1)
@@ -125,9 +201,9 @@
                 return;
             }
 
-            if (_hayCambiosSinGuardar)
+            if (_hayCambiosSinGuardar) // Por si le da a Cargar Lista estando en la misma evaluación
             {
-                var confirm = MessageBox.Show("Hay notas sin guardar. Si carga otra lista perderá sus cambios actuales. ¿Desea continuar?", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var confirm = MessageBox.Show("Hay notas sin guardar. Si recarga la lista perderá sus cambios actuales. ¿Desea continuar?", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (confirm == DialogResult.No) return;
             }
 
@@ -145,6 +221,9 @@
             _filasEditadas.Clear();
             _filasConError.Clear();
             _hayCambiosSinGuardar = false;
+
+            // GUARDAMOS EL ID DE LA EVALUACIÓN CARGADA PARA EVITAR EL BUG DE GUARDADO CRUZADO
+            _idEvaluacionCargada = idEvaluacion;
         }
 
         private void ConfigurarGrilla()
@@ -153,7 +232,7 @@
             {
                 dgvAlumnos.Columns["IdEstudiante"].Visible = false;
                 dgvAlumnos.Columns["IdCalificacion"].Visible = false;
-                dgvAlumnos.Columns["Nota"].Visible = false; // Ocultamos el campo decimal real
+                dgvAlumnos.Columns["Nota"].Visible = false;
 
                 dgvAlumnos.Columns["Codigo"].HeaderText = "CÓDIGO";
                 dgvAlumnos.Columns["Codigo"].ReadOnly = true;
@@ -162,8 +241,7 @@
                 dgvAlumnos.Columns["NombreCompleto"].HeaderText = "ESTUDIANTE";
                 dgvAlumnos.Columns["NombreCompleto"].ReadOnly = true;
 
-                // Mostramos el campo String (NotaUI) para que no crashee al escribir cualquier cosa
-                dgvAlumnos.Columns["NotaUI"].HeaderText = "CALIFICACIÓN (Ej: 8.50)";
+                dgvAlumnos.Columns["NotaUI"].HeaderText = "CALIFICACIÓN (0.00 - 10.00)";
                 dgvAlumnos.Columns["NotaUI"].DefaultCellStyle.BackColor = Color.LightYellow;
                 dgvAlumnos.Columns["NotaUI"].DefaultCellStyle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
                 dgvAlumnos.Columns["NotaUI"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -180,7 +258,6 @@
             }
         }
 
-        // Quita la marca roja temporalmente si entra a corregir
         private void dgvAlumnos_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "NotaUI")
@@ -193,7 +270,6 @@
             }
         }
 
-        // PINTADO MANUAL DEL SIGNO DE EXCLAMACIÓN (!)
         private void dgvAlumnos_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0 && dgvAlumnos.Columns[e.ColumnIndex].Name == "NotaUI")
@@ -215,7 +291,8 @@
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (_listaActual.Count == 0 || cmbEvaluacion.SelectedIndex == -1) return;
+            // Validamos que haya una lista y que se haya cargado formalmente una evaluación
+            if (_listaActual.Count == 0 || _idEvaluacionCargada == 0) return;
 
             if (!_hayCambiosSinGuardar)
             {
@@ -235,10 +312,8 @@
 
                     if (celdaNotaUI != null && !string.IsNullOrWhiteSpace(celdaNotaUI.ToString()))
                     {
-                        // Transformamos una posible coma a punto
                         string strValor = celdaNotaUI.ToString().Replace(",", ".");
 
-                        // Validamos forzando InvariantCulture (punto como decimal)
                         if (!decimal.TryParse(strValor, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal notaFinal)
                             || notaFinal < 0 || notaFinal > 10)
                         {
@@ -248,7 +323,6 @@
                         }
                         else
                         {
-                            // Actualizamos el string visual a algo correcto (Ej: de "8,5" a "8.50")
                             row.Cells["NotaUI"].Value = notaFinal.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
                         }
                     }
@@ -285,8 +359,8 @@
                 }
             }
 
-            int idEvaluacion = (int)cmbEvaluacion.SelectedValue;
-            var resultado = _califController.GuardarNotas(_listaActual, idEvaluacion);
+            // AHORA USA EL ID DE LA EVALUACIÓN QUE REALMENTE CARGÓ (NO LA DEL COMBOBOX QUE PUDO HABER CAMBIADO)
+            var resultado = _califController.GuardarNotas(_listaActual, _idEvaluacionCargada);
 
             if (resultado.exito)
             {
@@ -294,7 +368,7 @@
                 _hayCambiosSinGuardar = false;
                 _filasEditadas.Clear();
                 _filasConError.Clear();
-                btnCargar.PerformClick(); // Recargar para limpiar el DTO
+                btnCargar.PerformClick();
             }
             else
             {
