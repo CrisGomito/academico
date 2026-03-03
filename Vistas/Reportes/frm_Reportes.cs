@@ -30,33 +30,66 @@
 
         private void frm_Reportes_Load(object sender, EventArgs e)
         {
+            ConfigurarPermisosCombo();
             _reportViewer.RefreshReport();
+        }
+
+        // LÓGICA DE SEGURIDAD PARA EL COMBOBOX
+        private void ConfigurarPermisosCombo()
+        {
+            cmbTipoReporte.Items.Clear();
+
+            // Todos tienen acceso a su Rendimiento Académico (Filtrado en el controlador)
+            cmbTipoReporte.Items.Add("Rendimiento Académico Final");
+
+            // Solo Administradores (1) y Coordinadores (4) pueden ver Auditoría
+            if (Program.rolId == 1 || Program.rolId == 4)
+            {
+                cmbTipoReporte.Items.Add("Auditoría de Seguridad (Accesos del Año)");
+            }
+
+            if (cmbTipoReporte.Items.Count > 0)
+            {
+                cmbTipoReporte.SelectedIndex = 0; // Seleccionar el primero por defecto
+            }
         }
 
         private void btnGenerar_Click(object sender, EventArgs e)
         {
+            if (cmbTipoReporte.SelectedIndex == -1) return;
+
             _reportViewer.LocalReport.DataSources.Clear();
 
             try
             {
-                // 1. PREPARAMOS LOS PARÁMETROS
-                // Tomamos los datos globales de la sesión actual
-                string nombreUsuario = string.IsNullOrEmpty(Program.nombreUsuario) ? "Usuario Desconocido" : Program.nombreUsuario;
+                // 1. PREPARAMOS LOS PARÁMETROS (Metadatos del PDF)
+                // LLAMAMOS AL NUEVO MÉTODO PARA OBTENER NOMBRE + APELLIDO
+                string nombreCompleto = _reportesController.ObtenerNombreCompletoUsuarioActual();
+
+                string nombreFirma = string.IsNullOrEmpty(nombreCompleto) ? "Usuario Desconocido" : nombreCompleto;
                 string rolUsuario = string.IsNullOrEmpty(Program.rol) ? "Sin Rol" : Program.rol;
-                string textoUsuario = $"Generado por: {nombreUsuario} - {rolUsuario}";
+
+                string textoUsuario = $"Generado por: {nombreFirma} - {rolUsuario}";
                 string textoFecha = $"Fecha de emisión: {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}";
 
-                // Creamos el arreglo de parámetros (Deben llamarse EXACTAMENTE igual que en el .rdlc)
                 ReportParameter[] parametros = new ReportParameter[]
                 {
                     new ReportParameter("UsuarioImpresion", textoUsuario),
                     new ReportParameter("FechaImpresion", textoFecha)
                 };
 
-                // 2. CARGAMOS EL REPORTE SEGÚN LA SELECCIÓN
-                if (cmbTipoReporte.SelectedIndex == 0) // Rendimiento Académico
+                // 2. CARGAMOS EL REPORTE SEGÚN EL TEXTO DEL COMBO (Ya no por index para evitar cruces si se ocultan opciones)
+                string opcionSeleccionada = cmbTipoReporte.SelectedItem.ToString();
+
+                if (opcionSeleccionada == "Rendimiento Académico Final")
                 {
                     var datos = _reportesController.ObtenerReporteAcademico();
+
+                    if (datos.Count == 0)
+                    {
+                        MessageBox.Show("No se encontraron registros académicos para mostrar.", "Reporte Vacío", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
 
                     string rutaReporte = Path.Combine(Application.StartupPath, @"Vistas\Reportes\RptAcademico.rdlc");
                     _reportViewer.LocalReport.ReportPath = rutaReporte;
@@ -64,7 +97,7 @@
                     ReportDataSource rds = new ReportDataSource("dsAcademico", datos);
                     _reportViewer.LocalReport.DataSources.Add(rds);
                 }
-                else if (cmbTipoReporte.SelectedIndex == 1) // Auditoría Seguridad
+                else if (opcionSeleccionada == "Auditoría de Seguridad (Accesos del Año)")
                 {
                     var datos = _reportesController.ObtenerReporteAccesos();
 
@@ -76,7 +109,6 @@
                 }
 
                 // 3. INYECTAMOS LOS PARÁMETROS AL REPORTE
-                // Es muy importante hacer esto DESPUÉS de haber asignado el ReportPath
                 _reportViewer.LocalReport.SetParameters(parametros);
 
                 // 4. RENDERIZAMOS
