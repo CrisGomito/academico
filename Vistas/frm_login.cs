@@ -1,6 +1,7 @@
 ﻿namespace _02_CRUD.Vistas
 {
     using System;
+    using System.Runtime.InteropServices; // AÑADIDO PARA LA LIBRERÍA USER32
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
     using Academico;
@@ -16,6 +17,21 @@
         public frm_login()
         {
             InitializeComponent();
+
+            // Suscribimos el Label "BIENVENIDO" también para que el usuario pueda arrastrar desde ahí
+            this.label1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlTopBar_MouseDown);
+        }
+
+        // --- MANEJO DE VENTANA (ARRASTRAR SIN BORDES) ---
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private static extern void ReleaseCapture();
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+        private static extern void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+        private void pnlTopBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
         // --- MANEJO VISUAL DE PANELES ---
@@ -108,7 +124,7 @@
         private void lblOlvidoPass_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MostrarPanel(pnlRecuperar);
-            txtCorreoRecuperacion.Text = txt_Correo.Text; // Si ya había escrito su correo, se lo pasamos al otro panel
+            txtCorreoRecuperacion.Text = txt_Correo.Text;
             txtCorreoRecuperacion.Focus();
         }
 
@@ -116,7 +132,6 @@
         {
             string correoInput = txtCorreoRecuperacion.Text.Trim();
 
-            // 1. Validaciones
             if (string.IsNullOrWhiteSpace(correoInput))
             {
                 MessageBox.Show("Por favor, ingrese su correo electrónico.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -139,7 +154,6 @@
                 return;
             }
 
-            // 2. Confirmación y Envío
             var confirm = MessageBox.Show($"¿Desea enviar una nueva contraseña temporal al correo:\n{correoInput}?", "Confirmar Recuperación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.Yes)
             {
